@@ -225,6 +225,18 @@ body[data-theme=busqueda]{--yellow:#4fc3ff; --acc-hi:#c9eeff; --acc-sh:#1c5f86; 
 .uso h3::before{content:"★ "}
 @media (max-width:640px){ .cxgrid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .guide .ptitle b{background:none; padding:0}
+
+.rec .rtag{display:inline-block; font-family:var(--pix); font-size:14px; color:#111; background:var(--yellow); padding:1px 8px; margin:10px 8px 8px 0; box-shadow:0 3px 0 var(--acc-sh)}
+.rec .rplan{margin-bottom:6px}
+.req{background:#0c0c0c; border:2px solid var(--yellow); border-radius:4px; padding:12px 14px; font-family:var(--mono); font-size:15px; color:#fff; line-height:1.8; box-shadow:inset 0 0 0 2px #000}
+.rsteps{display:flex; flex-direction:column; gap:4px; background:#111; border:2px solid #2a2a2a; border-radius:4px; padding:8px}
+.rs{display:grid; grid-template-columns:26px minmax(0,1.4fr) minmax(0,1fr); gap:10px; align-items:center; padding:4px 6px; border-radius:3px}
+.rs:nth-child(odd){background:#161616}
+.rs .rn{color:#111; background:#555; text-align:center; font-size:13px; border-radius:2px}
+.rs code{background:none !important; padding:0 !important; color:#fff !important; font-size:13.5px !important; white-space:normal}
+.rs .rc{color:#9b9b9b; font-size:14px; line-height:1.35}
+.rres{background:var(--olive2); border-left:3px solid var(--yellow); padding:8px 10px !important; margin-bottom:8px !important}
+@media (max-width:640px){ .rs{grid-template-columns:22px minmax(0,1fr)} .rs .rc{grid-column:2} }
 #splash{position:fixed; inset:0; z-index:100; background:#0b0b0f; display:flex; overflow-x:hidden; overflow-y:auto; clip-path:circle(150% at 50% 50%)}
 #splash.out{animation:irisOut .9s steps(14) forwards}
 #splash.gone{display:none}
@@ -1462,6 +1474,218 @@ const INFO = {
 };
 
 /* ============================================================
+   CÁLCULO DE LA RECURRENCIA DE CADA ALGORITMO
+   plan: cómo se arma T(n) · rec: la ecuación · pasos: expansión
+   res: resultado · ej: comprobación con números
+   ============================================================ */
+const SIMPLE_STEPS = [
+  ['T(n) = T(n − 1) + (n − 1)', 'la recurrencia'],
+  ['T(n − 1) = T(n − 2) + (n − 2)', 'la misma regla, un tamaño menos'],
+  ['T(n) = T(n − 2) + (n − 2) + (n − 1)', 'sustituyo'],
+  ['T(n) = T(n − 3) + (n − 3) + (n − 2) + (n − 1)', 'sustituyo otra vez'],
+  ['T(n) = T(n − k) + (n − k) + … + (n − 1)', 'patrón después de k pasos'],
+  ['n − k = 1  ⇒  k = n − 1', 'llego al caso base T(1) = 0'],
+  ['T(n) = 0 + 1 + 2 + … + (n − 1)', 'queda una suma de Gauss'],
+  ['T(n) = n(n − 1) / 2', 'fórmula de la suma 1 + 2 + … + m = m(m + 1)/2']
+];
+const REC = {
+  intercambio: {
+    plan: 'Contamos <b>comparaciones</b>, la operación clave. La primera pasada compara <code>a[0]</code> con los otros n − 1 elementos y deja el mínimo fijo en su lugar. Lo que queda es <b>el mismo problema con un elemento menos</b>. Por eso: costo(n) = costo(n − 1) + lo que costó esta pasada.',
+    rec: ['T(n) = T(n − 1) + (n − 1)', 'T(1) = 0   (un solo elemento no se compara con nadie)'],
+    pasos: SIMPLE_STEPS,
+    res: 'T(n) = n(n − 1)/2 = n²/2 − n/2  ⇒  <b>O(n²)</b> en TODOS los casos: el código no tiene ningún "atajo", siempre recorre los dos for completos.',
+    ej: 'Con n = 6: 6·5/2 = <b>15</b> comparaciones (es lo que marca el contador del visualizador). Con n = 1.000: 499.500.'
+  },
+  burbuja: {
+    plan: 'Una pasada compara todas las parejas de vecinos de lo pendiente: con n elementos son n − 1 comparaciones, y el mayor queda fijo al final. Lo que queda es el mismo problema con <b>n − 1</b> elementos.',
+    rec: ['T(n) = T(n − 1) + (n − 1)', 'T(1) = 0'],
+    pasos: SIMPLE_STEPS,
+    res: 'Sin bandera: T(n) = n(n − 1)/2 ⇒ <b>O(n²)</b> siempre. Con bandera, si el arreglo ya está ordenado, la primera pasada no hace intercambios y el algoritmo se detiene: T(n) = n − 1 ⇒ <b>O(n)</b>.',
+    ej: 'n = 6 ⇒ 15 comparaciones. Los INTERCAMBIOS no siguen esta fórmula: son exactamente el número de pares desordenados (inversiones), entre 0 y n(n − 1)/2.'
+  },
+  seleccion: {
+    plan: 'Buscar el mínimo entre n elementos cuesta n − 1 comparaciones, y luego hay <b>un</b> intercambio. Queda el mismo problema con n − 1 elementos. Planteamos dos recurrencias: una para comparaciones T y otra para intercambios S.',
+    rec: ['T(n) = T(n − 1) + (n − 1),   T(1) = 0', 'S(n) = S(n − 1) + 1,          S(1) = 0'],
+    pasos: SIMPLE_STEPS.concat([['S(n) = S(n − k) + k  ⇒  con k = n − 1:  S(n) = n − 1', 'los intercambios crecen de forma lineal']]),
+    res: 'Comparaciones: n(n − 1)/2 ⇒ <b>O(n²)</b> siempre (aunque ya esté ordenado). Intercambios: n − 1 ⇒ <b>O(n)</b>. Por eso es el que menos mueve datos.',
+    ej: 'n = 6 ⇒ 15 comparaciones y como máximo 5 intercambios.'
+  },
+  insercion: {
+    plan: 'Para insertar el elemento i, el <code>while</code> compara hacia la izquierda. Si el arreglo está ordenado al revés (peor caso), hay que pasar por encima de los i − 1 anteriores. Si ya está ordenado (mejor caso), se detiene en la primera comparación. Así que la recurrencia <b>depende de los datos</b>.',
+    rec: ['Peor caso:   T(n) = T(n − 1) + (n − 1),   T(1) = 0', 'Mejor caso:  T(n) = T(n − 1) + 1,          T(1) = 0'],
+    pasos: SIMPLE_STEPS.slice(0, 5).concat([
+      ['… = n(n − 1)/2', 'peor caso, igual que los anteriores'],
+      ['Mejor caso:  T(n) = T(n − k) + k', 'cada inserción cuesta 1'],
+      ['k = n − 1  ⇒  T(n) = n − 1', 'lineal']
+    ]),
+    res: 'Peor caso <b>O(n²)</b>, mejor caso <b>O(n)</b>, promedio ≈ n²/4 (cada elemento recorre en promedio la mitad de la parte ordenada). Esta diferencia entre mejor y peor caso es lo que lo hace "adaptativo".',
+    ej: 'n = 6 al revés: 15 comparaciones. n = 6 ya ordenado: solo 5.'
+  },
+  shell: {
+    plan: 'Shell no es recursivo: es una suma de pases. Con gap = g, el arreglo se parte en g sub-listas de unos n/g elementos, y a cada una se le hace inserción. Así que <b>costo total = Σ (costo de cada pase)</b>, con g = n/2, n/4, …, 1.',
+    rec: ['T(n) = Σ  [ g · I(n / g) ]   para g = n/2, n/4, …, 1', 'I(m) = costo de inserción con m elementos'],
+    pasos: [
+      ['Peor caso:  I(m) ≈ m² / 2', 'inserción al revés'],
+      ['g · (n/g)² / 2 = n² / (2g)', 'costo de un pase con gap g'],
+      ['Σ n²/(2g) = n²/2 · (2/n + 4/n + … + 1)', 'sumo los pases'],
+      ['= n · (1 + 2 + 4 + … + n/2) ≈ n · n', 'serie geométrica ≈ n'],
+      ['Peor caso ⇒ O(n²)', 'con esta secuencia de gaps'],
+      ['Mejor caso (ya ordenado): cada pase ≈ n comparaciones', 'el while para de inmediato'],
+      ['log₂ n pases · n  ⇒  O(n log n)', 'hay log₂ n gaps distintos']
+    ],
+    res: 'Con gaps n/2, n/4, …, 1: peor caso <b>O(n²)</b> y mejor caso <b>O(n log n)</b>. En la práctica queda muy por debajo de n², porque los pases grandes dejan el arreglo casi ordenado y la inserción final es barata. Con la secuencia de Knuth (1, 4, 13, 40…) el peor caso baja a O(n^1.5).',
+    ej: 'n = 8: hay 3 pases (gap 4, 2, 1). Ya ordenado: 4 + 6 + 7 = 17 comparaciones, contra las 28 que haría inserción en su peor caso.'
+  },
+  quick: {
+    plan: 'Una llamada con n elementos hace: <b>la partición</b>, que compara cada elemento con el pivote (n − 1 comparaciones), y <b>dos llamadas recursivas</b>, una por lado. Si a la izquierda quedan k elementos, a la derecha quedan n − k − 1 (el pivote ya no cuenta).',
+    rec: ['T(n) = T(k) + T(n − k − 1) + (n − 1)', 'T(0) = T(1) = 0'],
+    pasos: [
+      ['MEJOR caso: el pivote parte justo a la mitad (k ≈ n/2)', ''],
+      ['T(n) = 2T(n/2) + n', 'dos mitades + la partición'],
+      ['T(n) = 2[2T(n/4) + n/2] + n = 4T(n/4) + 2n', 'sustituyo T(n/2)'],
+      ['T(n) = 8T(n/8) + 3n', 'otra vez'],
+      ['T(n) = 2ᵏ T(n/2ᵏ) + k·n', 'patrón'],
+      ['n/2ᵏ = 1  ⇒  k = log₂ n', 'caso base'],
+      ['T(n) = n·T(1) + n·log₂ n = n log₂ n', '⇒ O(n log n)'],
+      ['PEOR caso: el pivote es el menor o el mayor (k = 0)', 'pasa con un arreglo ordenado o al revés'],
+      ['T(n) = T(0) + T(n − 1) + (n − 1) = T(n − 1) + (n − 1)', 'un lado vacío'],
+      ['T(n) = (n − 1) + (n − 2) + … + 1 = n(n − 1)/2', 'igual que los simples ⇒ O(n²)']
+    ],
+    res: 'Mejor caso y promedio <b>O(n log n)</b>, peor caso <b>O(n²)</b>. En el visualizador se ve en la cantidad de niveles: con buenos pivotes hay unos log₂ n niveles; con el peor, n niveles en forma de escalera.',
+    ej: 'n = 8: con pivotes perfectos, unas 8·3 = 24 comparaciones; al revés, 8·7/2 = <b>28</b> y 8 niveles.'
+  },
+  merge: {
+    plan: 'Cada llamada hace <b>dos llamadas recursivas</b> con la mitad (izquierda y derecha) y luego <b>merge</b>, que recorre los n elementos del pedazo para mezclarlos: cuesta del orden de n. Dividir (calcular mid) cuesta una constante y no cambia nada.',
+    rec: ['T(n) = 2T(n/2) + n', 'T(1) = 0   (un elemento ya está ordenado: caso base)'],
+    pasos: [
+      ['T(n) = 2T(n/2) + n', 'la recurrencia'],
+      ['T(n/2) = 2T(n/4) + n/2', 'misma regla con la mitad'],
+      ['T(n) = 2[2T(n/4) + n/2] + n = 4T(n/4) + 2n', 'sustituyo'],
+      ['T(n) = 4[2T(n/8) + n/4] + 2n = 8T(n/8) + 3n', 'sustituyo otra vez'],
+      ['T(n) = 2ᵏ T(n/2ᵏ) + k·n', 'patrón después de k niveles'],
+      ['n/2ᵏ = 1  ⇒  2ᵏ = n  ⇒  k = log₂ n', 'llego al caso base'],
+      ['T(n) = n·T(1) + n·log₂ n', 'sustituyo k'],
+      ['T(n) = n log₂ n', '⇒ O(n log n)']
+    ],
+    res: '<b>O(n log n)</b> en el mejor, promedio y peor caso, porque la división SIEMPRE es a la mitad, sin depender de los datos. Mira el escenario: hay log₂ n niveles y en cada nivel, sumando todas las mezclas, se mueven los n elementos.',
+    ej: 'n = 8 ⇒ log₂ 8 = 3 niveles · 8 = <b>24</b> (cota de comparaciones; en la práctica algo menos). n = 1.000.000 ⇒ unos 20.000.000, contra 500.000.000.000 de los simples.'
+  },
+  heap: {
+    plan: 'Hay dos piezas. <b>heapify</b> baja un elemento por el árbol: en cada nivel hace 2 comparaciones (con el hijo izquierdo y el derecho) y, si intercambia, se llama a sí misma UNA vez en el nivel de abajo. Después, <b>HeapSort</b> extrae el máximo n − 1 veces y cada extracción cuesta un heapify.',
+    rec: ['heapify:   H(h) = H(h − 1) + 2,   H(0) = 0   (h = altura)', 'HeapSort:  T(n) = T(n − 1) + H(log₂ n)'],
+    pasos: [
+      ['H(h) = H(h − 1) + 2 = H(h − 2) + 4 = H(h − k) + 2k', 'expansión'],
+      ['h − k = 0  ⇒  H(h) = 2h', 'llego a una hoja'],
+      ['árbol completo: h = ⌊log₂ n⌋  ⇒  heapify = O(log n)', 'cada extracción'],
+      ['T(n) = T(n − 1) + 2 log₂ n', 'extraer el máximo y reparar'],
+      ['T(n) = 2 (log₂ n + log₂(n − 1) + … + log₂ 2)', 'expansión'],
+      ['= 2 log₂(n!) ≈ 2 n log₂ n', 'aproximación de Stirling: log(n!) ≈ n log n'],
+      ['Construir el heap: Σ (nodos de altura h) · h ≈ n·Σ h/2ʰ = O(n)', 'la mayoría de nodos están abajo y casi no bajan'],
+      ['Total = O(n) + O(n log n) = O(n log n)', '']
+    ],
+    res: '<b>O(n log n)</b> garantizado en todos los casos, porque el árbol siempre está completo y su altura nunca pasa de log₂ n.',
+    ej: 'n = 8: altura 3 ⇒ cada heapify hace como máximo 6 comparaciones; 7 extracciones ⇒ ≤ 42, más la construcción.'
+  },
+  radix: {
+    plan: 'Radix no compara ni es recursivo, pero se puede ver como una recurrencia sobre la cantidad de dígitos d. Cada pasada reparte los n elementos en cubetas (n operaciones) y recorre las 10 cubetas para recogerlos (n + 10). Después de una pasada, queda el mismo trabajo con un dígito menos.',
+    rec: ['T(d) = T(d − 1) + (n + 10)', 'T(0) = 0   (sin dígitos que mirar)'],
+    pasos: [
+      ['T(d) = T(d − 1) + (n + 10)', 'una pasada por dígito'],
+      ['T(d) = T(d − 2) + 2(n + 10)', 'sustituyo'],
+      ['T(d) = T(d − k) + k(n + 10)', 'patrón'],
+      ['k = d  ⇒  T(d) = d (n + 10)', 'caso base'],
+      ['d es fijo (números de 2 dígitos ⇒ d = 2)', ''],
+      ['⇒ T = O(d · n) = O(n)', 'lineal en n']
+    ],
+    res: '<b>O(d·(n + b))</b>, con b = 10 cubetas. Si d es pequeño y fijo, crece de forma <b>lineal</b> con n, algo imposible para los algoritmos que comparan (su límite es n log n).',
+    ej: 'n = 8 números de 2 dígitos ⇒ 2·(8 + 10) = 36 operaciones y 0 comparaciones.'
+  },
+  counting: {
+    plan: 'Counting Sort no es recursivo: es una secuencia de ciclos, y su costo se calcula <b>sumando cada ciclo</b>. Con n elementos y k = max − min + 1 valores posibles:',
+    rec: ['T(n, k) = n  (contar) + k  (acumular) + n  (colocar) + n  (copiar)', 'T(n, k) = 3n + k − 1'],
+    pasos: [
+      ['for (x : a) count[x − min]++', 'n operaciones'],
+      ['for (v = 1; v < k; v++) count[v] += count[v − 1]', 'k − 1 operaciones'],
+      ['for (i = n − 1; i ≥ 0; i−−) salida[−−count[...]] = a[i]', 'n operaciones'],
+      ['for (i = 0; i < n; i++) a[i] = salida[i]', 'n operaciones'],
+      ['T = 3n + k − 1  ⇒  O(n + k)', 'se descartan las constantes']
+    ],
+    res: '<b>O(n + k)</b> en todos los casos. Si k es pequeño comparado con n, es lineal. Si k es enorme (valores de 1 a 1.000.000 con 10 datos), el término k domina y deja de convenir.',
+    ej: 'n = 8 con valores de 1 a 9 (k = 9): 3·8 + 9 − 1 = 32 operaciones y 0 comparaciones.'
+  },
+  tim: {
+    plan: 'Son dos fases. <b>Fase 1:</b> n/RUN runs, y a cada uno se le hace inserción, que en el peor caso cuesta RUN²/2. <b>Fase 2:</b> mezcla de abajo hacia arriba: cada nivel de mezcla recorre los n elementos y el tamaño de los runs se duplica en cada nivel, como en MergeSort pero empezando en RUN y no en 1.',
+    rec: ['Fase 1:  I = (n / RUN) · RUN² / 2 = n · RUN / 2', 'Fase 2:  M(n) = 2M(n/2) + n,  con M(RUN) = 0'],
+    pasos: [
+      ['I = n · RUN / 2', 'RUN es constante (4 aquí, 32-64 en el real) ⇒ O(n)'],
+      ['M(n) = 2ᵏ M(n/2ᵏ) + k·n', 'misma expansión que MergeSort'],
+      ['n/2ᵏ = RUN  ⇒  k = log₂(n / RUN)', 'se detiene en los runs, no en 1'],
+      ['M(n) = n · log₂(n / RUN)', 'niveles de mezcla · n'],
+      ['T(n) = n·RUN/2 + n·log₂(n/RUN)  ⇒  O(n log n)', 'peor caso'],
+      ['Ya ordenado (TimSort real): detecta 1 solo run ⇒ O(n)', 'mejor caso']
+    ],
+    res: 'Peor caso <b>O(n log n)</b>. Empezar con runs ahorra los niveles más bajos de MergeSort, que son los más caros en llamadas. El real además llega a <b>O(n)</b> si los datos ya vienen ordenados.',
+    ej: 'n = 10, RUN = 4: 3 runs; fase 1 ≤ 6 + 6 + 1 = 13 comparaciones; fase 2 = 2 niveles de mezcla (4+4 → 8, y 8+2 → 10).'
+  },
+  intro: {
+    plan: 'Usa la recurrencia de QuickSort, <b>T(n) = T(k) + T(n − k − 1) + n</b>, pero le pone un límite: la profundidad nunca pasa de 2·log₂ n. Si llega al límite, ese pedazo se resuelve con HeapSort (O(m log m)). Si un pedazo es pequeño, con inserción (costo constante por pedazo).',
+    rec: ['T(n) = T(k) + T(n − k − 1) + n,   si prof > 0 y n > UMBRAL', 'T(n) = O(n log n)  (HeapSort),       si prof = 0', 'T(n) = O(UMBRAL²) = constante,       si n ≤ UMBRAL'],
+    pasos: [
+      ['Cada nivel de partición recorre, en total, ≤ n elementos', 'los pedazos de un nivel no se solapan'],
+      ['Hay como máximo 2·log₂ n niveles de partición', 'el límite de profundidad'],
+      ['Particiones: ≤ n · 2 log₂ n = O(n log n)', ''],
+      ['Pedazos que caen a HeapSort: suman ≤ n ⇒ O(n log n)', ''],
+      ['Pedazos pequeños con inserción: ≤ n/UMBRAL pedazos · UMBRAL² = O(n)', ''],
+      ['Total: O(n log n) + O(n log n) + O(n) = O(n log n)', 'incluso en el peor caso']
+    ],
+    res: '<b>O(n log n)</b> garantizado. Nunca cae en el O(n²) de QuickSort porque el límite de profundidad corta la "escalera" de pivotes malos.',
+    ej: 'n = 12 ⇒ límite = 2·⌊log₂ 12⌋ = 6 niveles. Con "AL REVÉS", QuickSort solo bajaría 12 niveles; IntroSort se detiene en el 6 y cambia a HeapSort.'
+  },
+  binIter: {
+    plan: 'Cada vuelta del <code>while</code> hace <b>una</b> comparación con <code>a[mid]</code> y descarta la mitad de la zona. Así que buscar en n elementos cuesta 1 + buscar en n/2. Aunque el código use un while, el costo sigue exactamente esta recurrencia.',
+    rec: ['T(n) = T(n/2) + 1', 'T(1) = 1   (queda un solo candidato: una comparación)'],
+    pasos: [
+      ['T(n) = T(n/2) + 1', 'la recurrencia'],
+      ['T(n) = T(n/4) + 2', 'sustituyo T(n/2) = T(n/4) + 1'],
+      ['T(n) = T(n/8) + 3', 'otra vez'],
+      ['T(n) = T(n/2ᵏ) + k', 'patrón'],
+      ['n/2ᵏ = 1  ⇒  k = log₂ n', 'caso base'],
+      ['T(n) = 1 + log₂ n', '⇒ O(log n)']
+    ],
+    res: 'Peor caso <b>⌊log₂ n⌋ + 1</b> comparaciones ⇒ <b>O(log n)</b>. Mejor caso <b>O(1)</b>, si x está justo en el medio.',
+    ej: 'n = 10 ⇒ máximo 4 intentos (mira la fila "CÓMO SE ACHICA LA ZONA"). n = 1.000.000 ⇒ máximo <b>20</b>.'
+  },
+  binRec: {
+    plan: 'Aquí la recurrencia se lee <b>directamente del código</b>: cada llamada hace una comparación (constante c) y <b>una sola</b> llamada recursiva con la mitad. No son dos llamadas como en MergeSort, porque solo se sigue el lado donde puede estar x.',
+    rec: ['T(n) = T(n/2) + c', 'T(1) = c   (caso base)', 'Memoria de la pila: M(n) = M(n/2) + 1'],
+    pasos: [
+      ['T(n) = T(n/2) + c', 'una llamada, la mitad'],
+      ['T(n) = T(n/4) + 2c', 'sustituyo'],
+      ['T(n) = T(n/2ᵏ) + k·c', 'patrón'],
+      ['n/2ᵏ = 1  ⇒  k = log₂ n', 'caso base'],
+      ['T(n) = c + c·log₂ n', '⇒ O(log n)'],
+      ['M(n) = log₂ n + 1 llamadas en la pila', 'la iterativa usa O(1)']
+    ],
+    res: 'Tiempo <b>O(log n)</b>, igual que la iterativa. Memoria <b>O(log n)</b>, porque cada llamada pendiente ocupa un lugar en la pila. Compárala con MergeSort: T(n) = <b>2</b>T(n/2) + n da n log n; con <b>1</b> llamada y costo constante, da solo log n.',
+    ej: 'n = 16 ⇒ como máximo 5 llamadas apiladas (pestaña PILA).'
+  },
+  interp: {
+    plan: 'La recurrencia depende de qué tan bien adivina la fórmula. Con datos <b>uniformes</b>, la zona que queda después de cada intento es de unos √n elementos (resultado conocido de su análisis). Con datos <b>muy desparejos</b>, cada intento puede descartar un solo elemento.',
+    rec: ['Uniforme:   T(n) = T(√n) + 1', 'Peor caso:  T(n) = T(n − 1) + 1'],
+    pasos: [
+      ['Uniforme: escribo n = 2^(2ᵏ)', 'así √n = 2^(2ᵏ⁻¹)'],
+      ['T(2^(2ᵏ)) = T(2^(2ᵏ⁻¹)) + 1', 'cada raíz baja k en 1'],
+      ['T = k + T(2) = k + 1', 'k raíces hasta llegar a 2'],
+      ['k = log₂(log₂ n)', 'porque log₂ n = 2ᵏ'],
+      ['⇒ O(log log n)', 'muchísimo menos que log n'],
+      ['Peor caso: T(n) = T(n − k) + k ⇒ T(n) = n', '⇒ O(n), como la lineal']
+    ],
+    res: 'Promedio <b>O(log log n)</b> con datos uniformes y peor caso <b>O(n)</b>. Por eso, con "NO UNIFORME" en el visualizador, avanza de a poquito.',
+    ej: 'n = 1.000.000 uniformes: log₂ n ≈ 20, log₂ 20 ≈ 4.3 ⇒ unos <b>5</b> intentos, contra los 20 de la binaria.'
+  }
+};
+
+/* ============================================================
    VISTAS: cada algoritmo dibuja la ESTRUCTURA de lo que hace
    flat     → simples y búsquedas (fila + historial)
    levels   → MergeSort / QuickSort / IntroSort (un nivel por llamada)
@@ -2524,6 +2748,16 @@ function goto(k, opts = {}) {
   if (!opts.silent) sfx(s.kind);
   if ((s.kind === 'done' || s.kind === 'found') && !opts.instant) burst();
 }
+function recHTML() {
+  const R = REC[algo]; if (!R) return '';
+  return `<div class="gsec rec"><h3>CÁLCULO DE LA RECURRENCIA</h3>
+    <p class="rplan"><span class="rtag">1 · PLANTEO</span>${R.plan}</p>
+    <div class="rtag">2 · LA ECUACIÓN</div><div class="req">${R.rec.map(l => `<div>${l}</div>`).join('')}</div>
+    <div class="rtag">3 · RESOLVIENDO PASO A PASO</div>
+    <div class="rsteps">${R.pasos.map(([f, c], k) => `<div class="rs"><span class="rn">${k + 1}</span><code>${f}</code><span class="rc">${c}</span></div>`).join('')}</div>
+    <div class="rtag">4 · RESULTADO</div><p class="rres">${R.res}</p>
+    <p class="gnote">${R.ej}</p></div>`;
+}
 function renderGuide() {
   const I = INFO[algo], S = A().search;
   const lab = ['MEJOR CASO', 'CASO PROMEDIO', 'PEOR CASO', 'MEMORIA EXTRA', S ? 'REQUISITO' : '¿ESTABLE?'];
@@ -2534,6 +2768,7 @@ function renderGuide() {
     <div class="gsec"><h3>¿CÓMO LO HACE? PASO A PASO</h3><ol>${I.como.map(x => `<li>${x}</li>`).join('')}</ol></div>
     <div class="gsec"><h3>¿PARA QUÉ SIRVE?</h3><p>${I.sirve}</p></div>
     <div class="gsec"><h3>COMPLEJIDAD</h3><div class="cxgrid">${lab.map((l, k) => `<div class="cx ${cls(k)}"><span>${l}</span><b>${val[k]}</b></div>`).join('')}</div>${I.nota ? `<p class="gnote">${I.nota}</p>` : ''}</div>
+    ${recHTML()}
     <div class="uso"><h3>MEJOR USO</h3><p>${I.uso}</p></div>`;
 }
 function rebuild() {
