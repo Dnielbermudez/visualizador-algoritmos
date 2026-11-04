@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORDENAMIENTO Y BÚSQUEDA - JAVA · Visualizador pixel</title>
+<style>
+@font-face{font-family:'Pix';src:url(data:font/woff;base64,d09GRk9UVE8AABAcAAsAAAAAJ8wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDRkYgAAAEUAAAC3EAAB2mk4ZlskdQT1MAAA/EAAAAEAAAABAAGQAMR1NVQgAAD9QAAAAqAAAAKqX1wPtPUy8yAAABZAAAAFkAAABkPrZG+WNtYXAAAAOYAAAApgAAAOSYKYziaGVhZAAAAQgAAAA2AAAANsKDpi9oaGVhAAABQAAAABwAAAAkAHoBF2htdHgAABAAAAAAHAAAA3ocIAAAbWF4cAAAAVwAAAAGAAAABgDfUABuYW1lAAABwAAAAdcAAAPkWex3kXBvc3QAAARAAAAAEAAAACAAAwACAAEAAAAAAADDcszqXw889QADAEAAAAAAfCWdwAAAAADnB8r6AAD/+ABAADgAAAAQAAIAAAAAAAB4nGNgZGBgsPj/g4GBwYGBAUwyMqCCewBM+AOQAABQAADfAAB4nC3JsQ3CMBQA0ecfB1mhQYIyhTsYIWW6dOnYhxEYiVFgi3RGQTR3J53enJ56XIzIf5/2KkMc8yEiSuQHHe8PFCzrvaaXej2b2oZJmUn7V91+RGtfrVMLLAAAAHicZZPNbtNQEIU/twUJEHkENCtWjdMEIdEukKA/FBTa0qqwrZvcOlYd2/iHElTxMOx4C54H8QwI+XBV3LC5dzxn5twzZ2TgPl9ZJVi7B8EZ+DigF5z5eIVekPl4lcfBtY/XOjV3eBR88/HdTv4Bz4MfPn7Ir+C3j3tcr/xkm5yCBSUJMTNqjO8YQzbZ5Bl9Rmww4gnGMTlzIjKMbb6w4JyckpKIdYwjIhpSjH0iSqYslH9Hoq6P/jb2dMdCX5AxpcRxhfGWhJQURyn0DTkzMjISHMYHHBGfbvAdfSVMpalVc46jphZ6ILZKvDkVl5q2EHaMU+2ECRHGS9/nyJiQ01B6llZTRoUjxxjjcMrvk9PnRPlLjF2fd3IxIiXkVMovyMmo9WYsj1p/bmN9hjwlZEjIhs6cmgvea9aKRHW2VDWT5oKKLQYMaG44G+/rglDzzG+h7YsDdmik00hJmGj2ds4tjBNeM8Y4pFC+3drfvtaDbrX5fXQ1tgrX5UKm3bzigFPdR2Jd7hhh2p7Jm1qocUVCzQzT6To8/7TsMtcep0y1p1i5z9JXUPsXwv+cislo5HJJzGDJgUoVhXbYds5JNc8yS8VE/077UkWoidIO6yF7jP8AtDeesQB4nGNgYGBkYGZgZGBg4GFgYbjBwMBgxKDAwMIgxFDH8F9BREFSQVZBSUFNoUlxsuIlJQ+lVGVu1YWqm1S3qe5RPaDGqmallqqWpc6kLvz/PwMDgwLDAgVhBQkFGaieCWA9Kcpcqguw6/n/8P+BB2sfrHqw4sGSBwsfuN23vPf7Xtu97LvHbxvfVr6tcFv6tsStK7cW3Cq7VXTz9s3TYJeSCACPDz8AAAB4nGNgZoABRihGAQAAowAGeJyNWX2IJEcV79mdnd7P2c+e3dm7Pe4u2T2iRvwjRDEiKvEjBKNynFFOPM0lOeOaG2VimtCBUurwGcb40CKUWsROMpExGeMigxlhieuxoGggJiYQDJJDIaABSUiQCxhQ3qvqnu6Z2b2bYXtmqt6revU+f6+24BVHvEKhMH7i7B23187eRd+PvnXgrYON6UMN+fTu2JrnXfCmj748e/E90+sH185NX3nxffPeaKFQKgcfvrV2y2033Hrb2bvuuOueZAGv4B35ovfwqcNLhcPVwuG1wuErvMPHvMPSO/KD0SPPe0dv8I7eVrhiqrD+cGG94613vfWnvPXz3kbJ27jO27jd29j0jo16x5a8Ua/gebT9hRGv4F3pbXjXeh/17vB+4v2tsFI4Unh/4XjhXOGBwqOFJwpPFp4fGR9ZG/nQyJdHvjXy45EnR/448uqoP7o8evXoZ0dvH8XRrdGXRi8W54pXFT9SPF68pfjt4g+LzeJviq8UXx+bGNsYu27sprHa2PfHOmO/G3tu7I3SVOma0onS3SVZeqj0ROn3pWdKF3zPX/Ov9Y/7Z33p/8I/77/o/2f80PjV49ePf3787Hhj/OfjT43/Y/zixPTE+sQHJ85MnJv42cQzEy9OepPVyQOT75z89OQ3Jn86+efJC1PTUwembp765tSjU1vTevq56ZemX5vxZzZmPj7zuZlw5nszD8w8PPPkzF/KhfI15a+VHy//qfzG7Orsx2bvnn1o9tnZ1+bm5t4194m5r8x9Z+6Rud/OvTz39vza/Cfn75y/f/5X83+d/+/ClQufWbhz4b6Fxxb+sPDm4tziexdPL+LizuKbS0eWTizdu/Tg0u7Sv4LF4LrgRFAL7g8eC14I3q4crHyg8qXKdyuPV85XXl2eXH7H8k3LX1/+0fKvly8s/3P59eX/rZRXrlq5fuXEyldX7lt5ZGV75YWVf1dL1XdXb6qerd5TPVe9v/pg9ZfVneqz1b+vHlo9tXrvqlp95cChBnaDU82uH0GgAAVIUKglPUtYD1BCqdwoN0wnqGHLh81AovLLDbUdRGh8XaFnuaE7gZCAEiLUSqBWCAoNCKl9iAIlZYmXAAkgUSlaXkgEQFCAqBAVSKkUSk2/ASXSHp2AyEFJAOJEoqTfKJlKSVTA36VSEmneV4hMrACtWLQC8QvUSCsDzQvQaJegjUkKZkNQ2udF/XLD2BOWG3GXFoE68hagoEkCk3zdgCStp7I13bamHQi7k92OpxFJBOA10A7wlHYMArRArVHQgFa0NPPRTxUHYNCOS0X6b3YCqxV+kkCo7DM5NkAd+WSyt5shRacSRfxskjS+NY+bqEmIUW71TKCMkDwJookhbUN7acAciQAdRYosZhANJAQxL4yRUOmZhWFzQNMvN7AThHEUsbIsX6Rj7J2i5oajyBiMaFu0XBBLEBChQW2VRPQCASLiiIyJ7GK0V09SgdqICIywXoCILesqbdasDJ2Ce7+zhmhuWSWxopJ374t7kXytAJro1yP+KDdwK0gZ0gXSVzKVU2dqWJJeJoGXta3BCKGJqKXzNSENnV63Uu9XEmVkvbyGpJKW81HsBKfjVK+oQUTapAJsovUVGbVNEhDEYZA9pg4g2ppP7iaaGJJ5rOVoAOP0Z7IiWRxjwfEs8utibELskCyOXm2yD7ZVepBNwa6lEe0gs5kBI6hUp8nL9ETcSvialDKwjh2KIKlAJRMtlPwG7EANFL/zWonaZhPbWcn7tWdq1nISoMU8HIQ5HspZSApQ7AV92heUZZRIY0kztc5qDPQZ3Eoi4QxTbcGZyB1QoLDro6LgAAGc10FztmERFKVhlNiBOlA+dqHIpyelpASsA7QulFGVVVKIsc08LhOx4L3wTF5p1uAXZ7xucFKj7CSmlAhO73xIq3e7VDcAdVqC3iZP2E6TFJNhEjZYgRbrbyfI+AMNtDn7oJERK5YSrJEcLTZKqPyRu2h2bGEVjsL6DXPXeYwSS9MkPt/sBhFVS6hjUwOlUmH9u+u4jIxUhlPHNgcZKiZCgqpjk8sd2qwieTEqAEIIa/ZIWYMLzrWoElkp4GskvJPRdDk1SBEA1jlqWrZqpaPsj5AERztZaDB48qFDLqGpxp3hVTvE1w42saVq9s9mxmQ4KxfmdBc1TZ3qjKU8TWVwQNtZDo3CKRUFdqBvD6uUDIdkd5FpCbHBpVJbWXCiQi6GMWndLldzKanN+axlBzl0VBo20oUMUytGDNiCmmxCXToOdtokWavUgdlDpZXOEoYuP1H5oXANeTK2kxCn0QKyiWGvOKjEbSyQAd7OwSAXBLSVUg61HMddB04U07E5JTKkIzpXcJRLJsourZzQBMSs2hgSkA+BYOxnf0uqr0ZFkuGXYm+RxqE2leAI0jcVMEaBNCU06V2npVDa01icAMqqKVUfw7EoSXXWNwWQQRxGIp/JO2sS76bDsA3qDr0lIJJjKucjSXxFPU9Ru3xgVXEgd0itNYD1DG4SMmDAkVeEy1QkMDAOEmAMoB/VA7DYhiKezt+rAspuPGS03EATQCzoPLtFQPSxcnlPK8ynZMADEHARUAyS0EqGFm1rog8541NWYHSmeu4mpfLbdhXIfdwI/BED49O4khnbhR6FlUPZkcsRfqju66gy+UolPYNgm2ATfFcKth3m0kn/YPsDlfhHFmpHm4ErHF1bJ6j1oXiJMULXmeSnBWhpFah50hHEO73KhC5fnXF9gY01hBYlGmlhb1ro69jB09hhHt106NNUuA+zg9105YgTcTMphK6caQtwU+fCLVudkzKOtiqTVw+OJpqmtJciTuqpYmt8q+kkmYHkfDXIotB6C3U4rsfAHJsfu2hWvKx0Xd2w7di+Ca8PEnt53KUj29AlEFW7JKl2A8YqEqnp3Bv6ml0OBFToi/3o9K61uYtpuR+tSmldJriEDLlMczlS8LkuRxLyehTSdrSbGKvQoDDsJ1kgq5yDYT/Mz2hRRH3APqO5sH+uT1tR/3zuxEO5e7vm4X9m16h/rm/XAd7crgPc2AkIZISZtsZwncoUhH6zklL2bhN6xyAjDXQMfUcZmB9ynAGaITIN3Wvg6IP9SyvI3VD0EHVSWGWKdi1ArSG47EH+09Q2l9QZ+7ZgIAxF1Neb5B0oPzfoQPn5fgfab+VLdCeEfrXGJD0JYw0u0nRIzRXnM4KaKXbWWdi0nbf0fi2G2c5bfT9a2+HkPWA/erU93BsuwdPnGftKtDOQgER4qR1c10WdJXU1SlDUsXxaa1u3M4A/k4zybVaflvdqqvL63YNqiGb3oBzQz9502YKT6b4yEon8TJ8UMj+b21kMzHHxdBgDkJQfckjT7Unboma5h1OIaFiL1ufE/d1av+P2zw9z1n6avRx0CF2fUw7s1g6AJBGM7+gj6Z4hYmp2SWoMkpAnO4XEjX2nFdGQ7i9z2nDYfN9po2E0uVMMXSW/yz49YTe4eWinbIZss88ysUPDcRHaiU1BMChNTJi9ac7O6kqWErOUqpLjaiVo1F21osrIl7ZTzX0htm4FvU6Obgq5CU4ktm5/ErczdzuG61fIrXPvItUWg5PJ9XvaJW47DgExhKDzHHyCPi8VA0PlRtwO2LOU8yRbDP16PbnnbbOPWRqekxxdybzeDk4aFF17rFMCzLYtxLWWu06gL3UI4jAspX2ibKqkdLWDukrv5npgnxKq7RWdhJI5mn65tWNbzSh7/ywtPHdNgG3B0+sf5WOYbw4gTNswvjPGkBUes/IoEOk/L9y4RdQXZhWmtmyDbG/2eH2T3hvRf5XoioTQg7s3Qb+sXG9jIKkufNFgr3dBpZdVmQt0H22FJ4NRN+FLGSBAKSzSs7yTubZPXxa1JTiu/+Wz79H/XFffWpveOBTc8oVao+E+pn08uPbIwtNL7eD/ibHOsQAAAAABAAAACgAMAA4AAAAAAAAAAQAAAAoAJgAoAAJERkxUAA50aGFpABgABAAAAAD//wAAAAAAAAAAAAAAAHicY1BgYGAYxUMLOwwCN4xi8uMLxGcAALZqHCE=) format('woff');font-display:block}
+:root{
+  --bg:#161616; --stage:#0f0f0f; --panel:#1d1d1d; --code:#2b2b2b; --line:#2f2f2f;
+  --text:#e6e6e6; --muted:#9b9b9b; --faint:#5f5f5f;
+  --yellow:#f5e642; --olive:rgba(140,128,0,.46);
+  --idle:#a3a3a3; --active:#5aa0ff; --part:#45d6e6; --compare:#ffd84a; --swap:#ff74b4; --min:#ff9f43; --shift:#b48cff; --sorted:#5ee87e;
+  --pix:'Pix','Courier New',monospace;
+  --mono:"DejaVu Sans Mono",ui-monospace,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); transition:background .3s; color:var(--text); font-family:var(--pix); font-size:16px; line-height:1.25; min-height:100vh}
+.app{max-width:1480px; margin:0 auto; padding:22px 18px 30px; display:flex; flex-direction:column; gap:16px}
+header{text-align:center; padding:6px 0 0}
+h1{margin:0; font-weight:400; font-size:44px; line-height:1; letter-spacing:1px; color:#fff; text-shadow:0 4px 0 #000}
+h1 .y{color:var(--yellow)}
+.sub{color:var(--muted); margin-top:12px}
+.sub b{color:#fff; font-weight:400}
+.algos{display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+.algo{font-family:var(--pix); font-size:18px; padding:9px 18px; background:#141414; color:var(--muted); border:2px solid #333; border-radius:4px; cursor:pointer; box-shadow:0 4px 0 #0a0a0a}
+.algo:hover{color:#fff; border-color:#666}
+.algo.on{background:var(--yellow); color:#111; border-color:var(--acc-hi); box-shadow:0 4px 0 var(--acc-sh)}
+.algo small{display:block; font-size:16px; opacity:.75; margin-top:2px}
+.hud{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+.hb{background:var(--panel); border:2px solid var(--line); border-radius:4px; padding:6px 10px; display:flex; gap:8px; align-items:center; box-shadow:0 4px 0 #0a0a0a}
+.hb span{color:var(--muted)}
+.hb b{font-weight:400; color:var(--yellow); display:inline-block}
+.hb b.bump{animation:bump .3s steps(3)}
+@keyframes bump{50%{color:#fff; transform:translateY(-3px)}}
+.phase{color:var(--idle)}
+.phase .sq{width:10px; height:10px; background:currentColor; animation:blink 1s steps(2) infinite}
+.phase.run{color:var(--active)} .phase.fin{color:var(--sorted)}
+@keyframes blink{50%{opacity:.15}}
+.panel{background:var(--panel); border:2px solid var(--line); border-radius:6px; box-shadow:0 4px 0 #0a0a0a; padding:14px}
+.ptitle{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; color:var(--muted)}
+.ptitle b{color:#fff; font-weight:400}
+.ptitle b::before{content:"■ "; color:var(--yellow)}
+.controls{display:flex; flex-direction:column; gap:14px}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.btn{font-family:var(--pix); font-size:16px; color:var(--text); background:#2b2b2b; border:2px solid #474747; border-radius:4px; padding:7px 12px; box-shadow:0 4px 0 #0a0a0a; cursor:pointer; display:inline-flex; gap:8px; align-items:center; white-space:nowrap}
+.btn:hover:not(:disabled){background:#353535; border-color:#666}
+.btn:active:not(:disabled){transform:translateY(4px); box-shadow:none}
+.btn:disabled{opacity:.33; cursor:not-allowed}
+.btn:focus-visible,.algo:focus-visible,.tab:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.btn.y{background:var(--yellow); color:#111; border-color:var(--acc-hi); box-shadow:0 4px 0 var(--acc-sh)}
+.btn.y:hover:not(:disabled){background:var(--acc-hov)}
+.btn.g{background:#173323; border-color:#5ee87e; color:#b9f7c8}
+.btn.on{background:#173323; border-color:#5ee87e; color:#b9f7c8}
+.btn svg{width:14px; height:14px; shape-rendering:crispEdges; flex:none}
+.sliders{display:flex; gap:22px; flex-wrap:wrap; align-items:center; flex:1; justify-content:flex-end}
+.field{display:flex; flex-direction:column; gap:6px; min-width:210px; flex:1; max-width:300px}
+.field label{display:flex; justify-content:space-between; color:var(--muted)}
+.field label output{color:var(--yellow)}
+input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:12px; margin:4px 0; background:linear-gradient(90deg,var(--yellow) var(--p,50%),#333 var(--p,50%)); border:2px solid #000; outline:none; cursor:pointer; border-radius:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:24px; background:#fff; border:3px solid #000; border-radius:0; box-shadow:inset -3px -3px 0 #b9b9b9}
+input[type=range]::-moz-range-thumb{width:12px; height:20px; background:#fff; border:3px solid #000; border-radius:0}
+input[type=range]:focus-visible{outline:2px solid var(--yellow); outline-offset:4px}
+.custom input[type=text]{flex:1; min-width:220px; font-family:var(--pix); font-size:16px; background:#111; color:#fff; border:2px solid #474747; border-radius:4px; padding:7px 10px; outline:none}
+.custom input[type=text]:focus{border-color:var(--yellow)}
+.lbl{color:var(--muted)}
+.err{color:#ff8080}
+.timeline .row{flex-wrap:nowrap}
+.timeline .row span{color:var(--muted); white-space:nowrap}
+.strip{height:6px; border:2px solid #000; box-sizing:content-box; margin-top:6px}
+.layout{display:grid; grid-template-columns:minmax(0,1fr) 500px; gap:16px; align-items:start}
+.col{display:flex; flex-direction:column; gap:16px; min-width:0}
+.stage-wrap{background:var(--stage); border:2px solid #000; border-radius:4px; position:relative; overflow:hidden}
+canvas{display:block; width:100%; image-rendering:pixelated}
+.legend{display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:12px}
+.lg{display:flex; align-items:center; gap:7px; color:var(--muted); white-space:nowrap}
+.lg i{width:12px; height:12px; border:2px solid #000; box-shadow:0 2px 0 #000}
+.mem{display:flex; align-items:center; gap:10px; margin-top:12px}
+.mlab{width:70px; color:var(--muted); flex:none; text-align:right}
+.mlab.t{color:var(--swap)}
+.cells{display:flex; gap:4px; flex-wrap:wrap; min-height:30px; align-items:center}
+.cell{min-width:30px; height:30px; padding:0 3px; display:grid; place-items:center; background:#3a3a3a; border:2px solid #000; color:#fff; box-shadow:inset 0 -4px 0 rgba(0,0,0,.3)}
+.cell.active{background:var(--active); color:#071223}
+.cell.part{background:var(--part); color:#04181b}
+.cell.compare{background:var(--compare); color:#1d1700}
+.cell.swap,.cell.temp{background:var(--swap); color:#2a0716}
+.cell.min{background:var(--min); color:#2a1400}
+.cell.shift{background:var(--shift); color:#140b26}
+.cell.sorted,.cell.done{background:var(--sorted); color:#06200f}
+.cell.empty{background:transparent; border:2px dashed #555; box-shadow:none; color:#555}
+.cells .none{color:var(--faint)}
+.dialog{position:relative; background:#0b0b0b; border:4px solid #fff; border-radius:2px; box-shadow:0 0 0 4px #0b0b0b, 0 8px 0 4px #000; padding:14px 16px 14px 112px; min-height:150px; cursor:pointer; margin:4px}
+.avatar{position:absolute; left:14px; top:14px; width:80px; height:80px; background:#191919; border:2px solid #3a3a3a}
+.dhead{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px}
+.dtag{display:inline-block; padding:2px 8px; color:#111; background:var(--tc,#aaa); box-shadow:0 3px 0 #000}
+.dstep{color:var(--faint)}
+.dmsg{color:#f2f2f2; min-height:60px; font-size:16px; line-height:1.5}
+.dialog.ready .dmsg::after{content:" ▼"; color:var(--yellow); animation:blink .8s steps(2) infinite}
+.dtip{margin-top:10px; color:#bdbdbd; border-top:2px dashed #333; padding-top:8px; line-height:1.45}
+.dtip:empty{display:none}
+.dtip::before{content:"★ TIP: "; color:var(--yellow)}
+.chip{display:inline-block; padding:0 4px; margin:0 1px; background:#444; color:#fff; box-shadow:0 2px 0 #000; line-height:1.25}
+.chip.active{background:var(--active); color:#071223}
+.chip.part{background:var(--part); color:#04181b}
+.chip.compare{background:var(--compare); color:#1d1700}
+.chip.swap{background:var(--swap); color:#2a0716}
+.chip.min{background:var(--min); color:#2a1400}
+.chip.shift{background:var(--shift); color:#140b26}
+.chip.sorted{background:var(--sorted); color:#06200f}
+.dialog code,.dtip code,.explain code{font-family:var(--pix); color:var(--yellow)}
+.dialog b,.dtip b,.explain b{font-weight:400; color:var(--yellow)}
+.tw-hide{visibility:hidden}
+.tabs{display:flex; gap:6px; margin-bottom:12px}
+.tab{flex:1; font-family:var(--pix); font-size:16px; padding:6px 8px; background:#141414; color:var(--muted); border:2px solid #333; border-radius:4px; cursor:pointer}
+.tab:hover{color:#fff}
+.tab.on{background:var(--yellow); color:#111; border-color:var(--acc-hi); box-shadow:0 3px 0 var(--acc-sh)}
+.code{background:var(--code); border-radius:6px; padding:12px 0; font-family:var(--mono); font-size:12.5px; line-height:1.6; overflow-x:auto; color:#cfcfcf}
+.ln{display:flex; white-space:pre; padding-right:14px; min-width:max-content}
+.ln .no{width:36px; text-align:right; padding-right:12px; color:#595959; flex:none; user-select:none}
+.ln.hl{background:var(--olive); color:#fffbe2}
+.ln.hl .no{color:var(--acc-no)}
+.ln.sec{background:var(--olive2)}
+.explain{margin-top:12px; color:#c8c8c8; line-height:1.45; min-height:44px; padding:8px 10px; border:2px dashed #3a3a3a; border-radius:4px}
+.vars{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:12px}
+.vb{background:#141414; border:2px solid #333; border-radius:4px; padding:4px 8px; display:flex; justify-content:space-between; gap:6px}
+.vb span{color:var(--muted)}
+.vb b{font-weight:400; color:#fff}
+.vb.i b{color:var(--part)} .vb.j b{color:var(--swap)} .vb.m b{color:var(--min)}
+.vb.flash{animation:vflash .5s steps(3)}
+@keyframes vflash{0%{background:var(--acc-dk); border-color:var(--yellow)}}
+.note{color:var(--faint); margin:0 0 10px; line-height:1.4}
+.presets{display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-bottom:12px}
+.presets .btn{justify-content:center}
+.race{display:flex; flex-direction:column; gap:10px}
+.rr{display:grid; grid-template-columns:110px 1fr; gap:8px; align-items:center; cursor:pointer; padding:4px; border-radius:4px; border:2px solid transparent}
+.rr:hover{background:#262626}
+.rr.on{border-color:var(--yellow)}
+.rr .nm{color:#fff}
+.bars{display:flex; flex-direction:column; gap:4px}
+.bar{display:flex; align-items:center; gap:8px}
+.bar i{display:block; height:12px; border:2px solid #000; min-width:4px}
+.bar span{color:var(--muted); white-space:nowrap}
+.verdict{margin-top:12px; padding:8px 10px; border:2px dashed #3a3a3a; border-radius:4px; color:#c8c8c8; line-height:1.45}
+.verdict b{color:var(--yellow); font-weight:400}
+.hist{max-height:440px; overflow:auto; display:flex; flex-direction:column; gap:2px}
+.h{padding:5px 8px; color:var(--muted); cursor:pointer; display:flex; gap:10px; line-height:1.45; border-radius:3px}
+.h:hover{background:#262626}
+.h .n{color:var(--faint); min-width:40px; flex:none}
+.h.cur{background:var(--acc-dk); color:#fff}
+.h.fut{display:none}
+.pane{display:none}
+.pane.on{display:block}
+footer{color:var(--faint); text-align:center; display:flex; gap:18px; justify-content:center; flex-wrap:wrap}
+kbd{font-family:var(--pix); background:#2b2b2b; border:2px solid #474747; border-bottom-width:4px; border-radius:3px; padding:0 6px; color:#ddd}
+::-webkit-scrollbar{width:10px; height:10px}
+::-webkit-scrollbar-thumb{background:#3a3a3a; border:2px solid #1d1d1d}
+::-webkit-scrollbar-track{background:#1d1d1d}
+@media (max-width:1200px){ .layout{grid-template-columns:1fr} }
+@media (max-width:640px){
+  h1{font-size:28px}
+  .app{padding:14px 10px 24px}
+  .btn .t{display:none}
+  .btn{padding:8px 11px}
+  .dialog{padding-left:16px}
+  .avatar{display:none}
+  .vars{grid-template-columns:repeat(2,1fr)}
+  .mlab{width:52px}
+  .field{max-width:none}
+  .algo{font-size:16px; padding:7px 10px}
+}
+@media (prefers-reduced-motion: reduce){ *{animation:none !important} }
+
+.groups{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+.grp{font-family:var(--pix); font-size:20px; padding:10px 22px; background:#141414; color:var(--muted); border:2px solid #333; border-radius:4px; cursor:pointer; box-shadow:0 4px 0 #0a0a0a}
+.grp:hover{color:#fff; border-color:#666}
+.grp.on{background:#173323; color:#b9f7c8; border-color:#5ee87e; box-shadow:0 4px 0 #0e2416}
+.grp small{color:var(--faint); margin-left:6px}
+.grp.on small{color:#8fd6a2}
+.cell.dim{opacity:.35}
+.cell.merge{background:var(--shift); color:#140b26}
+.cc{display:flex; flex-direction:column; align-items:center; gap:2px}
+.cc small{color:var(--faint); font-size:12px}
+.cc .cell.hot{background:var(--compare); color:#1d1700}
+.cc .cell.zero{background:#262626; color:#666}
+.stack{display:flex; flex-direction:column-reverse; gap:6px; max-height:420px; overflow:auto}
+.frame{display:flex; align-items:center; gap:10px; padding:6px 10px; background:#141414; border:2px solid #333; border-radius:4px; color:var(--muted)}
+.frame.top{border-color:var(--active); color:#fff}
+.frame .lv{margin-left:auto; color:var(--faint)}
+.emptyst{color:var(--faint); text-align:center; padding:16px; border:2px dashed #333; border-radius:4px; line-height:1.45}
+.tgt{display:none; align-items:center; gap:8px}
+.tgt.on{display:flex}
+.tgt input{width:80px !important; min-width:0 !important; flex:none !important}
+.rr.ref{cursor:default; opacity:.75}
+.rr.ref:hover{background:transparent}
+.algos .algo{padding:8px 12px; font-size:16px}
+.algos .algo small{font-size:14px}
+
+body[data-theme=simples]{--yellow:#f5e642; --acc-hi:#fff7a8; --acc-sh:#857a0c; --acc-hov:#fff06a; --olive:rgba(140,128,0,.46); --olive2:rgba(140,128,0,.17); --acc-dk:#3d3a10; --acc-no:#e3d86a; --bg:#161616}
+body[data-theme=avanzados]{--yellow:#c58cff; --acc-hi:#ead6ff; --acc-sh:#5d3594; --acc-hov:#d3a6ff; --olive:rgba(120,70,190,.45); --olive2:rgba(120,70,190,.17); --acc-dk:#33204d; --acc-no:#d2b0ff; --bg:#18141d}
+body[data-theme=busqueda]{--yellow:#4fc3ff; --acc-hi:#c9eeff; --acc-sh:#1c5f86; --acc-hov:#7fd3ff; --olive:rgba(30,120,180,.45); --olive2:rgba(30,120,180,.17); --acc-dk:#12324a; --acc-no:#a9e0ff; --bg:#121619}
+.grp[data-group=simples]{--gc:#f5e642; --gs:#857a0c}
+.grp[data-group=avanzados]{--gc:#c58cff; --gs:#5d3594}
+.grp[data-group=busqueda]{--gc:#4fc3ff; --gs:#1c5f86}
+.grp{border-color:var(--gs) !important}
+.grp::before{content:"■ "; color:var(--gc)}
+.grp.on{background:var(--gc) !important; color:#111 !important; border-color:#fff !important; box-shadow:0 4px 0 var(--gs) !important}
+.grp.on::before{color:#111}
+.grp.on small{color:#333 !important}
+.panel{border-color:color-mix(in srgb, var(--yellow) 18%, #2f2f2f)}
+.guide h3{font-family:var(--pix); font-weight:400; font-size:17px; color:var(--yellow); margin:0 0 8px; letter-spacing:.5px}
+.gsec{margin-bottom:18px}
+.guide p{margin:0; color:#d8d8d8; line-height:1.65}
+.guide ol{margin:0; padding-left:26px; color:#d8d8d8; line-height:1.6; display:flex; flex-direction:column; gap:6px}
+.guide ol li::marker{color:var(--yellow)}
+.guide code{font-family:var(--mono); font-size:13px; color:var(--yellow); background:#111; padding:1px 4px; border-radius:3px}
+.guide b{font-weight:400; color:#fff; background:var(--olive2); padding:0 2px}
+.cxgrid{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; margin-bottom:8px}
+.cx{background:#141414; border:2px solid #333; border-radius:4px; padding:6px 8px; display:flex; flex-direction:column; gap:4px}
+.cx span{color:var(--muted); font-size:14px}
+.cx b{background:none !important; padding:0 !important; color:#fff !important; font-size:15px; line-height:1.3}
+.cx.good b{color:#9df2b2 !important} .cx.bad b{color:#ffb0b0 !important}
+.gnote{color:#a9a9a9 !important; font-size:15px; border-left:3px solid var(--yellow); padding-left:10px}
+.uso{border:2px solid var(--yellow); border-radius:6px; padding:12px 14px; background:var(--olive2); box-shadow:0 4px 0 var(--acc-sh)}
+.uso h3::before{content:"★ "}
+@media (max-width:640px){ .cxgrid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.guide .ptitle b{background:none; padding:0}
+</style>
+</head>
+<body data-theme="simples">
+<div class="app">
+
+  <header>
+    <h1><span class="y" id="title">ORDENAMIENTOS SIMPLES</span> - JAVA</h1>
+    <div class="sub" id="subtitle"></div>
+  </header>
+
+  <nav class="groups" aria-label="Grupo de algoritmos">
+    <button class="grp on" data-group="simples">SIMPLES<small>4</small></button>
+    <button class="grp" data-group="avanzados">AVANZADOS<small>8</small></button>
+    <button class="grp" data-group="busqueda">BÚSQUEDA<small>3</small></button>
+  </nav>
+
+  <nav class="algos" id="algoNav" aria-label="Algoritmo"></nav>
+
+  <div class="hud">
+    <div class="hb phase" id="phase"><i class="sq"></i><span id="phaseTxt" style="color:inherit">LISTO</span></div>
+    <div class="hb"><span>PASO</span><b id="stStep">000/000</b></div>
+    <div class="hb"><span id="stPassLbl">PASADA</span><b id="stPass">-</b></div>
+    <div class="hb"><span>COMPARACIONES</span><b id="stCmp">000</b></div>
+    <div class="hb"><span id="stMovLbl">INTERCAMBIOS</span><b id="stMov">000</b></div>
+    <div class="hb"><span id="stRefLbl">PEOR CASO</span><b id="stRef">0</b></div>
+  </div>
+
+  <section class="panel controls" aria-label="Controles">
+    <div class="row">
+      <button class="btn y" id="btnPlay"><svg viewBox="0 0 14 14"><path fill="currentColor" d="M3 1h2v1h2v1h2v1h2v1h1v4h-1v1H9v1H7v1H5v1H3z"/></svg><span class="t">INICIAR</span></button>
+      <button class="btn" id="btnPause" disabled><svg viewBox="0 0 14 14"><path fill="currentColor" d="M3 2h3v10H3zM8 2h3v10H8z"/></svg><span class="t">PAUSAR</span></button>
+      <button class="btn" id="btnPrev"><svg viewBox="0 0 14 14"><path fill="currentColor" d="M2 2h2v10H2zM10 2h2v10h-2V11H9v-1H8V9H7V8H6V6h1V5h1V4h1V3h1z"/></svg><span class="t">ANTERIOR</span></button>
+      <button class="btn" id="btnNext"><span class="t">SIGUIENTE</span><svg viewBox="0 0 14 14"><path fill="currentColor" d="M10 2h2v10h-2zM2 2h2v1h1v1h1v1h1v1h1v2H7v1H6v1H5v1H4v1H2z"/></svg></button>
+      <button class="btn" id="btnReset"><svg viewBox="0 0 14 14"><path fill="currentColor" d="M4 1h6v2h2v2h-2V4H5v1H4v4h1v1h4V9h1V8h2v3h-2v1H4v-1H3v-1H2V4h1V3h1zM9 5h5v1H9z"/></svg><span class="t">REINICIAR</span></button>
+      <button class="btn g" id="btnNew"><svg viewBox="0 0 14 14"><path fill="currentColor" d="M1 1h12v12H1zM3 3v8h8V3zM4 4h2v2H4zM8 8h2v2H8zM6 6h2v2H6z"/></svg><span class="t">NUEVO ARREGLO</span></button>
+      <button class="btn" id="btnSound" aria-pressed="false"><svg viewBox="0 0 14 14"><path fill="currentColor" d="M1 5h3l3-3h1v10H7L4 9H1zM10 4h1v1h1v4h-1v1h-1V9h1V5h-1z"/></svg><span class="t" id="soundTxt">SONIDO: NO</span></button>
+      <div class="sliders">
+        <div class="field">
+          <label for="speed">VELOCIDAD <output id="speedOut">MODERADA</output></label>
+          <input type="range" id="speed" min="1" max="10" step="1" value="4">
+        </div>
+        <div class="field">
+          <label for="size">ELEMENTOS <output id="sizeOut">6</output></label>
+          <input type="range" id="size" min="4" max="12" step="1" value="6">
+        </div>
+      </div>
+    </div>
+    <div class="row custom">
+      <span class="lbl">ARREGLO PROPIO:</span>
+      <input type="text" id="customIn" placeholder="ej: 7, 4, 9, 2" aria-label="Arreglo personalizado">
+      <span class="tgt" id="tgtBox"><span class="lbl">OBJETIVO x:</span><input type="text" id="targetIn" aria-label="Valor a buscar"></span>
+      <button class="btn" id="btnCustom">CARGAR</button>
+      <span class="err" id="customErr" role="status"></span>
+    </div>
+    <div class="timeline">
+      <div class="row">
+        <span>LÍNEA DE TIEMPO</span>
+        <input type="range" id="timeline" min="0" max="0" value="0" aria-label="Línea de tiempo">
+        <span id="tlOut">0%</span>
+      </div>
+      <div class="strip" id="strip"></div>
+    </div>
+  </section>
+
+  <main class="layout">
+    <div class="col">
+      <section class="panel">
+        <div class="ptitle"><b>ESCENARIO</b><span id="stageHint"></span></div>
+        <div class="stage-wrap" id="wrapStage"><canvas id="cvStage" aria-label="Animación del algoritmo"></canvas></div>
+        <div class="legend" id="legend"></div>
+        <div class="mem"><span class="mlab">a[] =</span><div class="cells" id="memA"></div></div>
+        <div class="mem" id="memTRow"><span class="mlab t" id="memTLab">temp =</span><div class="cells" id="memT"></div></div>
+        <div class="mem" id="memCRow" style="display:none"><span class="mlab" style="color:var(--compare)">count[] =</span><div class="cells" id="memC"></div></div>
+      </section>
+
+      <div class="dialog" id="dialog" aria-live="polite" title="Clic para mostrar todo el texto">
+        <canvas class="avatar" id="cvAvatar" width="80" height="80"></canvas>
+        <div class="dhead"><span class="dtag" id="dTag">INICIO</span><span class="dstep" id="dStep">PASO 1</span></div>
+        <div class="dmsg" id="dMsg"></div>
+        <div class="dtip" id="dTip"></div>
+      </div>
+
+      <section class="panel guide" id="guide" aria-label="Guía del algoritmo"></section>
+    </div>
+
+    <aside class="col">
+      <section class="panel">
+        <div class="ptitle"><b id="codeTitle">CÓDIGO JAVA</b><span>línea en ejecución resaltada</span></div>
+        <div class="code" id="code"></div>
+        <div class="explain" id="explain"></div>
+        <div class="vars" id="vars"></div>
+      </section>
+      <section class="panel">
+        <div class="tabs" role="tablist">
+          <button class="tab on" data-pane="paneRace">COMPARAR</button>
+          <button class="tab" data-pane="paneStack">PILA</button>
+          <button class="tab" data-pane="paneHist">HISTORIAL</button>
+        </div>
+        <div class="pane on" id="paneRace">
+          <p class="note" id="raceNote"></p>
+          <div class="presets" id="presets"></div>
+          <div class="race" id="race"></div>
+          <div class="verdict" id="verdict"></div>
+        </div>
+        <div class="pane" id="paneStack">
+          <p class="note">Pila de llamadas recursivas: la de arriba es la que se está ejecutando. Cada llamada espera a que terminen las que tiene encima.</p>
+          <div class="stack" id="stack"></div>
+        </div>
+        <div class="pane" id="paneHist"><div class="hist" id="hist"></div></div>
+      </section>
+    </aside>
+  </main>
+
+  <footer>
+    <span><kbd>ESPACIO</kbd> iniciar/pausar</span>
+    <span><kbd>←</kbd><kbd>→</kbd> paso a paso</span>
+    <span><kbd>1</kbd>-<kbd>8</kbd> cambiar algoritmo</span>
+    <span><kbd>N</kbd> nuevo arreglo</span>
+    <span><kbd>R</kbd> reiniciar</span>
+  </footer>
+</div>
+<script>
+(() => {
+'use strict';
+/* ============================================================
+   1. CONFIGURACIÓN GENERAL
+   ============================================================ */
+const ST = { idle:'#a3a3a3', dim:'#6b6b6b', active:'#5aa0ff', part:'#45d6e6', compare:'#ffd84a', swap:'#ff74b4', temp:'#ff74b4', min:'#ff9f43', shift:'#b48cff', merge:'#b48cff', sorted:'#5ee87e', done:'#5ee87e' };
+const PCOL = { i:'#45d6e6', j:'#ff74b4', 'j+1':'#ffd84a', 'j-gap':'#ffd84a', min:'#ff9f43', k:'#b48cff', izq:'#ffd84a', der:'#ffd84a', mayor:'#ff9f43', low:'#45d6e6', high:'#ff74b4', mid:'#ffd84a', pos:'#ffd84a' };
+const hexToRgb = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+const rgbHex = (r, g, b) => '#' + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+const SPEEDS = [3400, 2500, 1800, 1250, 900, 640, 430, 270, 150, 80];
+const SPEED_LABELS = ['SÚPER LENTA','MUY LENTA','LENTA','MODERADA','NORMAL','ÁGIL','RÁPIDA','MUY RÁPIDA','VELOZ','TURBO'];
+
+const KIND = {
+  start:['INICIO','#a3a3a3','open'], pass:['NUEVA PASADA','#5aa0ff','surprised'], cmp:['COMPARACIÓN','#ffd84a','surprised'],
+  swap:['INTERCAMBIO','#ff74b4','happy'], keep:['SIN CAMBIO','#a3a3a3','open'], newMin:['NUEVO MÍNIMO','#ff9f43','surprised'],
+  noswap:['YA EN SU LUGAR','#a3a3a3','happy'], pick:['TOMAR VALOR','#ff74b4','open'], shift:['DESPLAZAR','#b48cff','happy'],
+  edge:['BORDE','#a3a3a3','open'], insert:['INSERTAR','#5ee87e','happy'], passEnd:['FIN DE PASADA','#5ee87e','happy'], done:['¡COMPLETADO!','#5ee87e','cool'],
+  gap:['NUEVO GAP','#5aa0ff','surprised'],
+  call:['LLAMADA RECURSIVA','#5aa0ff','surprised'], base:['CASO BASE','#a3a3a3','happy'],
+  pivot:['ELEGIR PIVOTE','#ff9f43','surprised'], pcmp:['COMPARAR CON PIVOTE','#ffd84a','surprised'], pswap:['A LA IZQUIERDA','#ff74b4','happy'],
+  pkeep:['SE QUEDA','#a3a3a3','open'], place:['PIVOTE A SU LUGAR','#5ee87e','happy'],
+  split:['DIVIDIR','#5aa0ff','surprised'], mergeStart:['MEZCLAR','#b48cff','open'], mcmp:['COMPARACIÓN','#ffd84a','surprised'],
+  takeL:['TOMA IZQUIERDA','#45d6e6','happy'], takeR:['TOMA DERECHA','#5aa0ff','happy'], rest:['COPIAR EL RESTO','#b48cff','open'], copyBack:['COPIAR DE VUELTA','#5ee87e','happy'],
+  build:['CONSTRUIR HEAP','#5aa0ff','surprised'], heapify:['HEAPIFY','#b48cff','open'], cmpL:['HIJO IZQUIERDO','#ffd84a','surprised'],
+  cmpR:['HIJO DERECHO','#ffd84a','surprised'], hswap:['SUBE EL MAYOR','#ff74b4','happy'], ok:['HEAP VÁLIDO','#5ee87e','happy'], extract:['SACAR EL MÁXIMO','#ff74b4','happy'],
+  digitPass:['NUEVO DÍGITO','#5aa0ff','surprised'], toBucket:['A LA CUBETA','#b48cff','open'], collect:['RECOGER CUBETA','#5ee87e','happy'],
+  range:['CALCULAR RANGO','#5aa0ff','open'], count:['CONTAR','#ffd84a','surprised'], prefix:['ACUMULAR','#b48cff','open'], cplace:['COLOCAR EN SALIDA','#ff74b4','happy'],
+  runStart:['NUEVO RUN','#5aa0ff','surprised'], mergePhase:['FASE DE MEZCLA','#b48cff','surprised'],
+  toIns:['CAMBIO A INSERCIÓN','#45d6e6','surprised'], toHeap:['CAMBIO A HEAPSORT','#ff9f43','surprised'],
+  sStart:['INICIO DE BÚSQUEDA','#5aa0ff','open'], sCall:['LLAMADA RECURSIVA','#5aa0ff','surprised'], sMid:['MIRAR UNA POSICIÓN','#ffd84a','surprised'],
+  found:['¡ENCONTRADO!','#5ee87e','cool'], goRight:['DESCARTA IZQUIERDA','#45d6e6','open'], goLeft:['DESCARTA DERECHA','#ff74b4','open'],
+  notFound:['NO ESTÁ','#a3a3a3','sweat'], same:['RANGO PLANO','#a3a3a3','open']
+};
+const EXPLAIN = {
+  start:'Aquí aparece la explicación de la línea que se está ejecutando.',
+  pass:'<b>Nueva pasada:</b> el for externo avanza.', cmp:'<b>Condición:</b> se comparan dos valores para decidir si hay que mover algo.',
+  swap:'<b>Intercambio con temp:</b> temp guarda un valor para no perderlo mientras se cruzan.', keep:'<b>Condición falsa:</b> no se mueve nada y el ciclo sigue.',
+  newMin:'<b>min = j:</b> solo se actualiza el índice del menor. El arreglo no cambia.', noswap:'<b>min == i:</b> el intercambio es consigo mismo.',
+  pick:'<b>Guardar el valor:</b> se toma el elemento a insertar; su casilla queda libre (hueco).', shift:'<b>Desplazamiento:</b> el mayor se copia hacia la derecha y el índice baja.',
+  edge:'<b>Condición del while:</b> se llegó al borde, no hay más elementos a la izquierda.', insert:'<b>Inserción:</b> el valor guardado cae en el hueco.',
+  passEnd:'<b>Fin de la pasada.</b>', done:'<b>Fin:</b> trabajo terminado.', gap:'<b>Nuevo gap:</b> distancia entre los elementos que se comparan. Se divide entre 2 en cada pase.',
+  call:'<b>Llamada recursiva:</b> el método se llama a sí mismo con un pedazo más pequeño del arreglo.', base:'<b>Caso base:</b> el pedazo tiene 0 o 1 elementos, ya está ordenado. La llamada termina sin volver a llamarse.',
+  pivot:'<b>pivote = a[hi]:</b> se toma el último elemento como pivote. i marca el final de la zona "menores o iguales".',
+  pcmp:'<b>if (a[j] <= pivote):</b> ¿este elemento va a la izquierda del pivote?', pswap:'<b>i++ e intercambiar:</b> el elemento entra a la zona de los menores.',
+  pkeep:'<b>Condición falsa:</b> es mayor que el pivote, se queda en la zona derecha.', place:'<b>intercambiar(a, i+1, hi):</b> el pivote queda entre menores y mayores: es su posición FINAL.',
+  split:'<b>mid = (lo + hi) / 2:</b> se parte el pedazo en dos mitades.', mergeStart:'<b>merge:</b> se crea temp y se ponen i (izquierda), j (derecha) y k (temp) al inicio.',
+  mcmp:'<b>if (a[i] <= a[j]):</b> se comparan los primeros de cada mitad.', takeL:'<b>temp[k++] = a[i++]:</b> el menor viene de la mitad izquierda.',
+  takeR:'<b>temp[k++] = a[j++]:</b> el menor viene de la mitad derecha.', rest:'<b>while sobrante:</b> una mitad se acabó; lo que queda de la otra se copia tal cual.',
+  copyBack:'<b>a[lo + k] = temp[k]:</b> la mezcla ordenada vuelve al arreglo original.',
+  build:'<b>Construir el heap:</b> heapify desde el último padre hasta la raíz.', heapify:'<b>heapify:</b> mayor = i; se calculan los hijos 2i+1 y 2i+2.',
+  cmpL:'<b>if (izq < n && a[izq] > a[mayor]):</b> ¿el hijo izquierdo es mayor?', cmpR:'<b>if (der < n && a[der] > a[mayor]):</b> ¿el hijo derecho es mayor?',
+  hswap:'<b>intercambiar(a, i, mayor):</b> el hijo mayor sube; luego heapify sigue hacia abajo.', ok:'<b>mayor == i:</b> el padre ya es mayor que sus hijos.',
+  extract:'<b>intercambiar(a, 0, i):</b> la raíz (el máximo) va al final, que queda fijo.',
+  digitPass:'<b>exp:</b> 1 = unidades, 10 = decenas. Se crean 10 cubetas (0 a 9).', toBucket:'<b>cubetas.get((x / exp) % 10).add(x):</b> se mira solo un dígito.',
+  collect:'<b>a[k++] = x:</b> se vacían las cubetas de la 0 a la 9, en orden.',
+  range:'<b>count:</b> un contador por cada valor posible entre min y max.', count:'<b>count[x - min]++:</b> se cuenta cuántas veces aparece cada valor.',
+  prefix:'<b>count[v] += count[v-1]:</b> ahora count[v] dice cuántos elementos son menores o iguales a v.', cplace:'<b>salida[--count[...]] = a[i]:</b> el contador dice su posición exacta.',
+  runStart:'<b>Run:</b> bloque pequeño que se ordena con inserción.', mergePhase:'<b>Fase de mezcla:</b> los runs ordenados se unen de dos en dos, como en MergeSort.',
+  toIns:'<b>tam <= UMBRAL:</b> pedazo pequeño, inserción es más rápida aquí.', toHeap:'<b>prof == 0:</b> demasiadas divisiones malas; se cambia a HeapSort para garantizar O(n log n).',
+  sStart:'<b>low y high:</b> marcan la zona donde todavía puede estar x.', sCall:'<b>Llamada recursiva:</b> se busca en la mitad que queda.',
+  sMid:'<b>Se calcula la posición a revisar</b> y se compara con x.', found:'<b>return:</b> se encontró x.',
+  goRight:'<b>low = ... + 1:</b> x es mayor, se descarta todo lo de la izquierda.', goLeft:'<b>high = ... - 1:</b> x es menor, se descarta todo lo de la derecha.',
+  notFound:'<b>return -1:</b> la zona quedó vacía (o x quedó fuera del rango): x no está.', same:'<b>a[high] == a[low]:</b> todos los valores del rango son iguales; se evita dividir entre 0.'
+};
+
+/* ============================================================
+   2. REGISTRADOR DE PASOS
+   ============================================================ */
+function Rec(vals) {
+  const n = vals.length;
+  const R = {
+    n, vals, main: vals.map((_, i) => i), tmp: new Array(n).fill(null), bk: null,
+    fixed: new Set(), stats: { cmp: 0, mov: 0, p: '-' }, stack: [], base: null, tmpState: 'temp', heap: null, label: '',
+    calls: 0, out: [],
+    v(id) { return vals[id]; },
+    at(p) { return vals[R.main[p]]; },
+    arr() { return R.main.map(id => id == null ? null : vals[id]); },
+    tarr() { return R.tmp.map(id => id == null ? null : vals[id]); },
+    swap(a, b) { [R.main[a], R.main[b]] = [R.main[b], R.main[a]]; },
+    lift(p, col) { const id = R.main[p]; R.main[p] = null; R.tmp[col] = id; return id; },
+    snap(o) {
+      const loc = new Array(n), st = new Array(n);
+      for (let id = 0; id < n; id++) {
+        let p = R.main.indexOf(id), L;
+        if (p >= 0) L = { z: 'm', c: p };
+        else if ((p = R.tmp.indexOf(id)) >= 0) L = { z: 't', c: p };
+        else if (R.bk) { for (let b = 0; b < 10; b++) { const k = R.bk[b].indexOf(id); if (k >= 0) { L = { z: 'b', c: b, k }; break; } } }
+        if (!L) L = { z: 'm', c: 0 };
+        loc[id] = L;
+        let s = 'idle';
+        if (o.kind === 'done') s = 'done';
+        else if (L.z === 't') s = R.tmpState;
+        else if (L.z === 'b') s = 'shift';
+        else if (R.fixed.has(L.c)) s = 'sorted';
+        else if (R.base) s = R.base(L.c) || 'idle';
+        if (o.ov && o.ov[id]) s = o.ov[id];
+        st[id] = s;
+      }
+      const holes = []; R.main.forEach((id, p) => { if (id == null) holes.push(p); });
+      R.out.push({
+        kind: o.kind, msg: o.msg, tip: o.tip, loc, st, holes, arr: R.arr(), tarr: R.tarr(),
+        ptr: Object.fromEntries(Object.entries(o.ptr || {}).map(([k, c]) => [k, (c == null || c < 0 || c >= n) ? null : c])), vars: { ...(o.vars || {}) }, stats: { ...R.stats }, cmp: o.cmp || null,
+        hot: o.hot != null ? o.hot : null, hop: o.hop || null, stack: R.stack.slice(), heap: R.heap ? { ...R.heap } : null,
+        extra: o.extra || null, label: o.label != null ? o.label : R.label, bk: R.bk ? R.bk.map(b => b.map(id => vals[id])) : null
+      });
+    }
+  };
+  return R;
+}
+const chip = (v, cls = '') => `<span class="chip ${cls}">${v}</span>`;
+const fmt = (vals, cls = '') => `[${vals.map(v => chip(v, cls)).join(' ')}]`;
+const seg = (R, lo, hi) => R.arr().slice(lo, hi + 1);
+const rangeBase = (lo, hi, inside = 'idle') => p => (p < lo || p > hi) ? 'dim' : inside;
+
+/* ============================================================
+   3. AYUDANTES REUTILIZABLES (inserción, partición, mezcla, heap)
+   ============================================================ */
+function insertionRange(R, lo, hi, opt = {}) {
+  let curI = lo;
+  const dim = !!opt.dim;
+  R.base = p => (p < lo || p > hi) ? (dim ? 'dim' : 'idle') : (p <= curI ? 'part' : 'idle');
+  R.tmpState = 'temp';
+  for (let i = lo + 1; i <= hi; i++) {
+    curI = i;
+    if (opt.passes) R.stats.p = `${i - lo}/${hi - lo}`;
+    const id = R.main[i], act = R.v(id);
+    R.lift(i, i); let hole = i, j = i - 1;
+    const jName = lo > 0 ? `j >= ${lo}` : 'j >= 0';
+    R.snap({ kind: 'pick', ptr: { i, j }, vars: { i, j, actual: act },
+      msg: `${opt.passes ? `PASADA ${i - lo}: ` : ''}i = ${i}. Tomo la carta actual = ${chip(act, 'swap')}; su casilla a[${i}] queda como HUECO. Busco su lugar en la parte ordenada ${fmt(seg(R, lo, i - 1), 'part')}.` });
+    while (true) {
+      if (j < lo) { R.snap({ kind: 'edge', ptr: { i }, vars: { i, j, actual: act }, msg: `j = ${j}: ya no hay más cartas a la izquierda (${jName} es falso). ${chip(act, 'swap')} va al inicio.` }); break; }
+      const cid = R.main[j], cv = R.v(cid); R.stats.cmp++;
+      const gt = cv > act;
+      R.snap({ kind: 'cmp', ptr: { i, j }, vars: { i, j, actual: act, 'a[j]': cv }, ov: { [cid]: 'compare' }, cmp: { x1: j, x2: hole, a: cv, b: act, op: gt ? '>' : '≤', good: !gt, lift: true },
+        msg: `¿a[${j}] > actual? ¿${chip(cv, 'compare')} > ${chip(act, 'swap')}? ${gt ? `SÍ: ${cv} es mayor, hay que correrlo a la derecha.` : `NO: el while se detiene.`}` });
+      if (!gt) break;
+      R.main[j + 1] = cid; R.main[j] = null; R.tmp[hole] = null; hole = j; R.tmp[hole] = id; R.stats.mov++; j--;
+      R.snap({ kind: 'shift', ptr: { i, j: j >= lo ? j : null }, vars: { i, j, actual: act }, ov: { [cid]: 'shift' }, hot: cid,
+        msg: `a[${j + 2}] = a[${j + 1}]: ${chip(cv, 'shift')} se corre una casilla a la derecha y el hueco pasa a la posición ${j + 1}. j = ${j}.` });
+    }
+    R.main[j + 1] = id; R.tmp[hole] = null;
+    R.snap({ kind: 'insert', ptr: { i }, vars: { i, j, actual: act }, hot: id,
+      msg: j + 1 === i ? `a[${j + 1}] = actual: ${chip(act, 'part')} vuelve a su misma casilla. ¡Ni se movió! Parte ordenada: ${fmt(seg(R, lo, i), 'part')}.`
+                       : `a[${j + 1}] = actual: ${chip(act, 'part')} cae en el hueco. Parte ordenada: ${fmt(seg(R, lo, i), 'part')}.` });
+  }
+}
+
+function partition(R, lo, hi) {
+  const pid = R.main[hi], pv = R.v(pid);
+  let i = lo - 1, jc = lo;
+  R.base = p => (p < lo || p > hi) ? 'dim' : (p === hi ? 'min' : (p <= i ? 'part' : (p < jc ? 'active' : 'idle')));
+  R.snap({ kind: 'pivot', ptr: { j: lo }, vars: { lo, hi, pivote: pv, i, j: lo },
+    msg: `particion(a, ${lo}, ${hi}): pivote = a[${hi}] = ${chip(pv, 'min')}; i = ${i}. Voy a pasar a la IZQUIERDA todo lo que sea ≤ ${pv}.` });
+  for (let j = lo; j < hi; j++) {
+    jc = j;
+    const id = R.main[j], x = R.v(id); R.stats.cmp++;
+    const le = x <= pv;
+    R.snap({ kind: 'pcmp', ptr: { i: i >= lo ? i : null, j }, vars: { lo, hi, pivote: pv, i, j, 'a[j]': x }, ov: { [id]: 'compare' }, cmp: { x1: j, x2: hi, a: x, b: pv, op: le ? '≤' : '>', good: le },
+      msg: `¿a[${j}] ≤ pivote? ¿${chip(x, 'compare')} ≤ ${chip(pv, 'min')}? ${le ? 'SÍ: va a la zona de los menores.' : 'NO: se queda en la zona de los mayores.'}` });
+    if (le) {
+      i++;
+      if (i !== j) {
+        const a = R.at(i); R.swap(i, j); R.stats.mov++; jc = j + 1;
+        R.snap({ kind: 'pswap', ptr: { i, j }, vars: { lo, hi, pivote: pv, i, j }, ov: { [R.main[i]]: 'swap', [R.main[j]]: 'swap' }, hop: [R.main[i], R.main[j]],
+          msg: `i = ${i}; intercambiar(a, ${i}, ${j}): ${chip(x, 'swap')} entra a la zona izquierda y ${chip(a, 'swap')} sale a la derecha. ${fmt(seg(R, lo, hi))}.` });
+      } else {
+        jc = j + 1;
+        R.snap({ kind: 'pswap', ptr: { i, j }, vars: { lo, hi, pivote: pv, i, j }, ov: { [R.main[i]]: 'part' },
+          msg: `i = ${i}; intercambiar(a, ${i}, ${j}) es consigo mismo: ${chip(x, 'part')} ya estaba en la zona izquierda.` });
+      }
+    } else {
+      jc = j + 1;
+      R.snap({ kind: 'pkeep', ptr: { i: i >= lo ? i : null, j }, vars: { lo, hi, pivote: pv, i, j }, msg: `${chip(x, 'active')} se queda. j avanza.` });
+    }
+  }
+  jc = hi;
+  const p = i + 1;
+  if (p !== hi) { R.swap(p, hi); R.stats.mov++; }
+  R.fixed.add(p);
+  R.snap({ kind: 'place', ptr: { i: p }, vars: { lo, hi, pivote: pv, 'i+1': p }, hop: p !== hi ? [R.main[p], R.main[hi]] : null, hot: R.main[p],
+    msg: `intercambiar(a, ${p}, ${hi}): el pivote ${chip(pv, 'sorted')} queda en a[${p}], su posición FINAL. A su izquierda todos son ≤ ${pv} y a su derecha todos son > ${pv}.` });
+  return p;
+}
+
+function mergeRange(R, lo, mid, hi) {
+  R.tmpState = 'merge';
+  R.base = p => (p < lo || p > hi) ? 'dim' : (p <= mid ? 'part' : 'active');
+  R.snap({ kind: 'mergeStart', ptr: { i: lo, j: mid + 1, k: lo }, vars: { lo, mid, hi, i: lo, j: mid + 1, k: 0 },
+    msg: `merge(a, ${lo}, ${mid}, ${hi}): mezclar la izquierda ${fmt(seg(R, lo, mid), 'part')} con la derecha ${fmt(seg(R, mid + 1, hi), 'active')}. Las dos ya están ordenadas.` });
+  let i = lo, j = mid + 1, k = lo;
+  while (i <= mid && j <= hi) {
+    const a = R.at(i), b = R.at(j); R.stats.cmp++;
+    const le = a <= b;
+    R.snap({ kind: 'mcmp', ptr: { i, j, k }, vars: { lo, mid, hi, i, j, k: k - lo }, ov: { [R.main[i]]: 'compare', [R.main[j]]: 'compare' }, cmp: { x1: i, x2: j, a, b, op: le ? '≤' : '>', good: le },
+      msg: `¿a[${i}] ≤ a[${j}]? ¿${chip(a, 'compare')} ≤ ${chip(b, 'compare')}? ${le ? `SÍ: el menor es ${a}, de la izquierda.` : `NO: el menor es ${b}, de la derecha.`}` });
+    if (le) { const id = R.lift(i, k); R.stats.mov++; i++; k++; R.snap({ kind: 'takeL', ptr: { i: i <= mid ? i : null, j, k: k <= hi ? k : null }, vars: { lo, mid, hi, i, j, k: k - lo }, hot: id, msg: `temp[${k - 1 - lo}] = ${chip(a, 'shift')}. i avanza a ${i}.` }); }
+    else { const id = R.lift(j, k); R.stats.mov++; j++; k++; R.snap({ kind: 'takeR', ptr: { i, j: j <= hi ? j : null, k: k <= hi ? k : null }, vars: { lo, mid, hi, i, j, k: k - lo }, hot: id, msg: `temp[${k - 1 - lo}] = ${chip(b, 'shift')}. j avanza a ${j}.` }); }
+  }
+  while (i <= mid) { const a = R.at(i), id = R.lift(i, k); R.stats.mov++; i++; k++; R.snap({ kind: 'rest', ptr: { i: i <= mid ? i : null, k: k <= hi ? k : null }, vars: { lo, mid, hi, i, j, k: k - lo }, hot: id, msg: `La derecha se acabó: ${chip(a, 'shift')} pasa directo a temp, sin comparar.` }); }
+  while (j <= hi) { const b = R.at(j), id = R.lift(j, k); R.stats.mov++; j++; k++; R.snap({ kind: 'rest', ptr: { j: j <= hi ? j : null, k: k <= hi ? k : null }, vars: { lo, mid, hi, i, j, k: k - lo }, hot: id, msg: `La izquierda se acabó: ${chip(b, 'shift')} pasa directo a temp, sin comparar.` }); }
+  for (let p = lo; p <= hi; p++) { R.main[p] = R.tmp[p]; R.tmp[p] = null; }
+  R.base = p => (p < lo || p > hi) ? 'dim' : 'part';
+  R.snap({ kind: 'copyBack', ptr: {}, vars: { lo, mid, hi }, hop: R.main.slice(lo, hi + 1),
+    msg: `temp vuelve a a[${lo}..${hi}]: ${fmt(seg(R, lo, hi), 'part')}. Este pedazo ya está ordenado.` });
+}
+
+function heapRange(R, lo, hi, opt = {}) {
+  const m = hi - lo + 1;
+  R.heap = { base: lo, size: m };
+  R.base = p => (p < lo || p > hi) ? (opt.intro ? 'dim' : 'idle') : (p < lo + R.heap.size ? 'active' : 'idle');
+  const P = k => lo + k;
+  function heapify(size, i) {
+    R.stack.push(`heapify(a, ${size}, ${i})`); R.label = R.stack[R.stack.length - 1];
+    let mayor = i; const l = 2 * i + 1, r = 2 * i + 2;
+    const kids = []; if (l < size) kids.push(R.at(P(l))); if (r < size) kids.push(R.at(P(r)));
+    R.snap({ kind: 'heapify', ptr: { i: P(i), izq: l < size ? P(l) : null, der: r < size ? P(r) : null }, vars: { n: size, i, izq: l, der: r, mayor },
+      ov: { [R.main[P(i)]]: 'min' },
+      msg: `heapify(a, ${size}, ${i}): padre = ${chip(R.at(P(i)), 'min')}${kids.length ? `, hijos ${kids.map(k => chip(k, 'active')).join(' ')}` : ' (no tiene hijos dentro del heap)'}. ¿Es mayor que sus hijos?` });
+    if (l < size) {
+      R.stats.cmp++; const gt = R.at(P(l)) > R.at(P(mayor));
+      R.snap({ kind: 'cmpL', ptr: { i: P(i), izq: P(l), mayor: P(mayor) }, vars: { n: size, i, izq: l, der: r, mayor: gt ? l : mayor }, ov: { [R.main[P(l)]]: 'compare', [R.main[P(mayor)]]: 'min' },
+        cmp: { x1: P(mayor), x2: P(l), a: R.at(P(l)), b: R.at(P(mayor)), op: gt ? '>' : '≤', good: !gt },
+        msg: `¿hijo izquierdo a[${P(l)}] = ${chip(R.at(P(l)), 'compare')} > a[mayor] = a[${P(mayor)}] = ${chip(R.at(P(mayor)), 'min')}? ${gt ? 'SÍ: ahora mayor = izq.' : 'NO.'}` });
+      if (gt) mayor = l;
+    }
+    if (r < size) {
+      R.stats.cmp++; const gt = R.at(P(r)) > R.at(P(mayor));
+      R.snap({ kind: 'cmpR', ptr: { i: P(i), der: P(r), mayor: P(mayor) }, vars: { n: size, i, izq: l, der: r, mayor: gt ? r : mayor }, ov: { [R.main[P(r)]]: 'compare', [R.main[P(mayor)]]: 'min' },
+        cmp: { x1: P(mayor), x2: P(r), a: R.at(P(r)), b: R.at(P(mayor)), op: gt ? '>' : '≤', good: !gt },
+        msg: `¿hijo derecho a[${P(r)}] = ${chip(R.at(P(r)), 'compare')} > a[mayor] = a[${P(mayor)}] = ${chip(R.at(P(mayor)), 'min')}? ${gt ? 'SÍ: ahora mayor = der.' : 'NO.'}` });
+      if (gt) mayor = r;
+    }
+    if (mayor !== i) {
+      const a = R.at(P(i)), b = R.at(P(mayor));
+      R.swap(P(i), P(mayor)); R.stats.mov++;
+      R.snap({ kind: 'hswap', ptr: { i: P(i), mayor: P(mayor) }, vars: { n: size, i, mayor }, ov: { [R.main[P(i)]]: 'swap', [R.main[P(mayor)]]: 'swap' }, hop: [R.main[P(i)], R.main[P(mayor)]],
+        msg: `intercambiar: ${chip(b, 'swap')} sube y ${chip(a, 'swap')} baja a a[${P(mayor)}]. Como ${a} bajó, hay que revisar su nuevo lugar: heapify(a, ${size}, ${mayor}).` });
+      heapify(size, mayor);
+    } else {
+      R.snap({ kind: 'ok', ptr: { i: P(i) }, vars: { n: size, i, mayor }, ov: { [R.main[P(i)]]: 'part' }, msg: `mayor == i: ${chip(R.at(P(i)), 'part')} ya es mayor que sus hijos. Este pedazo del heap es válido.` });
+    }
+    R.stack.pop(); R.label = R.stack[R.stack.length - 1] || '';
+  }
+  R.stats.p = 'CONSTRUIR';
+  R.snap({ kind: 'build', ptr: {}, vars: { n: m },
+    msg: `FASE 1: convertir ${fmt(seg(R, lo, hi))} en un MAX-HEAP (cada padre ≥ sus hijos). Mira el árbol: el hijo izquierdo de i es 2i+1 y el derecho 2i+2. Empiezo desde el último padre, i = ${Math.floor(m / 2) - 1}.` });
+  for (let i = Math.floor(m / 2) - 1; i >= 0; i--) heapify(m, i);
+  R.snap({ kind: 'build', ptr: { i: lo }, vars: { n: m }, ov: { [R.main[lo]]: 'min' },
+    msg: `¡Ya es un max-heap! La raíz a[${lo}] = ${chip(R.at(lo), 'min')} es el MAYOR. FASE 2: sacar el máximo una y otra vez.` });
+  R.stats.p = 'EXTRAER';
+  for (let i = m - 1; i > 0; i--) {
+    const top = R.at(lo), last = R.at(P(i));
+    R.swap(lo, P(i)); R.stats.mov++; R.heap.size = i; R.fixed.add(P(i));
+    R.snap({ kind: 'extract', ptr: { i: P(i) }, vars: { n: i, i }, hop: [R.main[lo], R.main[P(i)]], hot: R.main[P(i)],
+      msg: `intercambiar(a, ${P(0)}, ${P(i)}): el máximo ${chip(top, 'sorted')} va al final (a[${P(i)}]) y queda FIJO. ${chip(last, 'swap')} sube a la raíz y el heap se achica a ${i} elementos.` });
+    heapify(i, 0);
+  }
+  R.fixed.add(lo); R.heap = null;
+}
+
+/* ============================================================
+   4. GENERADORES: SIMPLES
+   ============================================================ */
+function genIntercambio(vals) {
+  const R = Rec(vals), n = R.n, S = R.main, v = id => R.v(id);
+  R.snap({ kind: 'start', msg: `Arreglo inicial de ${n} elementos: ${fmt(vals)}. INTERCAMBIO hará ${n - 1} pasadas: en cada una, la posición i se compara con todas las que vienen después. Pulsa INICIAR o SIGUIENTE.` });
+  for (let i = 0; i < n - 1; i++) {
+    R.stats.p = `${i + 1}/${n - 1}`; R.base = null;
+    R.snap({ kind: 'pass', ptr: { i }, vars: { n, i, j: '-', 'a[i]': v(S[i]) }, ov: { [S[i]]: 'part' },
+      msg: `PASADA ${i + 1}: i = ${i}. Vamos a dejar en a[${i}] el menor de ${fmt(R.arr().slice(i))}. Por ahora ahí está ${chip(v(S[i]), 'part')}.` });
+    for (let j = i + 1; j < n; j++) {
+      const a = v(S[i]), b = v(S[j]); R.stats.cmp++;
+      const vars = { n, i, j, 'a[i]': a, 'a[j]': b }, gt = a > b;
+      R.snap({ kind: 'cmp', ptr: { i, j }, vars, ov: { [S[i]]: 'compare', [S[j]]: 'compare' }, cmp: { x1: i, x2: j, a, b, op: gt ? '>' : '≤', good: !gt },
+        msg: `¿a[${i}] > a[${j}]? ¿${chip(a, 'compare')} > ${chip(b, 'compare')}? ${gt ? `SÍ: ${b} es más pequeño, se intercambian.` : `NO: ${a} sigue siendo el menor, no se mueve nada.`}` });
+      if (gt) {
+        R.swap(i, j); R.stats.mov++;
+        R.snap({ kind: 'swap', ptr: { i, j }, vars: { ...vars, 'a[i]': b, 'a[j]': a, temp: a }, ov: { [S[i]]: 'swap', [S[j]]: 'swap' }, hop: [S[i], S[j]],
+          msg: `temp = ${a}; a[${i}] = ${b}; a[${j}] = temp. Ahora a[${i}] = ${chip(b, 'swap')} es el menor visto. Arreglo: ${fmt(R.arr())}.` });
+      } else R.snap({ kind: 'keep', ptr: { i, j }, vars, ov: { [S[i]]: 'part' }, msg: `Sin cambio. a[${i}] = ${chip(a, 'part')} se mantiene; j avanza.` });
+    }
+    R.fixed.add(i);
+    R.snap({ kind: 'passEnd', vars: { n, i, j: '-' }, hot: S[i], msg: `Fin de la pasada ${i + 1}: a[${i}] = ${chip(v(S[i]), 'sorted')} es el menor de lo que faltaba y queda fijo. Arreglo: ${fmt(R.arr())}.` });
+  }
+  R.fixed.add(n - 1);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} intercambios. Intercambio SIEMPRE hace n(n-1)/2 = ${n * (n - 1) / 2} comparaciones.` });
+  return R.out;
+}
+function genBurbuja(vals) {
+  const R = Rec(vals), n = R.n, S = R.main, v = id => R.v(id);
+  R.snap({ kind: 'start', msg: `Arreglo inicial de ${n} elementos: ${fmt(vals)}. BURBUJA hará ${n - 1} pasadas comparando vecinos; en cada una, el mayor "sube" hasta el final. Pulsa INICIAR o SIGUIENTE.` });
+  for (let i = 0; i < n - 1; i++) {
+    R.stats.p = `${i + 1}/${n - 1}`;
+    R.snap({ kind: 'pass', vars: { n, i, j: '-' }, msg: `PASADA ${i + 1}: i = ${i}. Se recorren las parejas de vecinos de a[0] hasta a[${n - 1 - i}]${i > 0 ? ` (los últimos ${i} ya están en su lugar)` : ''}.` });
+    for (let j = 0; j < n - 1 - i; j++) {
+      const a = v(S[j]), b = v(S[j + 1]); R.stats.cmp++;
+      const gt = a > b, vars = { n, i, j, 'a[j]': a, 'a[j+1]': b };
+      R.snap({ kind: 'cmp', ptr: { j, 'j+1': j + 1 }, vars, ov: { [S[j]]: 'compare', [S[j + 1]]: 'compare' }, cmp: { x1: j, x2: j + 1, a, b, op: gt ? '>' : '≤', good: !gt },
+        msg: `¿a[${j}] > a[${j + 1}]? ¿${chip(a, 'compare')} > ${chip(b, 'compare')}? ${gt ? 'SÍ: el de la izquierda es mayor, se intercambian.' : 'NO: la pareja ya está en orden.'}` });
+      if (gt) {
+        R.swap(j, j + 1); R.stats.mov++;
+        R.snap({ kind: 'swap', ptr: { j, 'j+1': j + 1 }, vars: { ...vars, 'a[j]': b, 'a[j+1]': a, temp: a }, ov: { [S[j]]: 'swap', [S[j + 1]]: 'swap' }, hop: [S[j + 1], S[j]], msg: `El ${chip(a, 'swap')} pasa a la derecha. Arreglo: ${fmt(R.arr())}.` });
+      } else R.snap({ kind: 'keep', ptr: { j, 'j+1': j + 1 }, vars, msg: `Sin cambio; j avanza a la siguiente pareja.` });
+    }
+    R.fixed.add(n - 1 - i);
+    R.snap({ kind: 'passEnd', vars: { n, i, j: '-' }, hot: S[n - 1 - i], msg: `Fin de la pasada ${i + 1}: el mayor de lo pendiente, ${chip(v(S[n - 1 - i]), 'sorted')}, llegó a a[${n - 1 - i}] y queda fijo.` });
+  }
+  R.fixed.add(0);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} intercambios. Sin bandera, burbuja SIEMPRE hace n(n-1)/2 = ${n * (n - 1) / 2} comparaciones.` });
+  return R.out;
+}
+function genSeleccion(vals) {
+  const R = Rec(vals), n = R.n, S = R.main, v = id => R.v(id);
+  R.snap({ kind: 'start', msg: `Arreglo inicial de ${n} elementos: ${fmt(vals)}. SELECCIÓN hará ${n - 1} pasadas: en cada una BUSCA el menor de lo pendiente y lo pone al frente con un solo intercambio. Pulsa INICIAR o SIGUIENTE.` });
+  for (let i = 0; i < n - 1; i++) {
+    R.stats.p = `${i + 1}/${n - 1}`;
+    let min = i;
+    const ovB = () => { const o = { [S[i]]: 'part' }; o[S[min]] = 'min'; return o; };
+    R.snap({ kind: 'pass', ptr: { i, min }, vars: { n, i, min, j: '-', 'a[min]': v(S[min]) }, ov: ovB(),
+      msg: `PASADA ${i + 1}: i = ${i}, min = ${i}. Supongo que el menor de ${fmt(R.arr().slice(i))} es ${chip(v(S[i]), 'min')} (el primero). Ahora busco si hay uno más pequeño.` });
+    for (let j = i + 1; j < n; j++) {
+      const b = v(S[j]), m = v(S[min]); R.stats.cmp++;
+      const lt = b < m, ov = ovB(); ov[S[j]] = 'compare';
+      R.snap({ kind: 'cmp', ptr: { i, j, min }, vars: { n, i, min, j, 'a[min]': m, 'a[j]': b }, ov, cmp: { x1: min, x2: j, a: m, b, op: lt ? '>' : '≤', good: !lt },
+        msg: `¿a[${j}] < a[min]? ¿${chip(b, 'compare')} < ${chip(m, 'min')}? ${lt ? 'SÍ: encontré uno más pequeño.' : 'NO: el menor sigue siendo el mismo.'}` });
+      if (lt) { min = j; R.snap({ kind: 'newMin', ptr: { i, j, min }, vars: { n, i, min, j, 'a[min]': b }, ov: ovB(), msg: `min = ${j}. Solo ANOTO que el menor está en la posición ${j} (${chip(b, 'min')}). El arreglo NO cambia.` }); }
+      else R.snap({ kind: 'keep', ptr: { i, j, min }, vars: { n, i, min, j, 'a[min]': m }, ov: ovB(), msg: `min se queda en ${min}. j avanza.` });
+    }
+    if (min !== i) {
+      const a = v(S[i]), b = v(S[min]); R.swap(i, min); R.stats.mov++;
+      R.snap({ kind: 'swap', ptr: { i, min }, vars: { n, i, min, j: '-', temp: a }, ov: { [S[i]]: 'swap', [S[min]]: 'swap' }, hop: [S[i], S[min]],
+        msg: `Terminé de buscar. AHORA sí: UN intercambio. ${chip(b, 'swap')} pasa a a[${i}] y ${chip(a, 'swap')} se va a a[${min}]. Arreglo: ${fmt(R.arr())}.` });
+    } else R.snap({ kind: 'noswap', ptr: { i, min }, vars: { n, i, min, j: '-' }, ov: { [S[i]]: 'min' }, msg: `Terminé de buscar y min = i = ${i}: el menor (${chip(v(S[i]), 'min')}) ya estaba en su lugar. El intercambio no cambia nada.` });
+    R.fixed.add(i);
+    R.snap({ kind: 'passEnd', vars: { n, i, min, j: '-' }, hot: S[i], msg: `Fin de la pasada ${i + 1}: a[${i}] = ${chip(v(S[i]), 'sorted')} queda fijo.` });
+  }
+  R.fixed.add(n - 1);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones pero solo ${R.stats.mov} intercambios. Selección SIEMPRE hace n(n-1)/2 = ${n * (n - 1) / 2} comparaciones, aunque el arreglo ya esté ordenado.` });
+  return R.out;
+}
+function genInsercion(vals) {
+  const R = Rec(vals), n = R.n;
+  R.base = p => p === 0 ? 'part' : 'idle';
+  R.snap({ kind: 'start', msg: `Arreglo inicial de ${n} elementos: ${fmt(vals)}. INSERCIÓN: a[0] solo ya cuenta como "ordenado" (la mano). Cada carta nueva se mete en su lugar dentro de la mano. Pulsa INICIAR o SIGUIENTE.` });
+  insertionRange(R, 0, n - 1, { passes: true });
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} desplazamientos. Peor caso (al revés): ${n * (n - 1) / 2} comparaciones; mejor caso (ya ordenado): solo ${n - 1}.` });
+  return R.out;
+}
+
+/* ============================================================
+   5. GENERADORES: AVANZADOS
+   ============================================================ */
+function genShell(vals) {
+  const R = Rec(vals), n = R.n;
+  const gaps = []; for (let g = Math.floor(n / 2); g > 0; g = Math.floor(g / 2)) gaps.push(g);
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. SHELL SORT es inserción con SALTOS: primero compara elementos lejanos (gap grande) y termina con gap = 1. Gaps: ${gaps.join(', ')}.` });
+  R.tmpState = 'temp';
+  gaps.forEach((g, pi) => {
+    R.stats.p = `${pi + 1}/${gaps.length} (gap ${g})`;
+    let curI = g;
+    R.base = p => 'active';
+    const subs = []; for (let s = 0; s < g; s++) { const r = []; for (let p = s; p < n; p += g) r.push(R.at(p)); subs.push(fmt(r)); }
+    R.snap({ kind: 'gap', vars: { n, gap: g }, msg: g > 1 ? `PASE ${pi + 1}: gap = ${g}. Se forman ${g} sub-listas de elementos separados ${g} posiciones: ${subs.join(' ')}. Cada una se ordena por inserción.` : `PASE ${pi + 1}: gap = 1. Es la inserción normal. Como el arreglo ya está casi ordenado, habrá pocos desplazamientos.` });
+    for (let i = g; i < n; i++) {
+      curI = i;
+      R.base = p => (p % g !== i % g) ? 'dim' : (p <= curI ? 'part' : 'active');
+      const id = R.main[i], t = R.v(id); R.lift(i, i); let j = i;
+      R.snap({ kind: 'pick', ptr: { i, j }, vars: { gap: g, i, j, temp: t }, msg: `i = ${i}: temp = a[${i}] = ${chip(t, 'swap')}. Su sub-lista son las posiciones ${(() => { const r = []; for (let p = i % g; p < n; p += g) r.push(p); return r.join(', '); })()}.` });
+      while (true) {
+        if (j < g) { R.snap({ kind: 'edge', ptr: { i, j }, vars: { gap: g, i, j, temp: t }, msg: `j = ${j} < gap: no hay a[j - gap], no hay más elementos a la izquierda en esta sub-lista.` }); break; }
+        const cid = R.main[j - g], cv = R.v(cid); R.stats.cmp++;
+        const gt = cv > t;
+        R.snap({ kind: 'cmp', ptr: { i, j, 'j-gap': j - g }, vars: { gap: g, i, j, temp: t, 'a[j-gap]': cv }, ov: { [cid]: 'compare' }, cmp: { x1: j - g, x2: j, a: cv, b: t, op: gt ? '>' : '≤', good: !gt, lift: true },
+          msg: `¿a[${j - g}] > temp? ¿${chip(cv, 'compare')} > ${chip(t, 'swap')}? ${gt ? `SÍ: ${cv} salta ${g} posiciones a la derecha.` : 'NO: se detiene.'}` });
+        if (!gt) break;
+        R.main[j] = cid; R.main[j - g] = null; R.tmp[j] = null; R.tmp[j - g] = id; R.stats.mov++; j -= g;
+        R.snap({ kind: 'shift', ptr: { i, j }, vars: { gap: g, i, j, temp: t }, ov: { [cid]: 'shift' }, hot: cid, msg: `a[${j + g}] = a[${j}]: ${chip(cv, 'shift')} salta ${g} posiciones de una vez. j = ${j}.` });
+      }
+      R.main[j] = id; R.tmp[j] = null;
+      R.snap({ kind: 'insert', ptr: { i }, vars: { gap: g, i, j, temp: t }, hot: id, msg: j === i ? `temp = ${chip(t, 'part')} vuelve a su casilla: ya estaba en orden en su sub-lista.` : `a[${j}] = temp: ${chip(t, 'part')} cae en el hueco.` });
+    }
+    R.base = null;
+    R.snap({ kind: 'passEnd', vars: { gap: g }, msg: `Fin del pase con gap = ${g}: ${fmt(R.arr())}. ${g > 1 ? `Cada sub-lista quedó ordenada (el arreglo está "${g}-ordenado").` : 'Con gap = 1 queda totalmente ordenado.'}` });
+  });
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} desplazamientos. Los saltos grandes hacen que los elementos viajen lejos rápido; la inserción final casi no trabaja.` });
+  return R.out;
+}
+
+function genQuick(vals) {
+  const R = Rec(vals), n = R.n;
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. QUICKSORT (divide y vencerás): elige un pivote, pone los menores a su izquierda y los mayores a su derecha, y repite RECURSIVAMENTE con cada lado. Abre la pestaña PILA para ver las llamadas.` });
+  function qs(lo, hi) {
+    R.calls++; R.stats.p = String(R.calls);
+    R.stack.push(`quickSort(a, ${lo}, ${hi})`); R.label = R.stack[R.stack.length - 1];
+    R.base = rangeBase(lo, hi);
+    R.snap({ kind: 'call', vars: { lo, hi }, msg: `quickSort(a, ${lo}, ${hi}) → pedazo ${lo <= hi ? fmt(seg(R, lo, hi)) : '[ ] (vacío)'}.` });
+    if (lo >= hi) {
+      if (lo === hi) R.fixed.add(lo);
+      R.snap({ kind: 'base', vars: { lo, hi }, msg: `lo >= hi: el pedazo tiene ${lo === hi ? '1 elemento' : '0 elementos'}. CASO BASE: ya está ordenado, se retorna sin más llamadas.` });
+      R.stack.pop(); R.label = R.stack[R.stack.length - 1] || ''; return;
+    }
+    const p = partition(R, lo, hi);
+    qs(lo, p - 1); qs(p + 1, hi);
+    R.stack.pop(); R.label = R.stack[R.stack.length - 1] || '';
+  }
+  qs(0, n - 1);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones, ${R.stats.mov} intercambios y ${R.calls} llamadas. Con pivotes buenos es O(n log n); si el arreglo ya está ordenado o al revés, este pivote (el último) es el peor y llega a O(n²).` });
+  return R.out;
+}
+
+function genMerge(vals) {
+  const R = Rec(vals), n = R.n;
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. MERGESORT (divide y vencerás): divide a la mitad hasta tener pedazos de 1 elemento y luego los MEZCLA ordenadamente. Abre la pestaña PILA para ver las llamadas.` });
+  function ms(lo, hi) {
+    R.calls++; R.stats.p = String(R.calls);
+    R.stack.push(`mergeSort(a, ${lo}, ${hi})`); R.label = R.stack[R.stack.length - 1];
+    R.base = rangeBase(lo, hi);
+    R.snap({ kind: 'call', vars: { lo, hi }, msg: `mergeSort(a, ${lo}, ${hi}) → pedazo ${fmt(seg(R, lo, hi))}.` });
+    if (lo >= hi) {
+      R.snap({ kind: 'base', vars: { lo, hi }, ov: { [R.main[lo]]: 'part' }, msg: `lo >= hi: un solo elemento (${chip(R.at(lo), 'part')}) ya está ordenado. CASO BASE.` });
+      R.stack.pop(); R.label = R.stack[R.stack.length - 1] || ''; return;
+    }
+    const mid = Math.floor((lo + hi) / 2);
+    R.base = p => (p < lo || p > hi) ? 'dim' : (p <= mid ? 'part' : 'active');
+    R.snap({ kind: 'split', vars: { lo, mid, hi }, msg: `mid = (${lo} + ${hi}) / 2 = ${mid}. Divido en izquierda ${fmt(seg(R, lo, mid), 'part')} y derecha ${fmt(seg(R, mid + 1, hi), 'active')}. Primero ordeno la izquierda.` });
+    ms(lo, mid); ms(mid + 1, hi);
+    R.label = R.stack[R.stack.length - 1];
+    mergeRange(R, lo, mid, hi);
+    R.stack.pop(); R.label = R.stack[R.stack.length - 1] || '';
+  }
+  ms(0, n - 1);
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} copias a temp. T(n) = 2T(n/2) + n → O(n log n) SIEMPRE, sin importar cómo venga el arreglo. Es estable, pero usa memoria extra (temp).` });
+  return R.out;
+}
+
+function genHeap(vals) {
+  const R = Rec(vals), n = R.n;
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. HEAPSORT ve el arreglo como un ÁRBOL BINARIO (arriba). Fase 1: lo convierte en max-heap. Fase 2: saca el mayor (la raíz) y lo manda al final, una y otra vez.` });
+  heapRange(R, 0, n - 1);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} intercambios. O(n log n) garantizado y sin memoria extra (in-place), pero no es estable.` });
+  return R.out;
+}
+
+function genRadix(vals) {
+  const R = Rec(vals), n = R.n;
+  const max = Math.max(...vals);
+  R.bk = Array.from({ length: 10 }, () => []);
+  R.snap({ kind: 'start', vars: { max }, msg: `Arreglo inicial: ${fmt(vals)}. RADIX SORT no compara elementos entre sí: los reparte en 10 CUBETAS (0 a 9) según un dígito. Primero por unidades, luego por decenas. max = ${max}.` });
+  let pass = 0;
+  for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+    pass++; R.stats.p = exp === 1 ? 'UNIDADES' : (exp === 10 ? 'DECENAS' : 'CENTENAS');
+    const nm = exp === 1 ? 'las UNIDADES' : (exp === 10 ? 'las DECENAS' : 'las CENTENAS');
+    R.snap({ kind: 'digitPass', vars: { exp, max }, msg: `PASADA ${pass}: exp = ${exp}. Reparto según ${nm}.` });
+    for (let p = 0; p < n; p++) {
+      const id = R.main[p], x = R.v(id), d = Math.floor(x / exp) % 10;
+      R.main[p] = null; R.bk[d].push(id); R.stats.mov++;
+      R.snap({ kind: 'toBucket', ptr: {}, vars: { exp, x, 'dígito': d }, ov: { [id]: 'compare' }, extra: { bucket: d }, msg: `x = ${chip(x, 'compare')}: (${x} / ${exp}) % 10 = ${d} → cubeta ${d}.` });
+    }
+    let k = 0;
+    for (let d = 0; d < 10; d++) {
+      if (!R.bk[d].length) continue;
+      const items = R.bk[d].map(id => R.v(id)), from = k;
+      for (const id of R.bk[d]) { R.main[k++] = id; R.stats.mov++; }
+      R.bk[d] = [];
+      R.base = p => p < k ? 'part' : 'idle';
+      R.snap({ kind: 'collect', vars: { exp, k }, extra: { bucket: d }, hop: R.main.slice(from, k),
+        msg: `Vacío la cubeta ${d} en orden: ${fmt(items, 'part')} → a[${from}${k - 1 > from ? '..' + (k - 1) : ''}].` });
+    }
+    R.base = null;
+    R.snap({ kind: 'passEnd', vars: { exp }, msg: `Después de ordenar por ${nm}: ${fmt(R.arr())}.${exp * 10 <= max ? ' Falta el siguiente dígito.' : ''}` });
+  }
+  R.bk = null;
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. 0 comparaciones y ${R.stats.mov} movimientos. Complejidad O(d·n), con d = cantidad de dígitos. Funciona porque cada pasada es ESTABLE: respeta el orden que dejó la anterior.` });
+  return R.out;
+}
+
+function genCounting(vals) {
+  const R = Rec(vals), n = R.n;
+  const min = Math.min(...vals), max = Math.max(...vals), size = max - min + 1;
+  const count = new Array(size).fill(0);
+  R.tmpState = 'part';
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. COUNTING SORT no compara: CUENTA cuántas veces aparece cada valor y con eso calcula la posición exacta de cada uno.` });
+  R.stats.p = 'CONTAR';
+  R.snap({ kind: 'range', vars: { min, max, 'tamaño': size }, extra: { count: count.slice(), min }, msg: `min = ${min}, max = ${max}. Creo count[] con ${size} casillas (una por cada valor de ${min} a ${max}), todas en 0.` });
+  for (let p = 0; p < n; p++) {
+    const id = R.main[p], x = R.v(id); count[x - min]++;
+    R.snap({ kind: 'count', ptr: { i: p }, vars: { i: p, x, 'x-min': x - min }, ov: { [id]: 'compare' }, extra: { count: count.slice(), min, hot: x - min }, msg: `a[${p}] = ${chip(x, 'compare')}: count[${x} - ${min}] = count[${x - min}]++ → ${count[x - min]}.` });
+  }
+  R.stats.p = 'ACUMULAR';
+  for (let v = 1; v < size; v++) count[v] += count[v - 1];
+  R.snap({ kind: 'prefix', vars: { min, max }, extra: { count: count.slice(), min }, msg: `Sumo acumulado: count[v] += count[v-1]. Ahora count[v] dice cuántos elementos son ≤ ${'v'}. Por ejemplo, count[${size - 1}] = ${count[size - 1]} = n.` });
+  R.stats.p = 'COLOCAR';
+  for (let p = n - 1; p >= 0; p--) {
+    const id = R.main[p], x = R.v(id), pos = --count[x - min];
+    R.main[p] = null; R.tmp[pos] = id; R.stats.mov++;
+    R.snap({ kind: 'cplace', ptr: { i: p }, vars: { i: p, x, pos }, hot: id, extra: { count: count.slice(), min, hot: x - min }, msg: `i = ${p}: x = ${chip(x, 'swap')}. --count[${x - min}] = ${pos} → salida[${pos}] = ${x}. (Se recorre de derecha a izquierda para que sea ESTABLE.)` });
+  }
+  for (let p = 0; p < n; p++) { R.main[p] = R.tmp[p]; R.tmp[p] = null; }
+  R.base = () => 'part';
+  R.snap({ kind: 'copyBack', vars: {}, extra: { count: count.slice(), min }, hop: R.main.slice(), msg: `Copio salida[] de vuelta a a[]: ${fmt(R.arr(), 'part')}.` });
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, extra: { count: count.slice(), min }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. 0 comparaciones. O(n + k), con k = rango de valores (${size}). Rapidísimo si el rango es pequeño; si los valores van de 1 a 1.000.000, count[] sería enorme.` });
+  return R.out;
+}
+
+function genTim(vals) {
+  const R = Rec(vals), n = R.n, RUN = 4;
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. TIM SORT (versión simplificada, RUN = ${RUN}) combina lo mejor de dos: ordena bloques pequeños (runs) con INSERCIÓN y luego los une con MERGE. Es el que usa Java para ordenar objetos.` });
+  let r = 0;
+  for (let ini = 0; ini < n; ini += RUN) {
+    const fin = Math.min(ini + RUN - 1, n - 1); r++;
+    R.stats.p = `RUN ${r}`; R.label = `insercion(a, ${ini}, ${fin})`;
+    R.base = rangeBase(ini, fin);
+    R.snap({ kind: 'runStart', vars: { ini, fin, RUN }, msg: `Run ${r}: posiciones ${ini} a ${fin} → ${fmt(seg(R, ini, fin))}. Lo ordeno con inserción.` });
+    insertionRange(R, ini, fin, { dim: true });
+  }
+  R.label = '';
+  for (let tam = RUN; tam < n; tam *= 2) {
+    R.stats.p = `MEZCLA ${tam}`; R.base = null;
+    R.snap({ kind: 'mergePhase', vars: { tam }, msg: `FASE DE MEZCLA: uno runs de tamaño ${tam} de dos en dos. ${fmt(R.arr())}.` });
+    for (let lo = 0; lo < n - tam; lo += 2 * tam) {
+      const mid = lo + tam - 1, hi = Math.min(lo + 2 * tam - 1, n - 1);
+      R.label = `merge(a, ${lo}, ${mid}, ${hi})`;
+      mergeRange(R, lo, mid, hi);
+    }
+  }
+  R.label = '';
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} movimientos. El TimSort real usa runs de 32 a 64 y aprovecha los pedazos que YA vienen ordenados: por eso es muy rápido con datos reales.` });
+  return R.out;
+}
+
+function genIntro(vals) {
+  const R = Rec(vals), n = R.n, UMBRAL = 4;
+  const limite = 2 * Math.floor(Math.log2(n));
+  R.snap({ kind: 'start', vars: { limite, UMBRAL }, msg: `Arreglo inicial: ${fmt(vals)}. INTRO SORT empieza como QUICKSORT, pero vigila: si un pedazo es pequeño (≤ ${UMBRAL}) usa INSERCIÓN, y si la recursión se hace muy profunda (límite = 2·log2(n) = ${limite}) cambia a HEAPSORT. Prueba "AL REVÉS" con 11 o 12 elementos para ver el cambio a HeapSort.` });
+  function intro(lo, hi, prof) {
+    R.calls++; R.stats.p = String(R.calls);
+    R.stack.push(`intro(a, ${lo}, ${hi}, prof=${prof})`); R.label = R.stack[R.stack.length - 1];
+    R.base = rangeBase(lo, hi);
+    const tam = hi - lo + 1;
+    R.snap({ kind: 'call', vars: { lo, hi, prof, tam }, msg: `intro(a, ${lo}, ${hi}, ${prof}) → ${tam > 0 ? fmt(seg(R, lo, hi)) : '[ ]'} (tamaño ${tam}).` });
+    if (tam <= 1) {
+      if (tam === 1) R.fixed.add(lo);
+      R.snap({ kind: 'base', vars: { lo, hi, prof }, msg: `Tamaño ${tam}: ya está ordenado.` });
+    } else if (tam <= UMBRAL) {
+      R.snap({ kind: 'toIns', vars: { lo, hi, prof, tam }, msg: `tam = ${tam} ≤ UMBRAL (${UMBRAL}): pedazo pequeño → uso INSERCIÓN, que con pocos elementos es lo más rápido.` });
+      insertionRange(R, lo, hi, { dim: true });
+      for (let p = lo; p <= hi; p++) R.fixed.add(p);
+      R.base = rangeBase(lo, hi);
+    } else if (prof === 0) {
+      R.snap({ kind: 'toHeap', vars: { lo, hi, prof, tam }, msg: `prof = 0: QuickSort ya se dividió demasiadas veces (pivotes malos). → cambio a HEAPSORT en a[${lo}..${hi}] para garantizar O(n log n). Dentro de HeapSort los índices del árbol cuentan desde lo: el nodo 0 es a[${lo}].` });
+      heapRange(R, lo, hi, { intro: true });
+      R.label = R.stack[R.stack.length - 1];
+    } else {
+      const p = partition(R, lo, hi);
+      intro(lo, p - 1, prof - 1); intro(p + 1, hi, prof - 1);
+    }
+    R.stack.pop(); R.label = R.stack[R.stack.length - 1] || '';
+  }
+  intro(0, n - 1, limite);
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} movimientos. IntroSort tiene la velocidad de QuickSort y la garantía O(n log n) de HeapSort. Es el que usa C++ (std::sort); el real usa UMBRAL = 16.` });
+  return R.out;
+}
+
+/* ============================================================
+   6. GENERADORES: BÚSQUEDA
+   ============================================================ */
+function searchRec(vals, x) {
+  const R = Rec(vals); R.target = x; return R;
+}
+function genBinIter(vals, x) {
+  const R = searchRec(vals, x), n = R.n;
+  let low = 0, high = n - 1;
+  R.base = p => (p < low || p > high) ? 'dim' : 'active';
+  R.snap({ kind: 'sStart', ptr: { low, high }, vars: { x, low, high }, msg: `Buscar x = ${chip(x, 'min')} en ${fmt(vals)} (ORDENADO, es requisito). low = 0, high = ${n - 1}: x puede estar en cualquier parte.` });
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2), v = R.at(mid); R.stats.cmp++; R.stats.p = String(R.stats.cmp);
+    R.snap({ kind: 'sMid', ptr: { low, high, mid }, vars: { x, low, high, mid, 'a[mid]': v }, ov: { [R.main[mid]]: 'compare' }, cmp: { x1: mid, x2: mid, text: `a[${mid}]=${v}  x=${x}` },
+      msg: `mid = (${low} + ${high}) / 2 = ${mid}. Miro a[${mid}] = ${chip(v, 'compare')} y lo comparo con x = ${chip(x, 'min')}.` });
+    if (v === x) {
+      R.snap({ kind: 'found', ptr: { mid }, vars: { x, mid }, ov: { [R.main[mid]]: 'sorted' }, msg: `¡a[${mid}] == x! Encontrado en la posición ${mid} con solo ${R.stats.cmp} comparación${R.stats.cmp > 1 ? 'es' : ''}. Una búsqueda lineal habría necesitado ${mid + 1}.` });
+      return R.out;
+    } else if (v < x) { low = mid + 1; R.snap({ kind: 'goRight', ptr: { low, high }, vars: { x, low, high }, msg: `${v} < ${x}: x está a la DERECHA. low = mid + 1 = ${low}. Descarto la mitad izquierda de un golpe.` }); }
+    else { high = mid - 1; R.snap({ kind: 'goLeft', ptr: { low, high }, vars: { x, low, high }, msg: `${v} > ${x}: x está a la IZQUIERDA. high = mid - 1 = ${high}. Descarto la mitad derecha.` }); }
+  }
+  R.snap({ kind: 'notFound', vars: { x, low, high }, msg: `low (${low}) > high (${high}): la zona quedó vacía. ${x} NO está en el arreglo. return -1 tras ${R.stats.cmp} comparaciones.` });
+  return R.out;
+}
+function genBinRec(vals, x) {
+  const R = searchRec(vals, x), n = R.n;
+  let res = null;
+  R.base = null;
+  R.snap({ kind: 'sStart', vars: { x }, msg: `Buscar x = ${chip(x, 'min')} en ${fmt(vals)}. Misma idea que la iterativa, pero en vez de un while, el método SE LLAMA A SÍ MISMO con la mitad que queda. Mira la pestaña PILA.` });
+  function rec(low, high) {
+    R.stack.push(`binariaRec(a, ${x}, ${low}, ${high})`); R.label = R.stack[R.stack.length - 1];
+    R.base = p => (p < low || p > high) ? 'dim' : 'active';
+    R.snap({ kind: 'sCall', ptr: { low: low <= high ? low : null, high: low <= high ? high : null }, vars: { x, low, high }, msg: `binariaRec(a, ${x}, ${low}, ${high}).` });
+    if (low > high) { R.snap({ kind: 'notFound', vars: { x, low, high }, msg: `CASO BASE: low > high, zona vacía → return -1. Este -1 se devuelve por toda la pila.` }); res = -1; R.stack.pop(); return; }
+    const mid = Math.floor((low + high) / 2), v = R.at(mid); R.stats.cmp++; R.stats.p = String(R.stats.cmp);
+    R.snap({ kind: 'sMid', ptr: { low, high, mid }, vars: { x, low, high, mid, 'a[mid]': v }, ov: { [R.main[mid]]: 'compare' }, cmp: { x1: mid, x2: mid, text: `a[${mid}]=${v}  x=${x}` }, msg: `mid = ${mid}: a[${mid}] = ${chip(v, 'compare')} vs x = ${chip(x, 'min')}.` });
+    if (v === x) { R.snap({ kind: 'found', ptr: { mid }, vars: { x, mid }, ov: { [R.main[mid]]: 'sorted' }, msg: `CASO BASE: ¡a[${mid}] == x! return ${mid}. Cada llamada de la pila devuelve ese ${mid} hacia arriba. Total: ${R.stats.cmp} comparaciones y ${R.stack.length} llamadas.` }); res = mid; R.stack.pop(); return; }
+    if (v < x) { R.snap({ kind: 'goRight', ptr: { low, high, mid }, vars: { x, low, high, mid }, msg: `${v} < ${x}: return binariaRec(a, ${x}, ${mid + 1}, ${high}). Nueva llamada con la mitad derecha.` }); rec(mid + 1, high); }
+    else { R.snap({ kind: 'goLeft', ptr: { low, high, mid }, vars: { x, low, high, mid }, msg: `${v} > ${x}: return binariaRec(a, ${x}, ${low}, ${mid - 1}). Nueva llamada con la mitad izquierda.` }); rec(low, mid - 1); }
+    R.stack.pop();
+  }
+  rec(0, n - 1);
+  return R.out;
+}
+function genInterp(vals, x) {
+  const R = searchRec(vals, x), n = R.n;
+  let low = 0, high = n - 1;
+  R.base = p => (p < low || p > high) ? 'dim' : 'active';
+  R.snap({ kind: 'sStart', ptr: { low, high }, vars: { x, low, high }, msg: `Buscar x = ${chip(x, 'min')} en ${fmt(vals)}. INTERPOLACIÓN no mira la mitad: ESTIMA dónde debería estar x según su valor, como cuando buscas "Pérez" en un directorio y abres cerca del final.` });
+  while (low <= high && x >= R.at(low) && x <= R.at(high)) {
+    if (R.at(high) === R.at(low)) {
+      R.stats.cmp++;
+      if (R.at(low) === x) { R.snap({ kind: 'found', ptr: { pos: low }, vars: { x, pos: low }, ov: { [R.main[low]]: 'sorted' }, msg: `Rango plano y a[${low}] == x: encontrado en ${low}.` }); return R.out; }
+      R.snap({ kind: 'same', vars: { x }, msg: `a[high] == a[low] pero no es x.` }); break;
+    }
+    const al = R.at(low), ah = R.at(high);
+    const pos = low + Math.floor((x - al) * (high - low) / (ah - al)), v = R.at(pos);
+    R.stats.cmp++; R.stats.p = String(R.stats.cmp);
+    R.snap({ kind: 'sMid', ptr: { low, high, pos }, vars: { x, low, high, pos, 'a[pos]': v }, ov: { [R.main[pos]]: 'compare' }, cmp: { x1: pos, x2: pos, text: `a[${pos}]=${v}  x=${x}` },
+      msg: `pos = ${low} + (${x} - ${al})·(${high} - ${low}) / (${ah} - ${al}) = ${pos}. Miro a[${pos}] = ${chip(v, 'compare')}.` });
+    if (v === x) { R.snap({ kind: 'found', ptr: { pos }, vars: { x, pos }, ov: { [R.main[pos]]: 'sorted' }, msg: `¡a[${pos}] == x! Encontrado con ${R.stats.cmp} comparación${R.stats.cmp > 1 ? 'es' : ''}. Con datos repartidos uniformemente la estimación casi siempre cae cerca: O(log log n).` }); return R.out; }
+    if (v < x) { low = pos + 1; R.snap({ kind: 'goRight', ptr: { low, high }, vars: { x, low, high }, msg: `${v} < ${x}: low = pos + 1 = ${low}.` }); }
+    else { high = pos - 1; R.snap({ kind: 'goLeft', ptr: { low, high }, vars: { x, low, high }, msg: `${v} > ${x}: high = pos - 1 = ${high}.` }); }
+  }
+  R.snap({ kind: 'notFound', vars: { x, low, high }, msg: `${low > high ? `low > high` : `x queda fuera de [a[low], a[high]]`}: ${x} NO está. return -1 tras ${R.stats.cmp} comparaciones.` });
+  return R.out;
+}
+
+/* ============================================================
+   7. DEFINICIÓN DE ALGORITMOS (código Java con etiquetas)
+   Cada línea: [texto, 'etiquetas'] — "k" resalta, "~k" resalta suave
+   ============================================================ */
+const SIMPLE_LEG = { idle:'Pendiente', part:'Posición i', compare:'Comparando', swap:'Intercambiando', sorted:'Ya en su lugar ✓' };
+const ALGOS = {
+  intercambio: { name:'INTERCAMBIO', sub:'i contra todos', gen:genIntercambio, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'PASADA', hint:'la posición i se compara con TODAS las siguientes',
+    code:[['static void intercambio(int[] a) {',''],['  int n = a.length;',''],['  for (int i = 0; i < n - 1; i++) {','pass passEnd'],['    for (int j = i + 1; j < n; j++) {','~cmp ~keep'],['      if (a[i] > a[j]) {','cmp keep ~swap'],['        int temp = a[i];','swap'],['        a[i] = a[j];','swap'],['        a[j] = temp;','swap'],['      }',''],['    }',''],['  }',''],['}','']],
+    legend:['idle','part','compare','swap','sorted'],
+    tips:{ start:'Intercambio deja el MENOR en la posición i en cada pasada. Compara a[i] con cada a[j] que está después.', cmp:'Compara a[i] con a[j], NO vecinos. j puede estar lejos de i.', swap:'Cada vez que encuentra uno menor, intercambia de inmediato. Por eso hace MUCHOS intercambios.', done:'Siempre hace n(n-1)/2 comparaciones: O(n²) en todos los casos. No es estable.' } },
+  burbuja: { name:'BURBUJA', sub:'vecino con vecino', gen:genBurbuja, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'PASADA', hint:'solo se comparan VECINOS; el mayor sube al final',
+    code:[['static void burbuja(int[] a) {',''],['  int n = a.length;',''],['  for (int i = 0; i < n - 1; i++) {','pass passEnd'],['    for (int j = 0; j < n - 1 - i; j++) {','~cmp ~keep'],['      if (a[j] > a[j + 1]) {','cmp keep ~swap'],['        int temp = a[j];','swap'],['        a[j] = a[j + 1];','swap'],['        a[j + 1] = temp;','swap'],['      }',''],['    }',''],['  }',''],['}','']],
+    legend:['idle','compare','swap','sorted'],
+    tips:{ start:'Burbuja compara a[j] con a[j+1] (vecinos). El mayor se va empujando hacia la derecha como una burbuja que sube.', pass:'El "- i" del for interno: los últimos i ya están en su lugar.', passEnd:'Al terminar la pasada, el MAYOR de lo pendiente quedó al final.', done:'Sin bandera siempre hace n(n-1)/2 comparaciones: O(n²). Es estable.' } },
+  seleccion: { name:'SELECCIÓN', sub:'busca el menor', gen:genSeleccion, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'PASADA', hint:'primero BUSCA el menor, después hace UN solo intercambio',
+    code:[['static void seleccion(int[] a) {',''],['  int n = a.length;',''],['  for (int i = 0; i < n - 1; i++) {','~pass passEnd'],['    int min = i;','pass'],['    for (int j = i + 1; j < n; j++) {','~cmp ~keep'],['      if (a[j] < a[min]) {','cmp keep ~newMin'],['        min = j;','newMin'],['      }',''],['    }',''],['    int temp = a[i];','swap noswap'],['    a[i] = a[min];','swap noswap'],['    a[min] = temp;','swap noswap'],['  }',''],['}','']],
+    legend:['idle','part','min','compare','swap','sorted'],
+    tips:{ start:'Como buscar al más bajito de una fila: miras a todos SIN mover a nadie y al final lo pasas al frente.', newMin:'min = j: solo ANOTA la posición. Todavía no hay intercambio.', swap:'UN solo intercambio por pasada: como máximo n-1 en total.', done:'Siempre n(n-1)/2 comparaciones (no es adaptativo), pero muy pocos intercambios. No es estable.' } },
+  insercion: { name:'INSERCIÓN', sub:'cartas en la mano', gen:genInsercion, movLbl:'DESPLAZAMIENTOS', movShort:'desplaz.', pLbl:'PASADA', hint:'se toma "la carta" y se mete en la parte ya ordenada', top:{ temp:'actual' },
+    code:[['static void insercion(int[] a) {',''],['  int n = a.length;',''],['  for (int i = 1; i < n; i++) {','~pick'],['    int actual = a[i];','pick'],['    int j = i - 1;','pick'],['    while (j >= 0 && a[j] > actual) {','cmp edge ~shift'],['      a[j + 1] = a[j];','shift'],['      j--;','shift'],['    }',''],['    a[j + 1] = actual;','insert'],['  }',''],['}','']],
+    legend:['idle','part','temp','compare','shift','sorted'],
+    tips:{ start:'Como ordenar cartas en la mano: la parte izquierda ya está ordenada y cada carta nueva se mete en su lugar.', pick:'<code>actual</code> guarda el valor y su casilla queda como HUECO.', shift:'No intercambia: COPIA a[j] una casilla a la derecha.', insert:'Si el while paró en la primera comparación, ni se movió: por eso es rápido con datos casi ordenados.', done:'Mejor caso O(n), peor caso O(n²). Es estable y adaptativo.' } },
+
+  shell: { name:'SHELL SORT', sub:'inserción con saltos', gen:genShell, movLbl:'DESPLAZAMIENTOS', movShort:'desplaz.', pLbl:'PASE', hint:'inserción por sub-listas separadas gap posiciones', top:{ temp:'temp' },
+    code:[['static void shellSort(int[] a) {',''],['  int n = a.length;',''],['  for (int gap = n / 2; gap > 0; gap /= 2) {','gap passEnd'],['    for (int i = gap; i < n; i++) {','~pick'],['      int temp = a[i];','pick'],['      int j = i;','pick'],['      while (j >= gap && a[j - gap] > temp) {','cmp edge ~shift'],['        a[j] = a[j - gap];','shift'],['        j -= gap;','shift'],['      }',''],['      a[j] = temp;','insert'],['    }',''],['  }',''],['}','']],
+    legend:['dim','active','part','temp','compare','shift','sorted'],
+    tips:{ start:'Donald Shell (1959) mejoró la inserción: los elementos viajan lejos de un solo salto.', gap:'Con gap grande, un elemento pequeño que está al final llega al inicio en pocos saltos.', cmp:'Se compara con el que está a gap posiciones, no con el vecino.', done:'Con gaps n/2, n/4…, 1 el peor caso es O(n²), pero en la práctica es mucho más rápido que la inserción. No es estable.' } },
+  quick: { name:'QUICKSORT', sub:'pivote y partición', gen:genQuick, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'LLAMADAS', hint:'zona izquierda ≤ pivote · zona derecha > pivote', rec:true,
+    code:[['static void quickSort(int[] a, int lo, int hi) {','call'],['  if (lo >= hi) return;','base ~call'],['  int p = particion(a, lo, hi);','~pivot ~place'],['  quickSort(a, lo, p - 1);',''],['  quickSort(a, p + 1, hi);',''],['}',''],['static int particion(int[] a, int lo, int hi) {',''],['  int pivote = a[hi];','pivot'],['  int i = lo - 1;','pivot'],['  for (int j = lo; j < hi; j++) {','~pcmp ~pkeep'],['    if (a[j] <= pivote) {','pcmp pkeep ~pswap'],['      i++;','pswap'],['      intercambiar(a, i, j);','pswap'],['    }',''],['  }',''],['  intercambiar(a, i + 1, hi);','place'],['  return i + 1;','place'],['}','']],
+    legend:['dim','min','part','active','compare','swap','sorted'], legNames:{ min:'Pivote', part:'Zona ≤ pivote', active:'Zona > pivote' },
+    tips:{ start:'Divide y vencerás: el trabajo está en PARTIR. Después de partir, el pivote ya quedó en su posición final.', call:'Cada llamada trabaja solo con su pedazo (lo..hi). Lo demás está apagado.', base:'Recursividad: sin caso base, el método se llamaría para siempre.', place:'El pivote no se vuelve a mover nunca más.', done:'Promedio O(n log n), peor caso O(n²) con pivotes malos (arreglo ordenado). Es in-place pero no estable.' } },
+  merge: { name:'MERGESORT', sub:'dividir y mezclar', gen:genMerge, movLbl:'COPIAS', movShort:'copias', pLbl:'LLAMADAS', hint:'arriba: temp[] donde se mezclan las dos mitades', rec:true, top:{ temp:'temp[]' },
+    code:[['static void mergeSort(int[] a, int lo, int hi) {','call'],['  if (lo >= hi) return;','base ~call'],['  int mid = (lo + hi) / 2;','split'],['  mergeSort(a, lo, mid);','~split'],['  mergeSort(a, mid + 1, hi);','~split'],['  merge(a, lo, mid, hi);','~mergeStart'],['}',''],['static void merge(int[] a, int lo, int mid, int hi) {',''],['  int[] temp = new int[hi - lo + 1];','mergeStart'],['  int i = lo, j = mid + 1, k = 0;','mergeStart'],['  while (i <= mid && j <= hi) {','~mcmp'],['    if (a[i] <= a[j]) temp[k++] = a[i++];','mcmp takeL'],['    else              temp[k++] = a[j++];','takeR'],['  }',''],['  while (i <= mid) temp[k++] = a[i++];','rest'],['  while (j <= hi)  temp[k++] = a[j++];','rest'],['  for (k = 0; k < temp.length; k++)','copyBack'],['    a[lo + k] = temp[k];','copyBack'],['}','']],
+    legend:['dim','part','active','compare','merge','sorted'], legNames:{ part:'Mitad izquierda', active:'Mitad derecha', merge:'En temp[]' },
+    tips:{ start:'T(n) = 2T(n/2) + n: dos llamadas con la mitad, más n para mezclar. Resultado: O(n log n).', split:'Dividir no ordena nada: solo parte el problema en dos más pequeños.', base:'Un arreglo de 1 elemento SIEMPRE está ordenado: ese es el caso base.', mcmp:'Como las dos mitades ya están ordenadas, basta comparar el primero de cada una.', done:'O(n log n) en TODOS los casos. Estable. Usa memoria extra O(n).' } },
+  heap: { name:'HEAPSORT', sub:'árbol max-heap', gen:genHeap, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'FASE', hint:'arriba: el MISMO arreglo visto como árbol', rec:true, top:{ tree:true },
+    code:[['static void heapSort(int[] a) {',''],['  int n = a.length;',''],['  for (int i = n / 2 - 1; i >= 0; i--)','build'],['    heapify(a, n, i);','~build'],['  for (int i = n - 1; i > 0; i--) {','~extract'],['    intercambiar(a, 0, i);','extract'],['    heapify(a, i, 0);','~extract'],['  }',''],['}',''],['static void heapify(int[] a, int n, int i) {','heapify'],['  int mayor = i;','heapify'],['  int izq = 2 * i + 1, der = 2 * i + 2;','heapify'],['  if (izq < n && a[izq] > a[mayor]) mayor = izq;','cmpL'],['  if (der < n && a[der] > a[mayor]) mayor = der;','cmpR'],['  if (mayor != i) {','~hswap ok'],['    intercambiar(a, i, mayor);','hswap'],['    heapify(a, n, mayor);','~hswap'],['  }',''],['}','']],
+    legend:['active','min','compare','swap','part','sorted'], legNames:{ active:'Dentro del heap', min:'Padre / mayor', part:'Heap válido aquí' },
+    tips:{ start:'El árbol NO es otra estructura: es el mismo arreglo. a[0] es la raíz, a[1] y a[2] sus hijos, y así.', build:'En un max-heap el mayor siempre está en la raíz.', extract:'Es como selección, pero encontrar el mayor cuesta O(log n) en vez de O(n).', done:'O(n log n) garantizado, in-place, no estable.' } },
+  radix: { name:'RADIX SORT', sub:'cubetas por dígito', gen:genRadix, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'DÍGITO', hint:'arriba: 10 cubetas, una por dígito (0-9)', top:{ buckets:true },
+    code:[['static void radixSort(int[] a) {',''],['  int max = Arrays.stream(a).max().getAsInt();','start'],['  for (int exp = 1; max / exp > 0; exp *= 10) {','digitPass passEnd'],['    List<List<Integer>> cubetas = new ArrayList<>();','digitPass'],['    for (int d = 0; d < 10; d++) cubetas.add(new ArrayList<>());','digitPass'],['    for (int x : a)','~toBucket'],['      cubetas.get((x / exp) % 10).add(x);','toBucket'],['    int k = 0;',''],['    for (List<Integer> c : cubetas)','~collect'],['      for (int x : c) a[k++] = x;','collect'],['  }',''],['}','']],
+    legend:['idle','compare','shift','part','sorted'], legNames:{ compare:'Elemento actual', shift:'En una cubeta', part:'Recogido' },
+    tips:{ start:'Radix no pregunta "¿quién es mayor?": solo mira dígitos. Por eso tiene 0 comparaciones.', toBucket:'(x / exp) % 10 saca un dígito: con exp=1 las unidades, con exp=10 las decenas.', collect:'Se vacían en orden 0→9 y, dentro de cada cubeta, en el orden en que entraron (estable).', done:'O(d·n). Solo sirve con enteros (o claves que se puedan partir en dígitos).' } },
+  counting: { name:'COUNTING SORT', sub:'contar y colocar', gen:genCounting, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'FASE', hint:'arriba: salida[]; abajo: el arreglo count[]', top:{ temp:'salida' },
+    code:[['static void countingSort(int[] a) {',''],['  int min = minimo(a), max = maximo(a);','range'],['  int[] count = new int[max - min + 1];','range'],['  for (int x : a) count[x - min]++;','count'],['  for (int v = 1; v < count.length; v++)','~prefix'],['    count[v] += count[v - 1];','prefix'],['  int[] salida = new int[a.length];',''],['  for (int i = a.length - 1; i >= 0; i--)','~cplace'],['    salida[--count[a[i] - min]] = a[i];','cplace'],['  for (int i = 0; i < a.length; i++)','copyBack'],['    a[i] = salida[i];','copyBack'],['}','']],
+    legend:['idle','compare','part','sorted'], legNames:{ compare:'Contando', part:'En salida[]' },
+    tips:{ start:'Ideal cuando los valores están en un rango pequeño (notas de 0 a 5, edades, etc.).', count:'Cada casilla de count[] es un contador de un valor.', prefix:'El acumulado convierte "cuántos hay" en "hasta dónde llegan".', cplace:'Recorrer de derecha a izquierda mantiene el orden de los iguales: ESTABLE.', done:'O(n + k). No compara. Usa memoria extra: count[] y salida[].' } },
+  tim: { name:'TIM SORT', sub:'runs + merge', gen:genTim, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'FASE', hint:'inserción en runs de 4, luego mezcla como MergeSort', top:{ temp:'temp' },
+    code:[['static final int RUN = 4; // el real usa 32-64',''],['static void timSort(int[] a) {',''],['  int n = a.length;',''],['  for (int ini = 0; ini < n; ini += RUN)','runStart'],['    insercion(a, ini, Math.min(ini + RUN - 1, n - 1));','~runStart pick cmp shift edge insert'],['  for (int tam = RUN; tam < n; tam *= 2)','mergePhase'],['    for (int lo = 0; lo < n - tam; lo += 2 * tam) {','~mergePhase'],['      int mid = lo + tam - 1;',''],['      int hi = Math.min(lo + 2 * tam - 1, n - 1);',''],['      merge(a, lo, mid, hi);','mergeStart mcmp takeL takeR rest copyBack'],['    }',''],['}',''],['// insercion() y merge() son los de',''],['// Inserción y MergeSort (ver esas pestañas)','']],
+    legend:['dim','part','active','temp','compare','shift','merge','sorted'], legNames:{ part:'Ordenado / mitad izq.', active:'Mitad derecha', merge:'En temp' },
+    tips:{ start:'Inserción es rapidísima con pocos elementos y MergeSort es bueno uniendo: TimSort usa cada uno donde mejor funciona.', runStart:'Cada run es pequeño, así que la inserción casi no cuesta.', mergePhase:'Los runs ya están ordenados: solo falta mezclarlos.', done:'O(n log n) peor caso, O(n) si ya viene ordenado. Estable. Lo usan Java (objetos) y Python.' } },
+  intro: { name:'INTRO SORT', sub:'quick + heap + inserción', gen:genIntro, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'LLAMADAS', hint:'QuickSort que se cambia a inserción o HeapSort cuando conviene', rec:true, top:{ tree:true, temp:'actual' },
+    code:[['static void introSort(int[] a) {',''],['  int limite = 2 * (int) (Math.log(a.length) / Math.log(2));','start'],['  intro(a, 0, a.length - 1, limite);',''],['}',''],['static void intro(int[] a, int lo, int hi, int prof) {','call'],['  int tam = hi - lo + 1;','call base'],['  if (tam <= UMBRAL) {      // UMBRAL = 4','toIns base'],['    insercion(a, lo, hi); return;','~toIns pick cmp shift edge insert'],['  }',''],['  if (prof == 0) {','toHeap'],['    heapSort(a, lo, hi); return;','~toHeap build heapify cmpL cmpR hswap ok extract'],['  }',''],['  int p = particion(a, lo, hi);','pivot pcmp pswap pkeep place'],['  intro(a, lo, p - 1, prof - 1);',''],['  intro(a, p + 1, hi, prof - 1);',''],['}','']],
+    legend:['dim','min','part','active','temp','compare','swap','sorted'], legNames:{ min:'Pivote / padre', part:'Zona ≤ pivote / ordenado', active:'Zona > pivote / heap' },
+    tips:{ start:'Es un QuickSort "con seguro": si las cosas van mal (recursión muy profunda), cambia de estrategia.', toIns:'Con pedazos pequeños, la inserción le gana a QuickSort.', toHeap:'HeapSort garantiza O(n log n) aunque los pivotes sean malos.', done:'O(n log n) garantizado. No estable. Es el std::sort de C++.' } },
+
+  binIter: { name:'BINARIA ITERATIVA', sub:'while + mitades', gen:genBinIter, movLbl:'DESCARTADOS', movShort:'', pLbl:'INTENTO', hint:'zona apagada = descartada; x solo puede estar en la zona encendida', search:true,
+    code:[['static int busquedaBinaria(int[] a, int x) {',''],['  int low = 0, high = a.length - 1;','sStart'],['  while (low <= high) {','~sMid notFound'],['    int mid = (low + high) / 2;','sMid'],['    if (a[mid] == x) return mid;','found ~sMid'],['    else if (a[mid] < x) low = mid + 1;','goRight'],['    else high = mid - 1;','goLeft'],['  }',''],['  return -1;','notFound'],['}','']],
+    legend:['active','dim','compare','sorted'], legNames:{ active:'Zona donde puede estar x', dim:'Descartado', compare:'a[mid]', sorted:'Encontrado' },
+    tips:{ sStart:'Requisito: el arreglo DEBE estar ordenado. Si no, descartar una mitad no tendría sentido.', sMid:'Cada comparación descarta la mitad de lo que queda.', goRight:'Si a[mid] < x, todo lo que está a la izquierda de mid también es < x.', found:'Máximo de comparaciones: log2(n) + 1. Con 1.000.000 de elementos, ¡solo unas 20!', notFound:'O(log n) también cuando no está.' } },
+  binRec: { name:'BINARIA RECURSIVA', sub:'se llama a sí misma', gen:genBinRec, movLbl:'DESCARTADOS', movShort:'', pLbl:'INTENTO', hint:'cada llamada recibe una zona más pequeña (ver PILA)', search:true, rec:true,
+    code:[['static int binariaRec(int[] a, int x, int low, int high) {','sCall'],['  if (low > high) return -1;','notFound ~sCall'],['  int mid = (low + high) / 2;','sMid'],['  if (a[mid] == x) return mid;','found ~sMid'],['  if (a[mid] < x)','~goRight'],['    return binariaRec(a, x, mid + 1, high);','goRight'],['  return binariaRec(a, x, low, mid - 1);','goLeft'],['}','']],
+    legend:['active','dim','compare','sorted'], legNames:{ active:'Zona de esta llamada', dim:'Descartado', compare:'a[mid]', sorted:'Encontrado' },
+    tips:{ sStart:'Tiene DOS casos base: low > high (no está) y a[mid] == x (encontrado).', sCall:'T(n) = T(n/2) + c → O(log n), igual que la iterativa.', goRight:'Una sola llamada recursiva por nivel: la pila crece como mucho log2(n).', found:'Misma cantidad de comparaciones que la iterativa; la diferencia es que usa la pila de llamadas en vez de un while.' } },
+  interp: { name:'INTERPOLACIÓN', sub:'estima la posición', gen:genInterp, movLbl:'DESCARTADOS', movShort:'', pLbl:'INTENTO', hint:'en vez de la mitad, calcula dónde DEBERÍA estar x', search:true,
+    code:[['static int interpolacion(int[] a, int x) {',''],['  int low = 0, high = a.length - 1;','sStart'],['  while (low <= high && x >= a[low] && x <= a[high]) {','~sMid notFound'],['    if (a[high] == a[low]) return (a[low] == x) ? low : -1;','same'],['    int pos = low + (x - a[low]) * (high - low)','sMid'],['                  / (a[high] - a[low]);','sMid'],['    if (a[pos] == x) return pos;','found ~sMid'],['    if (a[pos] < x) low = pos + 1;','goRight'],['    else high = pos - 1;','goLeft'],['  }',''],['  return -1;','notFound'],['}','']],
+    legend:['active','dim','compare','sorted'], legNames:{ active:'Zona donde puede estar x', dim:'Descartado', compare:'a[pos]', sorted:'Encontrado' },
+    tips:{ sStart:'Prueba "UNIFORME" (gana) y "NO UNIFORME" (pierde contra la binaria).', sMid:'La fórmula es una regla de tres: qué tan lejos está x de a[low], comparado con todo el rango.', found:'Promedio O(log log n) con datos uniformes; peor caso O(n) con datos muy desparejos.', notFound:'Si x es menor que a[low] o mayor que a[high], para de inmediato.' } }
+};
+const GROUPS = {
+  simples:   { name:'ORDENAMIENTOS SIMPLES', sub:'Intercambio · Burbuja · Selección · Inserción — O(n²), fáciles de entender', algos:['intercambio','burbuja','seleccion','insercion'], type:'sort', def:'seleccion' },
+  avanzados: { name:'ORDENAMIENTOS AVANZADOS', sub:'Shell · Quick · Merge · Heap · Radix · Counting · Tim · Intro — cuándo conviene cada uno', algos:['shell','quick','merge','heap','radix','counting','tim','intro'], type:'sort', def:'merge' },
+  busqueda:  { name:'ALGORITMOS DE BÚSQUEDA', sub:'Binaria iterativa · Binaria recursiva · Interpolación — sobre un arreglo ORDENADO', algos:['binIter','binRec','interp'], type:'search', def:'binIter' }
+};
+const LEG_DEFAULT = { idle:'Pendiente', dim:'Fuera del rango actual', active:'Activo', part:'Ordenado parcial', compare:'Comparando', swap:'Intercambiando', temp:'Valor guardado', min:'Mínimo / pivote', shift:'Desplazado', merge:'En temp', sorted:'Ya en su lugar ✓', done:'Terminado' };
+
+/* ============================================================
+   GUÍA DE CADA ALGORITMO
+   que: qué hace · como: pasos · sirve: para qué sirve
+   cx: complejidad [mejor, promedio, peor, memoria, estable] · uso: mejor uso
+   ============================================================ */
+const INFO = {
+  intercambio: {
+    que: 'Ordena el arreglo llenando una posición a la vez, de izquierda a derecha. Para la posición <b>i</b>, compara <code>a[i]</code> con CADA elemento que está después. Cada vez que encuentra uno más pequeño, los intercambia en ese mismo momento. Al final de la pasada, en <code>a[i]</code> queda el menor de todo lo que faltaba ordenar.',
+    como: [
+      'Fija <code>i = 0</code>: la primera posición que se va a llenar.',
+      'Recorre <code>j</code> desde <code>i + 1</code> hasta el final y compara <code>a[i]</code> con <code>a[j]</code>.',
+      'Si <code>a[i] > a[j]</code>, los intercambia: el más pequeño visto hasta ahora pasa a ocupar la posición i.',
+      'Cuando <code>j</code> llega al final, <code>a[i]</code> ya tiene el mínimo y no se vuelve a tocar.',
+      'Avanza <code>i</code> y repite. Son <code>n − 1</code> pasadas.'
+    ],
+    sirve: 'Es el ordenamiento más fácil de escribir: dos <code>for</code> y un <code>if</code>. Sirve para entender la idea de "fijar una posición y buscar quién va ahí". Selección refina esa misma idea, y HeapSort la vuelve rápida.',
+    cx: ['O(n²)', 'O(n²)', 'O(n²)', 'O(1)', 'No'],
+    nota: 'Siempre hace exactamente n(n−1)/2 comparaciones, sin importar cómo venga el arreglo. El número de intercambios sí cambia: puede ser muy alto.',
+    uso: 'Arreglos muy pequeños (unos 10 elementos), ejercicios de clase o cuando lo importante es que el código se entienda de un vistazo. En la práctica, <b>Selección</b> hace el mismo trabajo con muchísimos menos intercambios, así que casi nunca es la mejor opción real.'
+  },
+  burbuja: {
+    que: 'Recorre el arreglo comparando cada pareja de <b>vecinos</b> (<code>a[j]</code> y <code>a[j+1]</code>) y los intercambia si están al revés. Así el mayor de lo pendiente se va empujando hacia la derecha en cada pasada, como una burbuja que sube, hasta quedar al final.',
+    como: [
+      'En la pasada <code>i</code>, recorre las parejas desde <code>j = 0</code> hasta <code>j = n − 2 − i</code>.',
+      'Si <code>a[j] > a[j+1]</code>, los intercambia; el mayor sigue avanzando con la siguiente pareja.',
+      'Al terminar la pasada, el mayor de lo pendiente quedó en <code>a[n − 1 − i]</code> y ya no se toca (por eso el <code>− i</code>).',
+      'Repite <code>n − 1</code> pasadas.',
+      'Mejora común: una bandera que detecta una pasada sin intercambios y termina antes.'
+    ],
+    sirve: 'Enseña dos ideas clave: comparar solo localmente (vecino con vecino) y el concepto de <b>inversión</b> (par desordenado). Cada intercambio corrige exactamente una inversión, así que burbuja hace tantos intercambios como inversiones tiene el arreglo.',
+    cx: ['O(n²) · O(n) con bandera', 'O(n²)', 'O(n²)', 'O(1)', 'Sí'],
+    nota: 'La versión animada aquí NO tiene bandera, igual que la de clase: siempre hace n(n−1)/2 comparaciones.',
+    uso: 'Listas pequeñas que <b>ya están casi ordenadas</b>, usando la versión con bandera: con una sola pasada detecta que no hay nada que hacer. También para enseñar, o en circuitos muy simples donde solo se pueden comparar elementos vecinos.'
+  },
+  seleccion: {
+    que: 'En cada pasada <b>busca</b> el menor de la parte desordenada sin mover nada; solo anota en <code>min</code> la posición donde está. Al terminar de buscar hace <b>un único intercambio</b> para llevar ese menor al frente.',
+    como: [
+      '<code>i</code> marca la posición que se va a llenar. Se supone <code>min = i</code>.',
+      '<code>j</code> recorre el resto: si <code>a[j] < a[min]</code>, se actualiza <code>min = j</code>. El arreglo no cambia.',
+      'Cuando termina la búsqueda, se intercambia <code>a[i]</code> con <code>a[min]</code>. Si <code>min == i</code>, el intercambio no cambia nada.',
+      '<code>a[i]</code> queda fijo, <code>i</code> avanza y se repite <code>n − 1</code> veces.'
+    ],
+    sirve: 'Minimiza los movimientos: hace como máximo <b>n − 1 intercambios</b> en total, sin importar qué tan desordenado esté el arreglo. Es la idea base de HeapSort, que encuentra el máximo mucho más rápido.',
+    cx: ['O(n²)', 'O(n²)', 'O(n²)', 'O(1)', 'No'],
+    nota: 'No es adaptativo: aunque el arreglo ya esté ordenado, igual busca el mínimo en cada pasada (n(n−1)/2 comparaciones).',
+    uso: 'Cuando <b>escribir o mover datos es caro</b> y comparar es barato: registros muy grandes que pesan al copiarse, o memorias que se desgastan con cada escritura (flash, EEPROM). También para listas pequeñas cuando se quiere el mínimo de movimientos.'
+  },
+  insercion: {
+    que: 'Mantiene una parte <b>ordenada</b> a la izquierda y va tomando los elementos de la derecha uno por uno para <b>insertarlos</b> en su lugar. Para abrir espacio, corre una casilla a la derecha todos los que son mayores. Es exactamente como ordenar cartas en la mano.',
+    como: [
+      '<code>a[0]</code> solo ya cuenta como ordenado.',
+      'Para cada <code>i</code> desde 1: se guarda <code>actual = a[i]</code> y su casilla queda libre (el hueco).',
+      'Con <code>j = i − 1</code>: mientras <code>a[j] > actual</code>, se copia <code>a[j]</code> a la derecha (<code>a[j+1] = a[j]</code>) y <code>j</code> retrocede.',
+      'Cuando aparece uno menor o igual, o se llega al inicio, se coloca <code>actual</code> en el hueco: <code>a[j+1] = actual</code>.'
+    ],
+    sirve: 'Es <b>adaptativo</b>: trabaja menos cuanto más ordenado venga el arreglo. Hace tantos desplazamientos como pares desordenados haya. Es estable, no usa memoria extra y funciona "en línea": puede ordenar los datos a medida que van llegando.',
+    cx: ['O(n) · ya ordenado', 'O(n²)', 'O(n²) · al revés', 'O(1)', 'Sí'],
+    nota: 'Con un arreglo ya ordenado hace solo n − 1 comparaciones y 0 desplazamientos.',
+    uso: 'Arreglos <b>pequeños</b> (menos de 20 a 50 elementos) o <b>casi ordenados</b>; por ejemplo, agregar unos pocos datos nuevos a una lista que ya estaba ordenada. Es tan buena en esos casos que TimSort e IntroSort la usan por dentro para ordenar los pedazos pequeños.'
+  },
+  shell: {
+    que: 'Es <b>inserción con saltos</b>. Primero ordena por inserción elementos separados por una distancia grande (el <b>gap</b>). Luego reduce el gap a la mitad, y termina con gap = 1, que es la inserción normal, pero sobre un arreglo que ya está casi ordenado.',
+    como: [
+      'Empieza con <code>gap = n / 2</code>.',
+      'Con ese gap, el arreglo se ve como <b>gap sub-listas</b> intercaladas: posiciones i, i+gap, i+2·gap…',
+      'Cada sub-lista se ordena por inserción: <code>temp = a[i]</code> y, mientras <code>a[j − gap] > temp</code>, el mayor salta gap posiciones a la derecha.',
+      'Se divide el gap entre 2 y se repite. El último pase (gap = 1) casi no trabaja.'
+    ],
+    sirve: 'Corrige la gran debilidad de la inserción: allí un elemento pequeño que está al final tiene que avanzar casilla por casilla. En Shell da <b>saltos largos</b> y llega rápido cerca de su lugar. Es mucho más rápido que los simples, sin recursión y sin memoria extra.',
+    cx: ['O(n log n)', 'depende de los gaps', 'O(n²) con n/2, n/4…', 'O(1)', 'No'],
+    nota: 'Con mejores secuencias de gaps (Knuth: 1, 4, 13, 40…; Sedgewick) el peor caso baja a O(n^1.5) o O(n^4/3).',
+    uso: 'Arreglos <b>medianos</b> (cientos o algunos miles de elementos) cuando se quiere algo mucho más rápido que los simples sin recursión ni memoria extra. Típico en <b>sistemas embebidos</b> o microcontroladores con poca memoria y pila limitada.'
+  },
+  quick: {
+    que: 'Usa <b>divide y vencerás</b>. Elige un <b>pivote</b> (aquí, el último del pedazo) y reorganiza el pedazo para que todo lo ≤ pivote quede a la izquierda y lo mayor a la derecha: eso es la <b>partición</b>. El pivote queda en su posición FINAL. Después repite el proceso, de forma recursiva, con cada lado.',
+    como: [
+      '<code>quickSort(a, lo, hi)</code>: si <code>lo >= hi</code> es el <b>caso base</b> (0 o 1 elemento) y se retorna.',
+      'Partición: <code>pivote = a[hi]</code> e <code>i = lo − 1</code> (fin de la zona de los menores).',
+      '<code>j</code> recorre de <code>lo</code> a <code>hi − 1</code>: si <code>a[j] ≤ pivote</code>, <code>i++</code> e <code>intercambiar(a, i, j)</code>, y el elemento entra a la zona izquierda.',
+      'Al final, <code>intercambiar(a, i + 1, hi)</code>: el pivote queda entre las dos zonas, ya ordenado para siempre.',
+      'Llamadas recursivas: <code>quickSort(a, lo, p − 1)</code> y <code>quickSort(a, p + 1, hi)</code>.'
+    ],
+    sirve: 'En promedio es el <b>más rápido en la práctica</b>: trabaja sobre el mismo arreglo (no copia a temp) y aprovecha muy bien la memoria caché. Promedio: T(n) = 2T(n/2) + n → O(n log n). Peor caso: T(n) = T(n−1) + n → O(n²).',
+    cx: ['O(n log n)', 'O(n log n)', 'O(n²) · pivotes malos', 'O(log n) de pila', 'No'],
+    nota: 'Con pivote = último, un arreglo YA ordenado o al revés es su peor caso: cada partición deja un lado vacío. Se evita eligiendo el pivote al azar o con la "mediana de tres".',
+    uso: 'Grandes volúmenes de datos <b>primitivos</b> (int, double) en orden <b>aleatorio</b>, cuando no importa la estabilidad. Java usa un QuickSort de doble pivote en <code>Arrays.sort(int[])</code>. Evítalo con pivote fijo si los datos pueden venir ya ordenados.'
+  },
+  merge: {
+    que: 'Usa <b>divide y vencerás</b>. Parte el arreglo a la mitad una y otra vez hasta tener pedazos de <b>un elemento</b>, que siempre están ordenados. Después los <b>mezcla</b> de dos en dos, comparando el primero de cada mitad y copiando el menor a un arreglo auxiliar <code>temp</code>.',
+    como: [
+      '<code>mergeSort(a, lo, hi)</code>: si <code>lo >= hi</code>, caso base (1 elemento) y se retorna.',
+      '<code>mid = (lo + hi) / 2</code>. Se ordena recursivamente la izquierda <code>(lo..mid)</code> y luego la derecha <code>(mid+1..hi)</code>.',
+      '<code>merge</code>: <code>i</code> en la izquierda, <code>j</code> en la derecha y <code>k</code> en temp. Se copia a temp el menor entre <code>a[i]</code> y <code>a[j]</code>.',
+      'Cuando una mitad se acaba, el resto de la otra se copia sin comparar.',
+      '<code>temp</code> se copia de vuelta a <code>a[lo..hi]</code>, que ya queda ordenado.'
+    ],
+    sirve: 'Garantiza <b>O(n log n) siempre</b>, sin peor caso malo, y es <b>estable</b>. Es la base del ordenamiento externo (datos que no caben en memoria) y de la forma de ordenar listas enlazadas. Recurrencia: T(n) = 2T(n/2) + n.',
+    cx: ['O(n log n)', 'O(n log n)', 'O(n log n)', 'O(n) extra', 'Sí'],
+    nota: 'Su "precio" es la memoria: necesita un arreglo temp del tamaño del pedazo que mezcla.',
+    uso: 'Cuando necesitas <b>estabilidad</b> o un <b>tiempo garantizado</b>. Por ejemplo, ordenar estudiantes por nota sin perder el orden alfabético que ya tenían. También sirve para <b>listas enlazadas</b> y para <b>archivos enormes en disco</b>, que se ordenan por bloques y después se mezclan.'
+  },
+  heap: {
+    que: 'Ve el arreglo como un <b>árbol binario completo</b>: los hijos de la posición <code>i</code> están en <code>2i+1</code> y <code>2i+2</code>. Primero lo convierte en un <b>max-heap</b> (cada padre ≥ sus hijos), así el máximo queda en la raíz. Luego, una y otra vez, manda la raíz al final y repara el heap.',
+    como: [
+      '<b>Construir:</b> se llama <code>heapify</code> desde el último padre (<code>n/2 − 1</code>) hasta la raíz.',
+      '<code>heapify(i)</code>: compara el padre con sus hijos; si un hijo es mayor, lo sube (intercambio) y sigue bajando por ese camino.',
+      '<b>Extraer:</b> <code>intercambiar(a, 0, i)</code> manda el máximo al final, donde queda fijo.',
+      'El heap se achica en 1 y se hace <code>heapify(a, i, 0)</code> para que la nueva raíz baje a su sitio. Se repite hasta que quede uno.'
+    ],
+    sirve: 'Es una <b>Selección mejorada</b>: encontrar el máximo cuesta O(log n) en vez de O(n). Garantiza O(n log n) <b>sin memoria extra</b>. La misma estructura es la que usan las colas de prioridad (<code>PriorityQueue</code> en Java).',
+    cx: ['O(n log n)', 'O(n log n)', 'O(n log n)', 'O(1)', 'No'],
+    nota: 'Construir el heap cuesta solo O(n). En la práctica suele ser 2 o 3 veces más lento que un buen QuickSort por cómo salta en la memoria.',
+    uso: 'Cuando necesitas un <b>tiempo garantizado</b> y <b>no puedes usar memoria extra</b>, como en sistemas embebidos o de tiempo real. También cuando solo quieres los <b>k mayores</b> (un "top 10"): construyes el heap y extraes k veces. Por eso IntroSort lo usa como plan de respaldo.'
+  },
+  radix: {
+    que: '<b>No compara</b> elementos entre sí. Reparte los números en 10 <b>cubetas</b> (0 a 9) según uno de sus dígitos, empezando por las <b>unidades</b>, y los recoge en orden. Luego repite con las decenas, las centenas, etc. Después del último dígito, el arreglo queda ordenado.',
+    como: [
+      'Busca el máximo para saber cuántos dígitos hay que revisar.',
+      'Con <code>exp = 1</code> (unidades): cada <code>x</code> va a la cubeta <code>(x / exp) % 10</code>.',
+      'Vacía las cubetas de la 0 a la 9, cada una en el orden en que entraron sus elementos.',
+      '<code>exp *= 10</code> y repite con el siguiente dígito.',
+      'Funciona porque cada pasada es <b>estable</b>: si dos números empatan en las decenas, conservan el orden que les dieron las unidades.'
+    ],
+    sirve: 'Rompe el límite de O(n log n) de los ordenamientos que comparan, cuando las claves son <b>enteros</b> o textos de longitud fija.',
+    cx: ['O(d·n)', 'O(d·n)', 'O(d·n)', 'O(n + 10)', 'Sí'],
+    nota: 'd = cantidad de dígitos del número más grande. Con números de 2 dígitos son solo 2 pasadas, haya 10 o 10 millones de datos.',
+    uso: 'Muchos enteros con <b>pocos dígitos</b> o claves de longitud fija: cédulas, códigos postales, teléfonos, fechas en formato AAAAMMDD, direcciones IP. Con millones de datos de ese tipo le gana a QuickSort. No sirve directamente con decimales ni con objetos sin una clave numérica.'
+  },
+  counting: {
+    que: '<b>Cuenta</b> cuántas veces aparece cada valor en un arreglo <code>count[]</code> (una casilla por valor posible). Después <b>acumula</b> esos conteos para saber hasta qué posición llega cada valor. Con eso coloca cada elemento <b>directamente</b> en su posición final en <code>salida[]</code>.',
+    como: [
+      'Calcula <code>min</code> y <code>max</code> y crea <code>count[]</code> con <code>max − min + 1</code> casillas en 0.',
+      'Recorre el arreglo: <code>count[x − min]++</code>.',
+      'Acumula: <code>count[v] += count[v − 1]</code>. Ahora <code>count[v]</code> = cuántos elementos son ≤ v.',
+      'Recorre el arreglo de <b>derecha a izquierda</b>: <code>salida[--count[x − min]] = x</code>.',
+      'Copia <code>salida</code> de vuelta a <code>a</code>.'
+    ],
+    sirve: 'Ordena en <b>tiempo lineal</b> sin comparar, cuando el rango de valores es pequeño. Es la pieza que Radix Sort usa en cada dígito.',
+    cx: ['O(n + k)', 'O(n + k)', 'O(n + k)', 'O(n + k)', 'Sí'],
+    nota: 'k = max − min + 1 (el rango). El recorrido de derecha a izquierda es lo que lo hace estable.',
+    uso: 'Muchos datos con <b>pocos valores distintos</b>: notas de 0 a 5, edades, calificaciones de 1 a 5 estrellas, meses, días de la semana. Si el rango es enorme (valores de 1 a 1.000.000 con solo 10 datos), <code>count[]</code> desperdicia memoria y tiempo, y ahí no conviene.'
+  },
+  tim: {
+    que: 'Es un algoritmo <b>híbrido</b>. Divide el arreglo en bloques pequeños llamados <b>runs</b>, ordena cada run con <b>inserción</b> (muy rápida en bloques pequeños) y luego mezcla los runs de dos en dos como <b>MergeSort</b>. Aquí se muestra una versión simplificada con RUN = 4.',
+    como: [
+      'Para cada bloque de <code>RUN</code> elementos: <code>insercion(a, ini, fin)</code>.',
+      'Con <code>tam = RUN</code>: mezcla cada par de runs vecinos con <code>merge</code>.',
+      '<code>tam *= 2</code> y repite hasta cubrir todo el arreglo.',
+      'El TimSort real además detecta los pedazos que <b>ya vienen ordenados</b> (o al revés) en los datos, usa runs de 32 a 64 y una mezcla "galopante" que salta bloques enteros.'
+    ],
+    sirve: 'Los datos reales casi nunca vienen en orden aleatorio: suelen traer pedazos ya ordenados. TimSort los aprovecha y se acerca a O(n) en esos casos, sin perder el O(n log n) del peor caso y siendo <b>estable</b>.',
+    cx: ['O(n) · ya ordenado (real)', 'O(n log n)', 'O(n log n)', 'O(n)', 'Sí'],
+    nota: 'Lo creó Tim Peters en 2002 para Python.',
+    uso: 'Es el ordenamiento por defecto para <b>datos reales</b>: lo usan Java (<code>Arrays.sort</code> con objetos y <code>Collections.sort</code>) y Python (<code>sorted</code>, <code>list.sort</code>). Ideal para listas de objetos que ya vienen parcialmente ordenadas, por ejemplo registros por fecha a los que se agregan unos pocos nuevos, y cuando se necesita estabilidad.'
+  },
+  intro: {
+    que: 'Es un algoritmo <b>híbrido</b> que empieza como <b>QuickSort</b> pero se protege de sus problemas: si un pedazo es pequeño usa <b>Inserción</b>, y si la recursión se vuelve demasiado profunda (señal de pivotes malos) cambia a <b>HeapSort</b>.',
+    como: [
+      'Calcula <code>limite = 2 · log2(n)</code>: la profundidad máxima permitida.',
+      '<code>intro(a, lo, hi, prof)</code>: si el pedazo tiene ≤ <code>UMBRAL</code> elementos, lo ordena con inserción.',
+      'Si <code>prof == 0</code>, ordena ese pedazo con HeapSort.',
+      'Si no, hace la partición de QuickSort y se llama recursivamente con <code>prof − 1</code> en cada lado.',
+      'Aquí <code>UMBRAL = 4</code> para que se vea con pocos elementos; el real usa 16.'
+    ],
+    sirve: 'Junta tres ventajas: la velocidad promedio de QuickSort, la garantía O(n log n) de HeapSort y la rapidez de Inserción en pedazos pequeños. <b>Nunca cae en O(n²).</b>',
+    cx: ['O(n log n)', 'O(n log n)', 'O(n log n)', 'O(log n) de pila', 'No'],
+    nota: 'Prueba "AL REVÉS" con 11 o 12 elementos: QuickSort solo se iría a O(n²), pero IntroSort detecta la profundidad y cambia a HeapSort.',
+    uso: 'Ordenamiento de <b>propósito general</b> para datos primitivos cuando no sabes cómo vendrán: es <code>std::sort</code> de C++ y <code>Array.Sort</code> de .NET. También sirve cuando los datos podrían venir armados a propósito para provocar el peor caso de QuickSort.'
+  },
+  binIter: {
+    que: 'Busca un valor <b>x</b> en un arreglo <b>ordenado</b> mirando siempre el elemento del <b>medio</b> de la zona donde todavía puede estar. Si es x, terminó. Si es menor, x solo puede estar a la derecha; si es mayor, a la izquierda. <b>Cada comparación descarta la mitad.</b>',
+    como: [
+      '<code>low = 0</code> y <code>high = n − 1</code>: al inicio, x puede estar en cualquier parte.',
+      'Mientras <code>low ≤ high</code>: <code>mid = (low + high) / 2</code>.',
+      'Si <code>a[mid] == x</code>, devuelve <code>mid</code>.',
+      'Si <code>a[mid] < x</code>, descarta la izquierda: <code>low = mid + 1</code>. Si no, descarta la derecha: <code>high = mid − 1</code>.',
+      'Si la zona se vacía (<code>low > high</code>), x no está: devuelve <code>−1</code>.'
+    ],
+    sirve: 'Encuentra datos muy rápido en colecciones ordenadas. Con <b>1.000.000</b> de elementos necesita como máximo unas <b>20</b> comparaciones; la búsqueda lineal podría necesitar 1.000.000.',
+    cx: ['O(1) · x en el medio', 'O(log n)', 'O(log n)', 'O(1)', '—'],
+    nota: 'Requisito obligatorio: el arreglo debe estar ORDENADO. Si no, descartar una mitad no tiene sentido.',
+    uso: 'Buscar <b>muchas veces</b> en datos ordenados que cambian poco: diccionarios, listas de precios, índices de bases de datos, <code>Arrays.binarySearch</code> en Java. También para "adivinar un número" o encontrar el primer valor que cumple una condición. Si el arreglo no está ordenado y solo vas a buscar una vez, ordenar primero no compensa: ahí conviene la búsqueda lineal.'
+  },
+  binRec: {
+    que: 'Hace <b>exactamente lo mismo</b> que la binaria iterativa, pero sin <code>while</code>: el método <b>se llama a sí mismo</b> con la mitad que queda (<code>mid+1..high</code> o <code>low..mid−1</code>). El resultado viaja de vuelta por toda la pila de llamadas.',
+    como: [
+      '<b>Caso base 1:</b> si <code>low > high</code>, la zona está vacía → <code>return −1</code>.',
+      'Calcula <code>mid = (low + high) / 2</code>.',
+      '<b>Caso base 2:</b> si <code>a[mid] == x</code> → <code>return mid</code>.',
+      'Si <code>a[mid] < x</code>: <code>return binariaRec(a, x, mid + 1, high)</code>.',
+      'Si no: <code>return binariaRec(a, x, low, mid − 1)</code>.'
+    ],
+    sirve: 'Es el ejemplo perfecto de recursión de "divide y vencerás" con <b>una sola llamada por nivel</b>: T(n) = T(n/2) + c → O(log n). Ayuda a entender las ecuaciones de recurrencia y la pila de llamadas.',
+    cx: ['O(1)', 'O(log n)', 'O(log n)', 'O(log n) de pila', '—'],
+    nota: 'Hace las mismas comparaciones que la iterativa. La diferencia es la memoria: cada llamada ocupa un espacio en la pila.',
+    uso: 'Cuando el problema ya es recursivo o el código recursivo es más claro, como buscar en un <b>árbol binario de búsqueda</b>, que funciona con la misma idea. En programas reales se prefiere la iterativa porque no gasta pila, pero la recursiva es la que mejor explica la idea en clase.'
+  },
+  interp: {
+    que: 'Mejora la binaria cuando los datos están <b>repartidos de forma pareja</b>. En lugar de mirar la mitad, <b>estima</b> dónde debería estar x con una regla de tres entre <code>a[low]</code> y <code>a[high]</code>. Es como buscar "Ramírez" en un directorio telefónico: lo abres hacia el final, no en la mitad.',
+    como: [
+      '<code>low = 0</code> y <code>high = n − 1</code>.',
+      'Mientras x esté entre <code>a[low]</code> y <code>a[high]</code>: <code>pos = low + (x − a[low])·(high − low) / (a[high] − a[low])</code>.',
+      'Si <code>a[pos] == x</code>, terminó.',
+      'Si <code>a[pos] < x</code>: <code>low = pos + 1</code>. Si no: <code>high = pos − 1</code>.',
+      'Si <code>a[high] == a[low]</code>, se revisa aparte para no dividir entre 0.'
+    ],
+    sirve: 'Con datos uniformes acierta <b>casi a la primera</b>: en arreglos enormes hace muchas menos comparaciones que la binaria.',
+    cx: ['O(1)', 'O(log log n) · uniforme', 'O(n) · muy desparejo', 'O(1)', '—'],
+    nota: 'Prueba "UNIFORME" (gana) y "NO UNIFORME" (avanza de a poquito y pierde contra la binaria).',
+    uso: 'Arreglos <b>grandes, ordenados y con valores uniformes</b>: números de factura o de cédula consecutivos, marcas de tiempo tomadas a intervalos regulares, IDs autoincrementales. Si los datos se amontonan (muchos valores pequeños y pocos grandes), la binaria es más segura.'
+  }
+};
+
+/* ============================================================
+   8. UTILIDADES
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const pad3 = v => String(v).padStart(3, '0');
+function hslHex(h, s, l) {
+  s /= 100; l /= 100;
+  const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return rgbHex(f(0) * 255, f(8) * 255, f(4) * 255);
+}
+function lineMap(code) {
+  const m = {};
+  code.forEach(([, tags], k) => tags.split(/\s+/).filter(Boolean).forEach(t => {
+    const sec = t[0] === '~', key = sec ? t.slice(1) : t;
+    m[key] = m[key] || [[], []]; m[key][sec ? 1 : 0].push(k + 1);
+  }));
+  return m;
+}
+for (const k in ALGOS) ALGOS[k].lines = lineMap(ALGOS[k].code);
+
+/* ============================================================
+   9. INTERPOLACIÓN
+   ============================================================ */
+const tw = {
+  items: new Map(), start: 0, dur: 0,
+  prog(it, now) { return this.dur <= 0 ? 1 : clamp((now - this.start - (it.delay || 0)) / this.dur, 0, 1); },
+  val(it, now) {
+    const t = this.prog(it, now), e = ease(t), o = {};
+    for (const k in it.to) { const a = it.from[k], b = it.to[k]; o[k] = (a == null || b == null) ? b : a + (b - a) * e; }
+    o.t = t; o.lift = it.arc ? it.arc * Math.sin(Math.PI * t) : 0;
+    return o;
+  },
+  set(T, dur, now) {
+    const next = new Map();
+    for (const [key, tg] of T) {
+      const old = this.items.get(key);
+      let from;
+      if (old) { from = this.val(old, now); from.y -= from.lift; delete from.t; delete from.lift; }
+      else from = key.startsWith('el') ? { ...tg.p } : { ...tg.p, a: 0 };
+      if (tg.keepX && old) tg.p.x = from.x;
+      if (from.x == null) from.x = tg.p.x;
+      let arc = 0;
+      if (old && dur > 0 && tg.arcH) {
+        const movedX = Math.abs(old.to.x - tg.p.x) > 1, movedY = Math.abs(old.to.y - tg.p.y) > 1;
+        if (movedX && !movedY) arc = tg.arcH * (tg.arcMul || 1);
+        else if (!movedX && !movedY && tg.hop) arc = tg.arcH * 0.4;
+      }
+      next.set(key, { from, to: { ...tg.p }, meta: tg.meta || {}, delay: tg.delay || 0, arc });
+    }
+    for (const [key, old] of this.items) {
+      if (next.has(key)) continue;
+      const v = this.val(old, now); if ((v.a || 0) < 0.02) continue;
+      delete v.t; delete v.lift;
+      next.set(key, { from: v, to: { ...v, a: 0 }, meta: old.meta, delay: 0, arc: 0 });
+    }
+    this.items = next; this.start = now; this.dur = dur;
+  },
+  progress(now) { return this.dur <= 0 ? 1 : clamp((now - this.start) / this.dur, 0, 1); }
+};
+
+/* ============================================================
+   10. SPRITES PIXEL Y DÍGITOS
+   ============================================================ */
+const SHAPE = [
+  '......XXXX......','....XXXXXXXX....','...XXXXXXXXXX...','..XXXXXXXXXXXX..','.XXXXXXXXXXXXXX.','.XXXXXXXXXXXXXX.',
+  'XXXXXXXXXXXXXXXX','XXXXXXXXXXXXXXXX','XXXXXXXXXXXXXXXX','XXXXXXXXXXXXXXXX','XXXXXXXXXXXXXXXX','.XXXXXXXXXXXXXX.','..XXXXXXXXXXXX..'
+];
+const EYES_OPEN = [[4,6],[5,6],[4,7],[5,7],[10,6],[11,6],[10,7],[11,7]];
+const SMILE = [[6,9],[9,9],[7,10],[8,10]];
+const FACES = {
+  neutral:   { D:[[5,6],[5,7],[10,6],[10,7],[7,9],[8,9]] },
+  open:      { D:[...EYES_OPEN, ...SMILE], W:[[4,6],[10,6]] },
+  happy:     { D:[[4,7],[5,6],[6,7],[9,7],[10,6],[11,7], ...SMILE], P:[[3,8],[12,8]] },
+  surprised: { D:[...EYES_OPEN,[7,9],[8,9],[7,10],[8,10]], W:[[4,6],[10,6]] },
+  sweat:     { D:[[4,6],[5,7],[11,6],[10,7],[6,10],[7,9],[8,10],[9,9]], B:[[13,3],[12,4],[13,4]] },
+  sleepy:    { D:[[4,7],[5,7],[10,7],[11,7],[7,9],[8,9]] },
+  cool:      { K:[[3,6],[4,6],[5,6],[6,6],[7,6],[8,6],[9,6],[10,6],[11,6],[12,6],[3,7],[4,7],[5,7],[6,7],[9,7],[10,7],[11,7],[12,7]], W:[[4,6],[10,6]], D:SMILE }
+};
+const FACE_COL = { D:'#1a1a22', W:'#ffffff', P:'#ff8fb3', B:'#8fd3ff', K:'#0b0b0b' };
+const spriteCache = new Map();
+const inShape = (x, y) => y >= 0 && y < 13 && x >= 0 && x < 16 && SHAPE[y][x] === 'X';
+function getSprite(hex, expr) {
+  const key = hex + expr;
+  if (spriteCache.has(key)) return spriteCache.get(key);
+  const c = document.createElement('canvas'); c.width = 18; c.height = 15;
+  const x = c.getContext('2d');
+  const [r, g, b] = hexToRgb(hex);
+  const shade = rgbHex(r * .76, g * .76, b * .76), outline = rgbHex(r * .28, g * .28, b * .28), light = rgbHex(r + (255 - r) * .6, g + (255 - g) * .6, b + (255 - b) * .6);
+  const px = (cx, cy, col) => { x.fillStyle = col; x.fillRect(cx + 1, cy + 1, 1, 1); };
+  for (let yy = -1; yy <= 13; yy++) for (let xx = -1; xx <= 16; xx++) {
+    if (inShape(xx, yy)) continue;
+    if (inShape(xx + 1, yy) || inShape(xx - 1, yy) || inShape(xx, yy + 1) || inShape(xx, yy - 1)) px(xx, yy, outline);
+  }
+  for (let yy = 0; yy < 13; yy++) for (let xx = 0; xx < 16; xx++) {
+    if (!inShape(xx, yy)) continue;
+    const edgeR = !inShape(xx + 1, yy) || !inShape(xx + 2, yy);
+    px(xx, yy, (yy >= 11 || edgeR && yy > 4) ? shade : hex);
+  }
+  [[4,2],[5,2],[3,3],[4,3],[3,4]].forEach(([a, bb]) => px(a, bb, light));
+  const f = FACES[expr] || FACES.neutral;
+  ['K', 'D', 'P', 'B', 'W'].forEach(k => (f[k] || []).forEach(([a, bb]) => px(a, bb, FACE_COL[k])));
+  spriteCache.set(key, c);
+  return c;
+}
+const DIG = { '0':'111101101101111','1':'010110010010111','2':'111001111100111','3':'111001111001111','4':'101101111001001',
+  '5':'111100111001111','6':'111100111101111','7':'111001001001001','8':'111101111101111','9':'111101111001111' };
+function drawNum(ctx, str, cx, top, q, color, a) {
+  const w = (str.length * 4 - 1) * q;
+  const x0 = Math.round(cx - w / 2), y0 = Math.round(top);
+  ctx.globalAlpha = a;
+  for (const pass of [0, 1]) {
+    ctx.fillStyle = pass ? color : '#000';
+    const off = pass ? 0 : Math.max(1, q / 2);
+    [...str].forEach((ch, k) => {
+      const bits = DIG[ch]; if (!bits) return;
+      for (let r = 0; r < 5; r++) for (let c = 0; c < 3; c++) if (bits[r * 3 + c] === '1')
+        ctx.fillRect(x0 + (k * 4 + c) * q + off, y0 + r * q + off, q, q);
+    });
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ============================================================
+   11. ESTADO Y GEOMETRÍA
+   ============================================================ */
+let group = 'simples', algo = 'seleccion', values = [], N = 6, steps = [], cur = 0, playing = false, lastAdvance = 0;
+let sortVals = [7, 4, 9, 2, 5, 1], searchVals = [3, 8, 13, 18, 23, 28, 33, 38, 43, 48], target = 33;
+let bodyCol = [], lay = null;
+let particles = [], lastFrame = performance.now(), soundOn = false, audio = null;
+const stage = { el: $('cvStage'), ctx: null, w: 0, h: 0 };
+const avatar = { el: $('cvAvatar'), ctx: null };
+const interval = () => SPEEDS[+$('speed').value - 1];
+const autoDur = () => clamp(interval() * 0.75, 70, 950);
+const manualDur = () => clamp(interval() * 0.75, 380, 800);
+const A = () => ALGOS[algo];
+let accCache = null; const themeAcc = () => accCache || (accCache = getComputedStyle(document.body).getPropertyValue('--yellow').trim() || '#f5e642');
+
+function computeLayout(W) {
+  const top = A().top || {};
+  const gut = W < 600 ? 50 : 84, padR = W < 600 ? 6 : 18;
+  const cw = Math.min((W - gut - padR) / N, 96);
+  const left = gut + ((W - gut - padR) - cw * N) / 2;
+  const sw = Math.max(14, Math.round(cw * (cw < 40 ? 0.8 : 0.66))), sh = Math.round(sw * 13 / 16);
+  const q = Math.max(1, Math.min(Math.max(2, Math.round(sw / 18)), Math.floor(cw * 0.92 / 7)));
+  const numH = 7 * q + 6;
+  const L = { W, gut, padR, cw, left, sw, sh, q, numH, top: 40 };
+  let y = 40;
+  if (top.tree) { const lv = Math.ceil(Math.log2(N + 1)); L.treeTop = y + 6; L.levelH = 50; L.treeH = lv * L.levelH; y = L.treeTop + L.treeH + 6; }
+  if (top.buckets) {
+    L.bsc = 0.55; L.bstep = Math.round((sh + numH) * L.bsc + 4);
+    const cap = Math.min(N, 5);
+    L.bucketFeet = y + cap * L.bstep + 10; L.bw = (W - gut - padR) / 10; L.bleft = gut;
+    y = L.bucketFeet + 34;
+  }
+  if (top.temp) { L.tempFeet = y + numH + sh; y = L.tempFeet + 54; } else y += 14;
+  L.mainTop = y; L.mainFeet = y + numH + sh; L.H = L.mainFeet + 120;
+  return L;
+}
+const X = col => lay.left + lay.cw * (col + 0.5);
+const BX = b => lay.bleft + lay.bw * (b + 0.5);
+
+function setupStage() {
+  const dpr = window.devicePixelRatio || 1;
+  const W = Math.max(300, $('wrapStage').clientWidth);
+  lay = computeLayout(W);
+  stage.w = W; stage.h = lay.H;
+  stage.el.style.height = lay.H + 'px';
+  stage.el.width = Math.round(W * dpr); stage.el.height = Math.round(lay.H * dpr);
+  stage.ctx = stage.el.getContext('2d'); stage.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  stage.ctx.imageSmoothingEnabled = false;
+  avatar.el.width = 80 * dpr; avatar.el.height = 80 * dpr;
+  avatar.ctx = avatar.el.getContext('2d'); avatar.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); avatar.ctx.imageSmoothingEnabled = false;
+}
+
+const EXPR = { idle:'neutral', dim:'sleepy', active:'open', part:'open', compare:'surprised', swap:'happy', temp:'open', min:'cool', shift:'surprised', merge:'open', sorted:'happy', done:'cool' };
+function buildTargets(s) {
+  const T = new Map();
+  for (let id = 0; id < N; id++) {
+    const st = s.st[id], L = s.loc[id];
+    const c = hexToRgb(ST[st]);
+    let expr = EXPR[st] || 'neutral';
+    if ((s.kind === 'cmp' || s.kind === 'pcmp' || s.kind === 'mcmp') && st === 'compare' && s.cmp) expr = s.cmp.good ? 'happy' : 'sweat';
+    if (s.kind === 'found' && st === 'sorted') expr = 'cool';
+    if (s.kind === 'notFound' && st !== 'dim') expr = 'sweat';
+    const hop = (s.hot === id && ['passEnd', 'insert', 'place', 'extract', 'takeL', 'takeR'].includes(s.kind)) || s.kind === 'done' || s.kind === 'found' && st === 'sorted';
+    let arcMul = 1;
+    if (s.hop && s.hop.length === 2) arcMul = id === s.hop[0] ? 1.3 : 0.55;
+    let x, y, sc = 1;
+    if (L.z === 't') { x = X(L.c); y = lay.tempFeet; }
+    else if (L.z === 'b') { x = BX(L.c); sc = lay.bsc; y = lay.bucketFeet - Math.min(L.k, 7) * (L.k > 4 ? lay.bstep * 0.55 : lay.bstep); }
+    else { x = X(L.c); y = lay.mainFeet; }
+    T.set('el' + id, { p: { x, y, sc, a: st === 'dim' ? 0.35 : 1, r: c[0], g: c[1], b: c[2] },
+      meta: { v: values[id], st, expr, id, z: L.z }, arcH: lay.sh * 0.9, arcMul, hop,
+      delay: s.kind === 'done' ? L.c * 40 : 0 });
+  }
+  s.holes.forEach(p => T.set('hole' + p, { p: { x: X(p), y: lay.mainFeet, a: 1 } }));
+  if (s.cmp && s.cmp.x1 !== s.cmp.x2) T.set('br', { p: { x1: X(Math.min(s.cmp.x1, s.cmp.x2)), x2: X(Math.max(s.cmp.x1, s.cmp.x2)), a: 1 }, meta: { lift: !!s.cmp.lift } });
+  for (const k of Object.keys(PCOL)) {
+    const col = s.ptr[k];
+    T.set('p:' + k, col != null ? { p: { x: X(col), a: 1 } } : { p: { x: null, a: 0 }, keepX: true });
+  }
+  return T;
+}
+
+/* ============================================================
+   12. DIBUJO
+   ============================================================ */
+let dotPattern = null;
+function getDots(ctx) {
+  if (dotPattern) return dotPattern;
+  const c = document.createElement('canvas'); c.width = 16; c.height = 16;
+  const x = c.getContext('2d'); x.fillStyle = '#1b1b1b'; x.fillRect(0, 0, 2, 2);
+  dotPattern = ctx.createPattern(c, 'repeat'); return dotPattern;
+}
+function rect(ctx, x, y, w, h) { ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); }
+function arrow(ctx, x, y, q, color) {
+  ctx.fillStyle = color;
+  for (let r = 0; r < 3; r++) { const w = (2 * r + 1) * q; rect(ctx, x - w / 2, y + r * q, w, q); }
+}
+function pixLine(ctx, x1, y1, x2, y2, q, color) {
+  ctx.fillStyle = color;
+  const n = Math.max(1, Math.round(Math.hypot(x2 - x1, y2 - y1) / q));
+  for (let k = 0; k <= n; k++) rect(ctx, x1 + (x2 - x1) * k / n - q / 2, y1 + (y2 - y1) * k / n - q / 2, q, q);
+}
+
+function drawTree(ctx, s) {
+  const h = s.heap, q = Math.max(2, lay.q);
+  ctx.font = '16px Pix'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#9b9b9b';
+  ctx.fillText('heap', 6, lay.treeTop + 16);
+  if (!h) {
+    ctx.fillStyle = '#4a4a4a'; ctx.textAlign = 'center';
+    ctx.fillText(algo === 'intro' ? 'aquí aparece el árbol si IntroSort cambia a HeapSort' : 'árbol del heap', lay.gut + (lay.W - lay.gut - lay.padR) / 2, lay.treeTop + lay.treeH / 2);
+    return;
+  }
+  const usable = lay.W - lay.gut - lay.padR;
+  const pos = k => { const l = Math.floor(Math.log2(k + 1)), idx = k - (2 ** l - 1); return { x: lay.gut + usable * (idx + 0.5) / 2 ** l, y: lay.treeTop + l * lay.levelH + 18 }; };
+  const nodeSt = k => { const id = s.loc.findIndex(L => L.z === 'm' && L.c === h.base + k); return id >= 0 ? s.st[id] : 'idle'; };
+  for (let k = 1; k < h.size; k++) {
+    const a = pos(Math.floor((k - 1) / 2)), b = pos(k);
+    const hot = ['compare', 'swap'].includes(nodeSt(k));
+    pixLine(ctx, a.x, a.y, b.x, b.y, q, hot ? ST.compare : '#3a3a3a');
+  }
+  const nw = Math.min(40, Math.max(26, usable / 2 ** Math.floor(Math.log2(h.size)) - 6));
+  for (let k = 0; k < h.size; k++) {
+    const p = pos(k), st = nodeSt(k), v = s.arr[h.base + k];
+    ctx.fillStyle = '#000'; rect(ctx, p.x - nw / 2 + 3, p.y - 14 + 3, nw, 28);
+    ctx.fillStyle = st === 'idle' ? '#3a3a3a' : ST[st]; rect(ctx, p.x - nw / 2, p.y - 14, nw, 28);
+    ctx.fillStyle = st === 'idle' ? '#fff' : '#161616'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(v == null ? '' : String(v), Math.round(p.x), Math.round(p.y + 1));
+    ctx.fillStyle = '#5f5f5f'; ctx.font = '12px Pix'; ctx.fillText(String(k), Math.round(p.x + nw / 2 + 8), Math.round(p.y - 10)); ctx.font = '16px Pix';
+  }
+}
+function drawBuckets(ctx, s) {
+  ctx.font = '16px Pix'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#9b9b9b';
+  ctx.fillText(lay.gut > 60 ? 'cubetas' : 'cub.', 6, lay.bucketFeet - 30);
+  const hotB = s.extra && s.extra.bucket != null ? s.extra.bucket : -1;
+  for (let b = 0; b < 10; b++) {
+    const x = BX(b), w = lay.bw * 0.82, hot = b === hotB;
+    ctx.fillStyle = hot ? ST.compare : '#333';
+    rect(ctx, x - w / 2, lay.bucketFeet + 3, w, 3); rect(ctx, x - w / 2, lay.bucketFeet - 18, 3, 21); rect(ctx, x + w / 2 - 3, lay.bucketFeet - 18, 3, 21);
+    ctx.fillStyle = hot ? ST.compare : '#777'; ctx.textAlign = 'center';
+    ctx.fillText(String(b), Math.round(x), lay.bucketFeet + 20);
+  }
+}
+
+function drawStage(now) {
+  const ctx = stage.ctx; if (!ctx || !lay || !steps[cur]) return;
+  const W = stage.w, H = stage.h, s = steps[cur], q = lay.q, top = A().top || {};
+  ctx.fillStyle = '#0f0f0f'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = getDots(ctx); ctx.fillRect(0, 0, W, H);
+
+  const els = [], holes = []; let br = null; const P = {};
+  for (const [key, it] of tw.items) {
+    if (key.startsWith('el')) els.push([it, tw.val(it, now)]);
+    else if (key.startsWith('hole')) holes.push(tw.val(it, now));
+    else if (key === 'br') br = [it, tw.val(it, now)];
+    else if (key.startsWith('p:')) P[key.slice(2)] = tw.val(it, now);
+  }
+
+  ctx.font = '16px Pix'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  if (s.label) { ctx.fillStyle = '#5aa0ff'; ctx.fillText('▶ ' + s.label, 8, 18); }
+  if (A().search) { ctx.fillStyle = ST.min; ctx.textAlign = 'right'; ctx.fillText('buscando x = ' + target, W - 10, 18); ctx.textAlign = 'left'; }
+  if (top.tree) drawTree(ctx, s);
+  if (top.buckets) drawBuckets(ctx, s);
+  if (top.temp) {
+    ctx.textAlign = 'left'; ctx.fillStyle = '#ff74b4'; ctx.fillText(lay.gut > 60 ? top.temp : top.temp.slice(0, 4), 6, Math.round(lay.tempFeet - lay.sh / 2));
+    ctx.fillStyle = 'rgba(255,116,180,0.10)'; rect(ctx, lay.left, lay.tempFeet + 2, lay.cw * N, 2);
+  }
+  ctx.textAlign = 'left'; ctx.fillStyle = '#9b9b9b'; ctx.fillText('a[]', 6, Math.round(lay.mainFeet - lay.sh / 2));
+  ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left, lay.mainFeet + q + 4, lay.cw * N, 2);
+  ctx.textAlign = 'center';
+  for (let c = 0; c < N; c++) { ctx.fillStyle = '#555'; ctx.fillText(String(c), Math.round(X(c)), Math.round(lay.mainFeet + 22)); }
+
+  for (const hole of holes) {
+    if (hole.a < 0.02) continue;
+    ctx.globalAlpha = hole.a * (0.6 + 0.4 * Math.abs(Math.sin(now / 300))); ctx.fillStyle = ST.temp;
+    const x0 = hole.x - lay.sw / 2, y0 = hole.y - lay.sh;
+    for (let x = x0; x < x0 + lay.sw; x += 2 * q) { rect(ctx, x, y0, q, q); rect(ctx, x, y0 + lay.sh - q, q, q); }
+    for (let y = y0; y < y0 + lay.sh; y += 2 * q) { rect(ctx, x0, y, q, q); rect(ctx, x0 + lay.sw - q, y, q, q); }
+    ctx.globalAlpha = 1;
+  }
+
+  if (br && br[1].a > 0.02 && !br[0].meta.lift) {
+    const v = br[1], y = lay.mainTop - 4, tk = Math.max(2, q);
+    ctx.globalAlpha = v.a; ctx.fillStyle = ST.compare;
+    rect(ctx, v.x1, y, v.x2 - v.x1, tk); rect(ctx, v.x1, y, tk, 10); rect(ctx, v.x2 - tk, y, tk, 10);
+    ctx.globalAlpha = 1;
+  }
+  if (s.cmp) {
+    const p = easeOut(tw.progress(now));
+    const txt = s.cmp.text || `${s.cmp.a} ${s.cmp.op} ${s.cmp.b}`;
+    ctx.font = '16px Pix';
+    const bw = ctx.measureText(txt).width + 16, bh = 22;
+    let bx, by;
+    if (s.cmp.lift) { bx = clamp(X(s.cmp.x2) + lay.cw * 0.5 + bw / 2, bw / 2 + 4, W - bw / 2 - 4); by = Math.round(lay.tempFeet - lay.sh - 6 + 4 * (1 - p)); }
+    else { bx = clamp((X(s.cmp.x1) + X(s.cmp.x2)) / 2, bw / 2 + 4, W - bw / 2 - 4); by = Math.round(lay.mainTop - 34 - 4 * (1 - p)); }
+    ctx.globalAlpha = p;
+    ctx.fillStyle = '#000'; rect(ctx, bx - bw / 2 + 3, by + 3, bw, bh);
+    ctx.fillStyle = s.cmp.good ? ST.sorted : ST.compare; rect(ctx, bx - bw / 2, by, bw, bh);
+    ctx.fillStyle = '#161616'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, Math.round(bx), by + bh / 2 + 1);
+    ctx.globalAlpha = 1;
+  }
+
+  const fly = [];
+  for (const pair of els) { if (pair[0].arc && pair[1].t > 0 && pair[1].t < 1) fly.push(pair); else drawElement(ctx, pair[0], pair[1], now); }
+  for (const pair of fly) drawElement(ctx, pair[0], pair[1], now);
+
+  ctx.font = '16px Pix'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  const used = {};
+  for (const k of Object.keys(PCOL)) {
+    const v = P[k]; if (!v || v.a < 0.02 || v.x == null) continue;
+    const slot = Math.round(v.x / 4), n = used[slot] = (used[slot] || 0) + 1;
+    const y = lay.mainFeet + 34 + (n - 1) * 28;
+    ctx.globalAlpha = v.a;
+    arrow(ctx, v.x, y, Math.max(2, q), PCOL[k]);
+    ctx.fillStyle = PCOL[k]; ctx.fillText(k, Math.round(v.x), y + 3 * Math.max(2, q) + 15);
+    ctx.globalAlpha = 1;
+  }
+
+  const dt = Math.min(3, (now - lastFrame) / 16.67);
+  for (const p of particles) {
+    p.vy += 0.2 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= 0.012 * dt;
+    if (p.life <= 0) continue;
+    ctx.globalAlpha = clamp(p.life, 0, 1); ctx.fillStyle = p.c; rect(ctx, p.x, p.y, p.s, p.s);
+  }
+  ctx.globalAlpha = 1;
+  particles = particles.filter(p => p.life > 0 && p.y < H + 10);
+}
+
+function drawElement(ctx, it, v, now) {
+  const sc = v.sc || 1, q = Math.max(1, Math.round(lay.q * sc)), sw = lay.sw * sc, sh = lay.sh * sc, id = it.meta.id;
+  let sx = 1, sy = 1;
+  const flying = it.arc && v.t > 0 && v.t < 1;
+  if (flying) {
+    if (v.t < 0.8) { const k = Math.sin(Math.PI * v.t / 0.8); sy = 1 + 0.16 * k; sx = 1 - 0.1 * k; }
+    else { const k = Math.sin(Math.PI * (v.t - 0.8) / 0.2); sy = 1 - 0.22 * k; sx = 1 + 0.18 * k; }
+  } else {
+    const b = Math.sin(now / 360 + id * 1.9), amp = it.meta.z === 't' ? 0.07 : (it.meta.st === 'dim' ? 0.015 : 0.04);
+    sy = 1 + amp * b; sx = 1 - amp * b;
+  }
+  const ground = v.y, float = it.meta.z === 't' && !flying ? 3 * Math.sin(now / 250) : 0;
+  const feet = ground - v.lift - float;
+  const air = flying ? Math.sin(Math.PI * v.t) : 0;
+  ctx.globalAlpha = v.a * (1 - 0.5 * air);
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  const shw = sw * (0.84 - 0.3 * air);
+  rect(ctx, v.x - shw / 2, ground + 1, shw, q);
+  ctx.globalAlpha = v.a * (1 - air);
+  ctx.fillStyle = `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`;
+  rect(ctx, v.x - sw * 0.4, ground + 1 + q + 2, sw * 0.8, q);
+  ctx.globalAlpha = v.a;
+  const spr = getSprite(bodyCol[id], it.meta.expr);
+  const dw = sw * 18 / 16 * sx, dh = sh * 15 / 13 * sy, pxh = sh / 13 * sy;
+  ctx.drawImage(spr, Math.round(v.x - dw / 2), Math.round(feet + pxh - dh), Math.round(dw), Math.round(dh));
+  const ncol = it.meta.st === 'idle' ? '#ffffff' : `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`;
+  drawNum(ctx, String(it.meta.v), v.x, feet - sh * sy - 7 * q, q, ncol, v.a);
+  ctx.globalAlpha = 1;
+}
+
+function drawAvatar(now) {
+  const ctx = avatar.ctx; if (!ctx) return;
+  ctx.fillStyle = '#191919'; ctx.fillRect(0, 0, 80, 80);
+  ctx.fillStyle = '#222'; for (let y = 0; y < 80; y += 8) for (let x = (y / 8) % 2 * 8; x < 80; x += 16) ctx.fillRect(x, y, 8, 8);
+  const s = steps[cur]; if (!s) return;
+  let expr = KIND[s.kind][2];
+  if (typer && !typer.done) expr = Math.floor(now / 120) % 2 ? 'surprised' : 'open';
+  const spr = getSprite(themeAcc(), expr);
+  const b = Math.sin(now / 300);
+  const w = 54 * (1 - 0.04 * b), h = 45 * (1 + 0.04 * b);
+  ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(16, 66, 48, 4);
+  ctx.drawImage(spr, Math.round(40 - w / 2), Math.round(68 - h), Math.round(w), Math.round(h));
+}
+function burst() {
+  const pal = [ST.sorted, ST.compare, ST.swap, ST.shift, '#45d6e6', '#ffffff', '#f5e642'];
+  for (let k = 0; k < 140; k++) {
+    const c = Math.floor(Math.random() * N);
+    particles.push({ x: X(c), y: lay.mainFeet - lay.sh - Math.random() * 30, vx: (Math.random() - 0.5) * 7, vy: -Math.random() * 7 - 2,
+      s: lay.q * (1 + Math.floor(Math.random() * 2)), life: 1 + Math.random() * 0.5, c: pal[k % pal.length] });
+  }
+}
+
+/* ============================================================
+   13. SONIDO 8-BIT (opcional)
+   ============================================================ */
+function beep(f1, f2, dur, vol = 0.035, delay = 0) {
+  if (!soundOn) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const t = audio.currentTime + delay, o = audio.createOscillator(), g = audio.createGain();
+    o.type = 'square'; o.frequency.setValueAtTime(f1, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + 0.02);
+  } catch (e) { /* sin audio */ }
+}
+function sfx(kind) {
+  if (!soundOn || interval() < 150) return;
+  if (['cmp', 'pcmp', 'mcmp', 'cmpL', 'cmpR', 'sMid', 'count'].includes(kind)) beep(880, null, 0.05);
+  else if (['swap', 'pswap', 'hswap', 'extract'].includes(kind)) { beep(660, 990, 0.1); beep(990, 660, 0.1, 0.03, 0.08); }
+  else if (['shift', 'takeL', 'takeR', 'rest', 'toBucket', 'cplace'].includes(kind)) beep(660, 990, 0.1);
+  else if (['call', 'sCall', 'pass', 'gap', 'digitPass', 'runStart', 'mergePhase', 'split'].includes(kind)) beep(520, 260, 0.12);
+  else if (['insert', 'place', 'copyBack', 'collect'].includes(kind)) beep(784, 392, 0.1);
+  else if (['passEnd', 'ok'].includes(kind)) [523, 659, 784].forEach((f, i) => beep(f, null, 0.08, 0.035, i * 0.07));
+  else if (kind === 'done' || kind === 'found') [523, 659, 784, 1046, 784, 1046].forEach((f, i) => beep(f, null, 0.12, 0.04, i * 0.1));
+  else beep(300, null, 0.06);
+}
+
+/* ============================================================
+   14. MÁQUINA DE ESCRIBIR
+   ============================================================ */
+let typer = null;
+function typeMessage(html, instant) {
+  const el = $('dMsg');
+  el.innerHTML = html;
+  $('dialog').classList.remove('ready');
+  if (instant) { typer = null; $('dialog').classList.add('ready'); return; }
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [];
+  while (walker.nextNode()) nodes.push({ n: walker.currentNode, t: walker.currentNode.nodeValue });
+  nodes.forEach(o => { o.n.nodeValue = ''; o.chip = o.n.parentElement.closest('.chip'); if (o.chip) o.chip.classList.add('tw-hide'); });
+  typer = { nodes, i: 0, pos: 0, last: performance.now(), done: false, acc: 0 };
+}
+function finishTyping() {
+  if (!typer) return;
+  typer.nodes.forEach(o => { o.n.nodeValue = o.t; if (o.chip) o.chip.classList.remove('tw-hide'); });
+  typer.done = true; $('dialog').classList.add('ready');
+}
+function tickTyping(now) {
+  if (!typer || typer.done) return;
+  typer.acc += (now - typer.last) * 0.11; typer.last = now;
+  let n = Math.floor(typer.acc); typer.acc -= n;
+  while (n > 0 && typer.i < typer.nodes.length) {
+    const o = typer.nodes[typer.i];
+    if (o.chip) o.chip.classList.remove('tw-hide');
+    const take = Math.min(n, o.t.length - typer.pos);
+    typer.pos += take; n -= take;
+    o.n.nodeValue = o.t.slice(0, typer.pos);
+    if (typer.pos >= o.t.length) { typer.i++; typer.pos = 0; }
+  }
+  if (typer.i >= typer.nodes.length) { typer.done = true; $('dialog').classList.add('ready'); }
+}
+
+/* ============================================================
+   15. INTERFAZ
+   ============================================================ */
+const isSearch = () => GROUPS[group].type === 'search';
+const gen = (k, vals) => ALGOS[k].gen(vals, target);
+
+function renderNav() {
+  $('algoNav').innerHTML = GROUPS[group].algos.map((k, i) => `<button class="algo${k === algo ? ' on' : ''}" data-algo="${k}" title="Tecla ${i + 1}">${ALGOS[k].name}<small>${ALGOS[k].sub}</small></button>`).join('');
+  document.querySelectorAll('.grp').forEach(b => b.classList.toggle('on', b.dataset.group === group));
+  $('title').textContent = GROUPS[group].name;
+  $('subtitle').innerHTML = GROUPS[group].sub;
+}
+function renderLegend() {
+  const names = { ...LEG_DEFAULT, ...(group === 'simples' ? SIMPLE_LEG : {}), ...(A().legNames || {}) };
+  $('legend').innerHTML = A().legend.map(k => `<span class="lg"><i style="background:${ST[k]}"></i>${names[k]}</span>`).join('');
+}
+function renderCode(s) {
+  const L = A().lines[s.kind] || [[], []];
+  $('code').innerHTML = A().code.map(([l], k) => {
+    const n = k + 1, cls = L[0].includes(n) ? 'ln hl' : L[1].includes(n) ? 'ln sec' : 'ln';
+    return `<div class="${cls}"><span class="no">${n}</span>${l.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</div>`;
+  }).join('');
+  $('explain').innerHTML = EXPLAIN[s.kind] || '';
+  const hl = $('code').querySelector('.hl'); if (hl) { const c = $('code'); const t = hl.offsetTop - c.offsetTop; if (t < c.scrollTop || t > c.scrollTop + c.clientHeight - 30) c.scrollTop = t - 40; }
+}
+let prevVars = {};
+function renderVars(s) {
+  const keys = Object.keys(s.vars);
+  $('vars').innerHTML = keys.map(k => {
+    const v = s.vars[k], cls = (k === 'i' || k === 'low') ? 'i' : ((k === 'j' || k === 'high') ? 'j' : ((k === 'min' || k === 'mayor' || k === 'pivote' || k === 'x') ? 'm' : ''));
+    const fl = prevVars[k] !== undefined && prevVars[k] !== v ? ' flash' : '';
+    return `<div class="vb ${cls}${fl}"><span>${k}</span><b>${v === null || v === undefined ? '-' : v}</b></div>`;
+  }).join('') || '<div class="vb"><span>-</span><b>-</b></div>';
+  prevVars = { ...s.vars };
+}
+function cellsFrom(arr, s, useState) {
+  return arr.map((v, p) => {
+    if (v == null) return `<div class="cell empty">_</div>`;
+    if (!useState) return `<div class="cell temp">${v}</div>`;
+    const id = s.loc.findIndex(L => L.z === 'm' && L.c === p);
+    const st = id >= 0 ? s.st[id] : '';
+    return `<div class="cell ${st === 'idle' ? '' : st}">${v}</div>`;
+  }).join('');
+}
+function renderMem(s) {
+  $('memA').innerHTML = cellsFrom(s.arr, s, true);
+  const top = A().top || {};
+  let lab = 'temp =', html = `<span class="none">—</span>`;
+  $('memCRow').style.display = 'none';
+  if (A().search) { lab = 'objetivo x ='; html = `<div class="cell min">${target}</div>`; }
+  else if (algo === 'radix') {
+    lab = 'cubetas =';
+    html = s.bk ? s.bk.map((b, d) => b.length ? `<span class="lg" style="margin-right:8px">${d}:</span>${b.map(v => `<div class="cell shift">${v}</div>`).join('')}` : '').join('') || `<span class="none">vacías</span>` : `<span class="none">—</span>`;
+  } else if (algo === 'counting') {
+    lab = 'salida[] ='; html = cellsFrom(s.tarr, s, false).replace(/cell temp/g, 'cell part');
+    if (s.extra && s.extra.count) {
+      $('memCRow').style.display = 'flex';
+      $('memC').innerHTML = s.extra.count.map((c, k) => `<div class="cc"><small>${k + s.extra.min}</small><div class="cell ${k === s.extra.hot ? 'hot' : (c === 0 ? 'zero' : '')}">${c}</div></div>`).join('');
+    }
+  } else if (algo === 'merge' || (algo === 'tim' && s.tarr.some((v, p) => v != null && s.loc.some(L => L.z === 't' && L.c === p) && !['pick', 'cmp', 'shift', 'edge'].includes(s.kind)))) {
+    lab = 'temp[] ='; const t = s.tarr.filter(v => v != null);
+    html = t.length ? t.map(v => `<div class="cell merge">${v}</div>`).join('') : `<span class="none">—</span>`;
+  } else if (algo === 'heap' || (algo === 'intro' && s.heap)) {
+    lab = 'heap ='; html = s.heap ? s.arr.slice(s.heap.base, s.heap.base + s.heap.size).map(v => `<div class="cell active">${v}</div>`).join('') : `<span class="none">—</span>`;
+  } else if (algo === 'quick' || (algo === 'intro' && s.vars.pivote != null)) {
+    lab = 'pivote ='; html = s.vars.pivote != null ? `<div class="cell min">${s.vars.pivote}</div>` : `<span class="none">—</span>`;
+  } else {
+    const key = algo === 'shell' ? 'temp' : (s.vars.actual !== undefined ? 'actual' : 'temp');
+    lab = key + ' =';
+    const tv = s.vars[key];
+    html = tv != null && s.kind !== 'done' && s.kind !== 'start' ? `<div class="cell temp">${tv}</div>` : `<span class="none">—</span>`;
+  }
+  $('memTLab').textContent = lab; $('memT').innerHTML = html;
+}
+function bump(id, v) { const el = $(id); if (el.textContent !== v) { el.textContent = v; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); } }
+function renderHud(s) {
+  bump('stStep', pad3(cur + 1) + '/' + pad3(steps.length));
+  bump('stCmp', pad3(s.stats.cmp));
+  bump('stPass', s.stats.p);
+  $('stPassLbl').textContent = A().pLbl;
+  if (A().search) {
+    $('stMovLbl').textContent = 'LINEAL HARÍA'; const idx = values.indexOf(target); $('stMov').textContent = pad3(idx >= 0 ? idx + 1 : N);
+    $('stRefLbl').textContent = 'log2(n)+1 ≈'; $('stRef').textContent = Math.floor(Math.log2(N)) + 1;
+  } else {
+    $('stMovLbl').textContent = A().movLbl; bump('stMov', pad3(s.stats.mov));
+    if (group === 'simples') { $('stRefLbl').textContent = 'PEOR CASO n(n-1)/2 ='; $('stRef').textContent = N * (N - 1) / 2; }
+    else { $('stRefLbl').textContent = 'n·log2(n) ≈'; $('stRef').textContent = Math.round(N * Math.log2(N)); }
+  }
+  const last = cur === steps.length - 1;
+  $('phase').className = 'hb phase' + (last ? ' fin' : (cur > 0 ? ' run' : ''));
+  $('phaseTxt').textContent = last ? 'TERMINADO' : (playing ? 'EJECUTANDO' : (cur > 0 ? 'EN PAUSA' : 'LISTO'));
+}
+function renderStack(s) {
+  if (!A().rec && !s.stack.length) { $('stack').innerHTML = `<div class="emptyst">${A().name} no es recursivo: no usa la pila de llamadas.<br>Prueba QuickSort, MergeSort, HeapSort, IntroSort o la Binaria recursiva.</div>`; return; }
+  if (!s.stack.length) { $('stack').innerHTML = `<div class="emptyst">${cur === 0 ? 'Todavía no hay llamadas.' : 'La pila está vacía: todas las llamadas terminaron.'}</div>`; return; }
+  $('stack').innerHTML = s.stack.map((f, k) => `<div class="frame${k === s.stack.length - 1 ? ' top' : ''}"><span>${f}</span><span class="lv">nivel ${k}</span></div>`).join('');
+}
+function renderHist() {
+  if (!$('paneHist').classList.contains('on')) return;
+  const tmp = document.createElement('div');
+  $('hist').innerHTML = steps.map((s, k) => { tmp.innerHTML = s.msg; return `<div class="h${k === cur ? ' cur' : ''}${k > cur ? ' fut' : ''}" data-k="${k}"><span class="n">${pad3(k + 1)}</span><span>${KIND[s.kind][0]} · ${tmp.textContent}</span></div>`; }).join('');
+  const c = $('hist').querySelector('.cur'); if (c) c.scrollIntoView({ block: 'nearest' });
+}
+function renderStrip() {
+  const segs = steps.map((s, k) => `${KIND[s.kind][1]} ${k / steps.length * 100}% ${(k + 1) / steps.length * 100}%`);
+  $('strip').style.background = `linear-gradient(90deg, ${segs.join(',')})`;
+}
+
+/* --- panel de comparación --- */
+function renderPresets() {
+  const P = isSearch()
+    ? [['uniform', 'UNIFORME'], ['skew', 'NO UNIFORME'], ['target', 'NUEVO OBJETIVO'], ['absent', 'OBJETIVO AUSENTE']]
+    : [['random', 'ALEATORIO'], ['almost', 'CASI ORDENADO'], ['reverse', 'AL REVÉS'], ['sorted', 'YA ORDENADO']];
+  $('presets').innerHTML = P.map(([k, t]) => `<button class="btn" data-preset="${k}">${t}</button>`).join('');
+  $('raceNote').textContent = isSearch()
+    ? 'Los 3 métodos buscando el MISMO x en el MISMO arreglo. Compara cuántas posiciones revisa cada uno. Clic en una fila para animarlo.'
+    : `Los ${GROUPS[group].algos.length} algoritmos sobre el MISMO arreglo. Prueba cada tipo de arreglo y mira quién trabaja menos. Clic en una fila para animarlo.`;
+}
+function renderRace() {
+  const ks = GROUPS[group].algos, r = {};
+  for (const k of ks) { const st = gen(k, values); r[k] = st[st.length - 1].stats; }
+  const n = N, sortedAsc = values.every((v, i) => i === 0 || values[i - 1] <= v), rev = values.every((v, i) => i === 0 || values[i - 1] >= v);
+  if (isSearch()) {
+    const idx = values.indexOf(target), lin = idx >= 0 ? idx + 1 : n;
+    const max = Math.max(lin, ...ks.map(k => r[k].cmp), 1);
+    const row = (k, nm, c, ref) => `<div class="rr${k === algo ? ' on' : ''}${ref ? ' ref' : ''}" data-algo="${ref ? '' : k}"><span class="nm">${nm}</span><div class="bars"><div class="bar"><i style="width:${Math.max(4, c / max * 200)}px;background:${ref ? '#666' : ST.compare}"></i><span>${c} comparaciones</span></div></div></div>`;
+    $('race').innerHTML = ks.map(k => row(k, ALGOS[k].name, r[k].cmp)).join('') + row('', 'LINEAL (referencia)', lin, true);
+    const uni = values.length > 2 && (() => { const d = values[1] - values[0]; return values.every((v, i) => i === 0 || values[i] - values[i - 1] === d); })();
+    $('verdict').innerHTML = `${idx >= 0 ? `x = <b>${target}</b> está en la posición ${idx}.` : `x = <b>${target}</b> NO está en el arreglo.`} Lineal revisaría ${lin}; binaria ${r.binIter.cmp} (máximo log2(n)+1 = ${Math.floor(Math.log2(n)) + 1}); interpolación ${r.interp.cmp}. ` +
+      (uni ? 'Los datos están repartidos <b>uniformemente</b>: la fórmula de interpolación acierta casi a la primera.' : 'Los datos <b>no son uniformes</b>: la interpolación puede estimar mal y avanzar de a poquito; la binaria no depende de cómo estén repartidos.') +
+      ' La binaria iterativa y la recursiva hacen exactamente las mismas comparaciones.';
+    return;
+  }
+  const maxC = Math.max(...ks.map(k => r[k].cmp), 1), maxM = Math.max(...ks.map(k => r[k].mov), 1);
+  $('race').innerHTML = ks.map(k => {
+    const x = r[k];
+    return `<div class="rr${k === algo ? ' on' : ''}" data-algo="${k}"><span class="nm">${ALGOS[k].name}</span><div class="bars">
+      <div class="bar"><i style="width:${Math.max(4, x.cmp / maxC * 200)}px;background:${ST.compare}"></i><span>${x.cmp} comparaciones</span></div>
+      <div class="bar"><i style="width:${Math.max(4, x.mov / maxM * 200)}px;background:${ST.swap}"></i><span>${x.mov} ${ALGOS[k].movShort}</span></div></div></div>`;
+  }).join('');
+  const comp = ks.filter(k => r[k].cmp > 0), minCmp = Math.min(...comp.map(k => r[k].cmp));
+  const best = comp.filter(k => r[k].cmp === minCmp).map(k => ALGOS[k].name).join(', ');
+  let txt;
+  if (group === 'simples') {
+    if (sortedAsc) txt = `Arreglo <b>ya ordenado</b>: inserción solo hace ${r.insercion.cmp} comparaciones (n-1) y 0 desplazamientos. Los otros tres hacen ${n * (n - 1) / 2} igual: no se dan cuenta de que ya está listo.`;
+    else if (rev) txt = `Arreglo <b>al revés</b> (peor caso): todos hacen ${n * (n - 1) / 2} comparaciones. Fíjate en los movimientos: selección hace solo ${r.seleccion.mov} intercambios, mientras burbuja hace ${r.burbuja.mov}.`;
+    else txt = `Menos comparaciones: <b>${best}</b> (${minCmp}). Menos movimientos: <b>SELECCIÓN</b> casi siempre (${r.seleccion.mov}). Intercambio, burbuja y selección SIEMPRE comparan ${n * (n - 1) / 2} veces; inserción depende del orden de los datos.`;
+  } else {
+    txt = `Menos comparaciones (entre los que comparan): <b>${best}</b> (${minCmp}). <b>RADIX</b> y <b>COUNTING</b> hacen 0: no comparan, cuentan o miran dígitos. `;
+    if (sortedAsc || rev) txt += `Arreglo ${sortedAsc ? '<b>ya ordenado</b>' : '<b>al revés</b>'}: QuickSort con el último como pivote cae en su PEOR caso (${r.quick.cmp} comparaciones, casi n²/2 = ${Math.round(n * n / 2)}). IntroSort lo detecta${r.intro.cmp < r.quick.cmp ? ` y baja a ${r.intro.cmp}` : ''}.${sortedAsc ? ` TimSort y Shell aprovechan el orden: ${r.tim.cmp} y ${r.shell.cmp}.` : ''}`;
+    else txt += `MergeSort siempre ronda n·log2(n) ≈ ${Math.round(n * Math.log2(n))} sin importar el arreglo; QuickSort suele estar cerca, pero puede empeorar mucho. Prueba "AL REVÉS".`;
+  }
+  $('verdict').innerHTML = txt;
+}
+
+function goto(k, opts = {}) {
+  cur = clamp(k, 0, steps.length - 1);
+  const s = steps[cur], now = performance.now();
+  tw.set(buildTargets(s), opts.instant ? 0 : (opts.dur != null ? opts.dur : manualDur()), now);
+  const [tag, col] = KIND[s.kind];
+  $('dTag').textContent = tag; $('dTag').style.setProperty('--tc', col);
+  $('dStep').textContent = 'PASO ' + (cur + 1) + ' / ' + steps.length;
+  typeMessage(s.msg, opts.instant || interval() < 300);
+  $('dTip').innerHTML = s.tip || (A().tips && A().tips[s.kind]) || '';
+  renderCode(s); renderVars(s); renderMem(s); renderHud(s); renderStack(s); renderHist();
+  $('timeline').max = steps.length - 1; $('timeline').value = cur;
+  const pct = steps.length > 1 ? cur / (steps.length - 1) * 100 : 0;
+  $('timeline').style.setProperty('--p', pct + '%'); $('tlOut').textContent = Math.round(pct) + '%';
+  $('btnPrev').disabled = cur === 0; $('btnNext').disabled = cur === steps.length - 1;
+  if (!opts.silent) sfx(s.kind);
+  if ((s.kind === 'done' || s.kind === 'found') && !opts.instant) burst();
+}
+function renderGuide() {
+  const I = INFO[algo], S = A().search;
+  const lab = ['MEJOR CASO', 'CASO PROMEDIO', 'PEOR CASO', 'MEMORIA EXTRA', S ? 'REQUISITO' : '¿ESTABLE?'];
+  const val = I.cx.slice(); if (S) val[4] = 'Arreglo ordenado';
+  const cls = k => k === 4 ? (S ? '' : (val[4] === 'Sí' ? 'good' : 'bad')) : (k === 0 ? 'good' : (k === 2 ? (/n²|O\(n\) ·/.test(val[2]) ? 'bad' : 'good') : ''));
+  $('guide').innerHTML = `<div class="ptitle"><b>GUÍA · ${A().name}</b><span>qué hace, cómo, para qué y cuándo usarlo</span></div>
+    <div class="gsec"><h3>¿QUÉ HACE?</h3><p>${I.que}</p></div>
+    <div class="gsec"><h3>¿CÓMO LO HACE? PASO A PASO</h3><ol>${I.como.map(x => `<li>${x}</li>`).join('')}</ol></div>
+    <div class="gsec"><h3>¿PARA QUÉ SIRVE?</h3><p>${I.sirve}</p></div>
+    <div class="gsec"><h3>COMPLEJIDAD</h3><div class="cxgrid">${lab.map((l, k) => `<div class="cx ${cls(k)}"><span>${l}</span><b>${val[k]}</b></div>`).join('')}</div>${I.nota ? `<p class="gnote">${I.nota}</p>` : ''}</div>
+    <div class="uso"><h3>MEJOR USO</h3><p>${I.uso}</p></div>`;
+}
+function rebuild() {
+  steps = gen(algo, values);
+  renderGuide(); renderNav(); renderLegend(); renderStrip(); renderRace();
+  $('stageHint').textContent = A().hint;
+  $('codeTitle').textContent = 'CÓDIGO JAVA · ' + A().name;
+  prevVars = {};
+  setupStage(); tw.items.clear();
+  goto(0, { instant: true, silent: true });
+}
+function sizeRange() { return isSearch() ? [6, 16] : [4, 12]; }
+function syncSize() {
+  const [a, b] = sizeRange(); const s = $('size');
+  s.min = a; s.max = b; s.value = clamp(N, a, b);
+  $('sizeOut').textContent = N; s.style.setProperty('--p', ((s.value - a) / (b - a) * 100) + '%');
+}
+function setValues(v) {
+  values = v.slice(); N = v.length;
+  if (isSearch()) searchVals = values; else sortVals = values;
+  const sortedV = [...values].sort((a, b) => a - b);
+  bodyCol = values.map(x => hslHex(sortedV.indexOf(x) * 300 / Math.max(1, N - 1) + 190, 60, 64));
+  syncSize();
+  $('customIn').value = values.join(', ');
+  $('targetIn').value = target;
+  pause(); rebuild();
+}
+function randomArr(n, maxV = 30) {
+  const pool = []; for (let i = 1; i <= maxV; i++) pool.push(i);
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  return pool.slice(0, n);
+}
+function uniformArr(n) { const step = Math.max(2, Math.min(7, Math.floor(95 / n))), st = 1 + Math.floor(Math.random() * 4); return Array.from({ length: n }, (_, k) => st + k * step); }
+function skewArr(n) { const a = []; for (let k = 0; k < n - 3; k++) a.push(k + 1); a.push(70, 85, 99); return a; }
+function newArray(kind) {
+  const n = +$('size').value;
+  if (isSearch()) {
+    if (kind === 'skew') { const a = skewArr(n); target = a[n - 4]; setValues(a); return; }
+    if (kind === 'target') { target = values[Math.floor(Math.random() * N)]; setValues(values); return; }
+    if (kind === 'absent') { const set = new Set(values); let t; do { t = values[0] + Math.floor(Math.random() * (values[N - 1] - values[0])); } while (set.has(t)); target = t; setValues(values); return; }
+    const a = uniformArr(n); target = a[Math.floor(Math.random() * n)]; setValues(a); return;
+  }
+  let a = randomArr(n).sort((x, y) => x - y);
+  if (!kind || kind === 'random') a = randomArr(n);
+  else if (kind === 'reverse') a.reverse();
+  else if (kind === 'almost') { const k = Math.floor(Math.random() * (n - 1)); [a[k], a[k + 1]] = [a[k + 1], a[k]]; }
+  setValues(a);
+}
+function setGroup(g, keepAlgo) {
+  const wasSearch = isSearch();
+  group = g; if (!keepAlgo) algo = GROUPS[g].def;
+  document.body.dataset.theme = g; accCache = null; spriteCache.clear();
+  $('tgtBox').classList.toggle('on', isSearch());
+  renderPresets();
+  if (isSearch() !== wasSearch || !values.length) setValues(isSearch() ? searchVals : sortVals); else { pause(); rebuild(); }
+}
+function setAlgo(k) { algo = k; pause(); rebuild(); }
+
+function play() {
+  if (cur >= steps.length - 1) goto(0, { instant: true, silent: true });
+  playing = true; lastAdvance = performance.now();
+  $('btnPlay').disabled = true; $('btnPause').disabled = false; renderHud(steps[cur]);
+}
+function pause() {
+  playing = false; $('btnPlay').disabled = false; $('btnPause').disabled = true;
+  if (steps[cur]) renderHud(steps[cur]);
+}
+function loop(now) {
+  if (playing && now - lastAdvance >= interval()) {
+    lastAdvance = now;
+    if (cur < steps.length - 1) goto(cur + 1, { dur: autoDur() });
+    if (cur >= steps.length - 1) pause();
+  }
+  tickTyping(now);
+  drawStage(now); drawAvatar(now);
+  lastFrame = now;
+  requestAnimationFrame(loop);
+}
+
+/* eventos */
+$('btnPlay').onclick = play;
+$('btnPause').onclick = pause;
+$('btnNext').onclick = () => { pause(); goto(cur + 1); };
+$('btnPrev').onclick = () => { pause(); goto(cur - 1); };
+$('btnReset').onclick = () => { pause(); goto(0, { instant: true }); };
+$('btnNew').onclick = () => newArray(isSearch() ? 'uniform' : 'random');
+$('btnSound').onclick = () => { soundOn = !soundOn; $('soundTxt').textContent = 'SONIDO: ' + (soundOn ? 'SÍ' : 'NO'); $('btnSound').classList.toggle('on', soundOn); $('btnSound').setAttribute('aria-pressed', soundOn); };
+$('speed').oninput = () => { $('speedOut').textContent = SPEED_LABELS[$('speed').value - 1]; $('speed').style.setProperty('--p', (($('speed').value - 1) / 9 * 100) + '%'); };
+$('size').oninput = () => { const [a, b] = sizeRange(); $('sizeOut').textContent = $('size').value; $('size').style.setProperty('--p', (($('size').value - a) / (b - a) * 100) + '%'); };
+$('size').onchange = () => newArray(isSearch() ? 'uniform' : 'random');
+$('timeline').oninput = () => { pause(); goto(+$('timeline').value, { dur: 200, silent: true }); };
+$('btnCustom').onclick = () => {
+  const raw = $('customIn').value.trim(), err = $('customErr');
+  if (!raw) { err.textContent = 'Escribe números separados por comas.'; return; }
+  let nums = raw.split(/[\s,;]+/).filter(Boolean).map(Number);
+  if (nums.some(x => !Number.isInteger(x) || x < 0 || x > 99)) { err.textContent = 'Solo enteros entre 0 y 99.'; return; }
+  const [a, b] = isSearch() ? [2, 16] : [2, 12];
+  if (nums.length < a || nums.length > b) { err.textContent = `Entre ${a} y ${b} números.`; return; }
+  if (isSearch()) {
+    nums = [...new Set(nums)].sort((x, y) => x - y);
+    const t = Number($('targetIn').value.trim());
+    if (!Number.isInteger(t) || t < 0 || t > 99) { err.textContent = 'El objetivo x debe ser un entero entre 0 y 99.'; return; }
+    target = t;
+  }
+  err.textContent = ''; setValues(nums);
+};
+['customIn', 'targetIn'].forEach(id => { $(id).addEventListener('input', () => { $('customErr').textContent = ''; }); $(id).addEventListener('keydown', e => { if (e.key === 'Enter') $('btnCustom').click(); }); });
+$('dialog').onclick = () => { if (typer && !typer.done) finishTyping(); else { pause(); goto(cur + 1); } };
+document.querySelectorAll('.grp').forEach(b => b.onclick = () => setGroup(b.dataset.group));
+$('algoNav').onclick = e => { const b = e.target.closest('.algo'); if (b) setAlgo(b.dataset.algo); };
+$('presets').onclick = e => { const b = e.target.closest('[data-preset]'); if (b) newArray(b.dataset.preset); };
+$('race').onclick = e => { const r = e.target.closest('.rr'); if (r && r.dataset.algo) setAlgo(r.dataset.algo); };
+document.querySelectorAll('.tab[data-pane]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab[data-pane]').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === b.dataset.pane));
+  renderHist();
+});
+$('hist').onclick = e => { const h = e.target.closest('.h'); if (h) { pause(); goto(+h.dataset.k); } };
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.target.type === 'text') return;
+  if (e.code === 'Space') { e.preventDefault(); playing ? pause() : play(); }
+  else if (e.key === 'ArrowRight') { pause(); goto(cur + 1); }
+  else if (e.key === 'ArrowLeft') { pause(); goto(cur - 1); }
+  else if (e.key === 'n' || e.key === 'N') $('btnNew').click();
+  else if (e.key === 'r' || e.key === 'R') $('btnReset').click();
+  else if (/^[1-8]$/.test(e.key)) { const k = GROUPS[group].algos[+e.key - 1]; if (k) setAlgo(k); }
+});
+let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { setupStage(); tw.set(buildTargets(steps[cur]), 0, performance.now()); }, 120); });
+
+/* inicio */
+$('speed').oninput();
+const start = () => { renderPresets(); setValues(sortVals); requestAnimationFrame(loop); };
+if (document.fonts && document.fonts.load) document.fonts.load('16px Pix').then(start, start); else start();
+
+})();
+</script>
+</body>
+</html>
