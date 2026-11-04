@@ -237,6 +237,8 @@ body[data-theme=busqueda]{--yellow:#4fc3ff; --acc-hi:#c9eeff; --acc-sh:#1c5f86; 
 .rs .rc{color:#9b9b9b; font-size:14px; line-height:1.35}
 .rres{background:var(--olive2); border-left:3px solid var(--yellow); padding:8px 10px !important; margin-bottom:8px !important}
 @media (max-width:640px){ .rs{grid-template-columns:22px minmax(0,1fr)} .rs .rc{grid-column:2} }
+.pivrow .piv.on{background:var(--yellow); color:#111; border-color:var(--acc-hi); box-shadow:0 4px 0 var(--acc-sh)}
+#pivNote{color:var(--faint)}
 #splash{position:fixed; inset:0; z-index:100; background:#0b0b0f; display:flex; overflow-x:hidden; overflow-y:auto; clip-path:circle(150% at 50% 50%)}
 #splash.out{animation:irisOut .9s steps(14) forwards}
 #splash.gone{display:none}
@@ -345,6 +347,13 @@ header{position:relative}
         </div>
       </div>
     </div>
+    <div class="row pivrow" id="pivRow" style="display:none">
+      <span class="lbl">PIVOTE DE QUICKSORT:</span>
+      <button class="btn piv" data-piv="first">INICIO · a[lo]</button>
+      <button class="btn piv on" data-piv="mid">MEDIO · a[(lo+hi)/2]</button>
+      <button class="btn piv" data-piv="last">FINAL · a[hi]</button>
+      <span class="lbl" id="pivNote"></span>
+    </div>
     <div class="row custom">
       <span class="lbl">ARREGLO PROPIO:</span>
       <input type="text" id="customIn" placeholder="ej: 7, 4, 9, 2" aria-label="Arreglo personalizado">
@@ -433,6 +442,8 @@ const rgbHex = (r, g, b) => '#' + [r, g, b].map(v => Math.max(0, Math.min(255, M
 const SPEEDS = [3400, 2500, 1800, 1250, 900, 640, 430, 270, 150, 80];
 const SPEED_LABELS = ['SÚPER LENTA','MUY LENTA','LENTA','MODERADA','NORMAL','ÁGIL','RÁPIDA','MUY RÁPIDA','VELOZ','TURBO'];
 
+const QS = { pivot: 'mid' };
+const PIVOT_NAME = { first: 'INICIO', mid: 'MEDIO', last: 'FINAL' };
 const KIND = {
   start:['INICIO','#a3a3a3','open'], pass:['NUEVA PASADA','#5aa0ff','surprised'], cmp:['COMPARACIÓN','#ffd84a','surprised'],
   swap:['INTERCAMBIO','#ff74b4','happy'], keep:['SIN CAMBIO','#a3a3a3','open'], newMin:['NUEVO MÍNIMO','#ff9f43','surprised'],
@@ -440,7 +451,7 @@ const KIND = {
   edge:['BORDE','#a3a3a3','open'], insert:['INSERTAR','#5ee87e','happy'], passEnd:['FIN DE PASADA','#5ee87e','happy'], done:['¡COMPLETADO!','#5ee87e','cool'],
   gap:['NUEVO GAP','#5aa0ff','surprised'],
   call:['LLAMADA RECURSIVA','#5aa0ff','surprised'], base:['CASO BASE','#a3a3a3','happy'],
-  pivot:['ELEGIR PIVOTE','#ff9f43','surprised'], pcmp:['COMPARAR CON PIVOTE','#ffd84a','surprised'], pswap:['A LA IZQUIERDA','#ff74b4','happy'],
+  choose:['ELEGIR PIVOTE','#ff9f43','surprised'], pmove:['PIVOTE AL FINAL','#ff74b4','happy'], pivot:['PIVOTE Y PUNTEROS','#ff9f43','open'], pcmp:['COMPARAR CON PIVOTE','#ffd84a','surprised'], pswap:['A LA IZQUIERDA','#ff74b4','happy'],
   pkeep:['SE QUEDA','#a3a3a3','open'], place:['PIVOTE A SU LUGAR','#5ee87e','happy'], qret:['LA LLAMADA TERMINA','#5ee87e','happy'],
   split:['DIVIDIR','#5aa0ff','surprised'], mergeStart:['MEZCLAR','#b48cff','open'], mcmp:['COMPARACIÓN','#ffd84a','surprised'],
   takeL:['TOMA IZQUIERDA','#45d6e6','happy'], takeR:['TOMA DERECHA','#5aa0ff','happy'], rest:['COPIAR EL RESTO','#b48cff','open'], copyBack:['COPIAR DE VUELTA','#5ee87e','happy'],
@@ -463,7 +474,7 @@ const EXPLAIN = {
   edge:'<b>Condición del while:</b> se llegó al borde, no hay más elementos a la izquierda.', insert:'<b>Inserción:</b> el valor guardado cae en el hueco.',
   passEnd:'<b>Fin de la pasada.</b>', done:'<b>Fin:</b> trabajo terminado.', gap:'<b>Nuevo gap:</b> distancia entre los elementos que se comparan. Se divide entre 2 en cada pase.',
   call:'<b>Llamada recursiva:</b> el método se llama a sí mismo con un pedazo más pequeño del arreglo.', base:'<b>Caso base:</b> el pedazo tiene 0 o 1 elementos, ya está ordenado. La llamada termina sin volver a llamarse.',
-  pivot:'<b>pivote = a[hi]:</b> se toma el último elemento como pivote. i marca el final de la zona "menores o iguales".',
+  choose:'<b>Elegir el pivote:</b> según la opción elegida se toma a[lo] (inicio), a[(lo+hi)/2] (medio) o a[hi] (final).', pmove:'<b>intercambiar(a, m, hi):</b> el pivote se pasa al final para usar SIEMPRE la misma partición.', pivot:'<b>pivote = a[hi]:</b> se toma el último elemento como pivote. i marca el final de la zona "menores o iguales".',
   pcmp:'<b>if (a[j] <= pivote):</b> ¿este elemento va a la izquierda del pivote?', pswap:'<b>i++ e intercambiar:</b> el elemento entra a la zona de los menores.',
   pkeep:'<b>Condición falsa:</b> es mayor que el pivote, se queda en la zona derecha.', qret:'<b>Fin de la llamada:</b> las dos llamadas recursivas terminaron; el pedazo completo ya está ordenado y la llamada retorna.', place:'<b>intercambiar(a, i+1, hi):</b> el pivote queda entre menores y mayores: es su posición FINAL.',
   split:'<b>mid = (lo + hi) / 2:</b> se parte el pedazo en dos mitades.', mergeStart:'<b>merge:</b> se crea temp y se ponen i (izquierda), j (derecha) y k (temp) al inicio.',
@@ -582,7 +593,18 @@ function insertionRange(R, lo, hi, opt = {}) {
   }
 }
 
-function partition(R, lo, hi) {
+function partition(R, lo, hi, mode = 'last') {
+  if (mode !== 'last' || R.showChoose) {
+    const m = mode === 'first' ? lo : mode === 'mid' ? Math.floor((lo + hi) / 2) : hi, cv = R.at(m);
+    R.base = p => (p < lo || p > hi) ? 'dim' : (p === m ? 'min' : 'active');
+    const how = mode === 'first' ? `el del INICIO: m = lo = ${lo}` : mode === 'mid' ? `el del MEDIO: m = (${lo} + ${hi}) / 2 = ${m}` : `el del FINAL: m = hi = ${hi}`;
+    R.snap({ kind: 'choose', ptr: {}, vars: { lo, hi, m, pivote: cv }, msg: `particion(a, ${lo}, ${hi}): elijo como pivote ${how} → ${chip(cv, 'min')}.${m === hi ? ' Ya está al final, no hay que moverlo.' : ''}` });
+    if (m !== hi) {
+      const hv = R.at(hi); R.swap(m, hi); R.stats.mov++;
+      R.base = p => (p < lo || p > hi) ? 'dim' : (p === hi ? 'min' : 'active');
+      R.snap({ kind: 'pmove', ptr: {}, vars: { lo, hi, m, pivote: cv }, hop: [R.main[hi], R.main[m]], msg: `intercambiar(a, ${m}, ${hi}): el pivote ${chip(cv, 'min')} pasa al final y ${chip(hv, 'swap')} ocupa su lugar. Así la partición es siempre la misma, sin importar qué pivote se eligió.` });
+    }
+  }
   const pid = R.main[hi], pv = R.v(pid);
   let i = lo - 1, jc = lo;
   R.base = p => (p < lo || p > hi) ? 'dim' : (p === hi ? 'min' : (p <= i ? 'part' : (p < jc ? 'active' : 'idle')));
@@ -829,9 +851,9 @@ function genShell(vals) {
 }
 
 function genQuick(vals) {
-  const R = Rec(vals), n = R.n;
+  const R = Rec(vals), n = R.n; R.showChoose = true;
   let D = 0; const splits = new Array(Math.max(0, n - 1)).fill(99);
-  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. QUICKSORT elige un pivote, pone los menores a su izquierda y los mayores a su derecha (partición) y repite con cada lado. Cada llamada recursiva BAJA un nivel; el pivote se queda arriba, ya en su lugar final.` });
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. QUICKSORT (pivote del ${PIVOT_NAME[QS.pivot]}) elige un pivote, pone los menores a su izquierda y los mayores a su derecha (partición) y repite con cada lado. Cada llamada recursiva BAJA un nivel; el pivote se queda arriba, ya en su lugar final.` });
   function qs(lo, hi, depth, side) {
     R.calls++; R.stats.p = String(R.calls);
     R.stack.push(`quickSort(a, ${lo}, ${hi})`); R.label = '';
@@ -853,7 +875,7 @@ function genQuick(vals) {
       R.stack.pop(); R.keyStack.pop(); return;
     }
     R.focus = { lo, hi, mode: 'part', depth };
-    const p = partition(R, lo, hi);
+    const p = partition(R, lo, hi, QS.pivot);
     if (p - 1 >= lo) splits[p - 1] = Math.min(splits[p - 1], depth);
     if (p + 1 <= hi) splits[p] = Math.min(splits[p], depth);
     R.focus = { lo, hi, mode: 'divide', depth, pivot: p };
@@ -870,7 +892,7 @@ function genQuick(vals) {
   qs(0, n - 1, 0, 'root');
   R.focus = null; R.nodes.clear();
   for (let k = 0; k < n; k++) R.fixed.add(k);
-  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones, ${R.stats.mov} intercambios y ${R.calls} llamadas, con ${D + 1} niveles de profundidad. Con pivotes buenos hay unos log2(n) niveles (O(n log n)); si el arreglo ya está ordenado o al revés, este pivote es el peor: ¡n niveles y O(n²)!` });
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones, ${R.stats.mov} intercambios y ${R.calls} llamadas, con ${D + 1} niveles de profundidad. Con pivotes buenos hay unos log2(n) niveles (O(n log n)); ${QS.pivot === 'mid' ? 'con el pivote del MEDIO, un arreglo ya ordenado o al revés es su MEJOR caso (prueba cambiar a INICIO o FINAL con "AL REVÉS")' : 'con el pivote del ' + PIVOT_NAME[QS.pivot] + ', un arreglo ya ordenado o al revés es su PEOR caso: ¡n niveles y O(n²)! (prueba el pivote del MEDIO)'}.` });
   R.out.layout = { D, splits };
   return R.out;
 }
@@ -1188,6 +1210,13 @@ function genInterp(vals, x) {
    7. DEFINICIÓN DE ALGORITMOS (código Java con etiquetas)
    Cada línea: [texto, 'etiquetas'] — "k" resalta, "~k" resalta suave
    ============================================================ */
+function quickCode(mode) {
+  const head = [['static void quickSort(int[] a, int lo, int hi) {','call'],['  if (lo >= hi) return;','base ~call'],['  int p = particion(a, lo, hi);','~choose ~pmove ~pivot ~place'],['  quickSort(a, lo, p - 1);',''],['  quickSort(a, p + 1, hi);',''],['}','qret'],['static int particion(int[] a, int lo, int hi) {','']];
+  const pick = mode === 'first' ? [['  int m = lo;               // pivote del INICIO','choose'],['  intercambiar(a, m, hi);   // lo paso al final','pmove']]
+    : mode === 'mid' ? [['  int m = (lo + hi) / 2;    // pivote del MEDIO','choose'],['  intercambiar(a, m, hi);   // lo paso al final','pmove']]
+    : [['  // pivote del FINAL: ya está en a[hi]','choose']];
+  return head.concat(pick, [['  int pivote = a[hi];','pivot'], ['  int i = lo - 1;','pivot'],['  for (int j = lo; j < hi; j++) {','~pcmp ~pkeep'],['    if (a[j] <= pivote) {','pcmp pkeep ~pswap'],['      i++;','pswap'],['      intercambiar(a, i, j);','pswap'],['    }',''],['  }',''],['  intercambiar(a, i + 1, hi);','place'],['  return i + 1;','place'],['}','']]);
+}
 const SIMPLE_LEG = { idle:'Pendiente', part:'Posición i', compare:'Comparando', swap:'Intercambiando', sorted:'Ya en su lugar ✓' };
 const ALGOS = {
   intercambio: { name:'INTERCAMBIO', sub:'i contra todos', gen:genIntercambio, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'PASADA', hint:'la posición i se compara con TODAS las siguientes',
@@ -1212,7 +1241,7 @@ const ALGOS = {
     legend:['dim','active','part','temp','compare','shift','sorted'],
     tips:{ start:'Donald Shell (1959) mejoró la inserción: los elementos viajan lejos de un solo salto.', gap:'Con gap grande, un elemento pequeño que está al final llega al inicio en pocos saltos.', cmp:'Se compara con el que está a gap posiciones, no con el vecino.', done:'Con gaps n/2, n/4…, 1 el peor caso es O(n²), pero en la práctica es mucho más rápido que la inserción. No es estable.' } },
   quick: { view:'levels', name:'QUICKSORT', sub:'pivote y partición', gen:genQuick, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'LLAMADAS', hint:'cada [ ] es una llamada · los lados bajan un nivel, el pivote se queda arriba', rec:true,
-    code:[['static void quickSort(int[] a, int lo, int hi) {','call'],['  if (lo >= hi) return;','base ~call'],['  int p = particion(a, lo, hi);','~pivot ~place'],['  quickSort(a, lo, p - 1);',''],['  quickSort(a, p + 1, hi);',''],['}','qret'],['static int particion(int[] a, int lo, int hi) {',''],['  int pivote = a[hi];','pivot'],['  int i = lo - 1;','pivot'],['  for (int j = lo; j < hi; j++) {','~pcmp ~pkeep'],['    if (a[j] <= pivote) {','pcmp pkeep ~pswap'],['      i++;','pswap'],['      intercambiar(a, i, j);','pswap'],['    }',''],['  }',''],['  intercambiar(a, i + 1, hi);','place'],['  return i + 1;','place'],['}','']],
+    code: quickCode(QS.pivot),
     legend:['dim','min','part','active','compare','swap','sorted'], legNames:{ min:'Pivote', part:'Zona ≤ pivote', active:'Zona > pivote' },
     tips:{ start:'Divide y vencerás: el trabajo está en PARTIR. Después de partir, el pivote ya quedó en su posición final.', call:'Cada llamada trabaja solo con su pedazo (lo..hi). Lo demás está apagado.', base:'Recursividad: sin caso base, el método se llamaría para siempre.', place:'El pivote no se vuelve a mover nunca más.', done:'Promedio O(n log n), peor caso O(n²) con pivotes malos (arreglo ordenado). Es in-place pero no estable.' } },
   merge: { view:'levels', name:'MERGESORT', sub:'dividir y mezclar', gen:genMerge, movLbl:'COPIAS', movShort:'copias', pLbl:'LLAMADAS', hint:'cada [ ] es una llamada recursiva · cada nivel baja una división', rec:true, top:{ temp:'temp[]' },
@@ -1334,9 +1363,10 @@ const INFO = {
     uso: 'Arreglos <b>medianos</b> (cientos o algunos miles de elementos) cuando se quiere algo mucho más rápido que los simples sin recursión ni memoria extra. Típico en <b>sistemas embebidos</b> o microcontroladores con poca memoria y pila limitada.'
   },
   quick: {
-    que: 'Usa <b>divide y vencerás</b>. Elige un <b>pivote</b> (aquí, el último del pedazo) y reorganiza el pedazo para que todo lo ≤ pivote quede a la izquierda y lo mayor a la derecha: eso es la <b>partición</b>. El pivote queda en su posición FINAL. Después repite el proceso, de forma recursiva, con cada lado.',
+    que: 'Usa <b>divide y vencerás</b>. Elige un <b>pivote</b> (aquí puedes escoger el del INICIO, el del MEDIO, que es el predeterminado, o el del FINAL) y reorganiza el pedazo para que todo lo ≤ pivote quede a la izquierda y lo mayor a la derecha: eso es la <b>partición</b>. El pivote queda en su posición FINAL. Después repite el proceso, de forma recursiva, con cada lado.',
     como: [
       '<code>quickSort(a, lo, hi)</code>: si <code>lo >= hi</code> es el <b>caso base</b> (0 o 1 elemento) y se retorna.',
+      'Se elige el pivote (<code>a[lo]</code>, <code>a[(lo+hi)/2]</code> o <code>a[hi]</code>) y, si no es el último, se intercambia con <code>a[hi]</code>. Así la partición es siempre la misma.',
       'Partición: <code>pivote = a[hi]</code> e <code>i = lo − 1</code> (fin de la zona de los menores).',
       '<code>j</code> recorre de <code>lo</code> a <code>hi − 1</code>: si <code>a[j] ≤ pivote</code>, <code>i++</code> e <code>intercambiar(a, i, j)</code>, y el elemento entra a la zona izquierda.',
       'Al final, <code>intercambiar(a, i + 1, hi)</code>: el pivote queda entre las dos zonas, ya ordenado para siempre.',
@@ -1344,7 +1374,7 @@ const INFO = {
     ],
     sirve: 'En promedio es el <b>más rápido en la práctica</b>: trabaja sobre el mismo arreglo (no copia a temp) y aprovecha muy bien la memoria caché. Promedio: T(n) = 2T(n/2) + n → O(n log n). Peor caso: T(n) = T(n−1) + n → O(n²).',
     cx: ['O(n log n)', 'O(n log n)', 'O(n²) · pivotes malos', 'O(log n) de pila', 'No'],
-    nota: 'Con pivote = último, un arreglo YA ordenado o al revés es su peor caso: cada partición deja un lado vacío. Se evita eligiendo el pivote al azar o con la "mediana de tres".',
+    nota: 'La elección del pivote lo decide todo. Con pivote del INICIO o del FINAL, un arreglo YA ordenado o al revés es su peor caso: el pivote siempre es el menor o el mayor y cada partición deja un lado vacío. Con el del MEDIO, esos mismos arreglos son su MEJOR caso. Otras opciones reales: pivote al azar o "mediana de tres".',
     uso: 'Grandes volúmenes de datos <b>primitivos</b> (int, double) en orden <b>aleatorio</b>, cuando no importa la estabilidad. Java usa un QuickSort de doble pivote en <code>Arrays.sort(int[])</code>. Evítalo con pivote fijo si los datos pueden venir ya ordenados.'
   },
   merge: {
@@ -1540,19 +1570,19 @@ const REC = {
     plan: 'Una llamada con n elementos hace: <b>la partición</b>, que compara cada elemento con el pivote (n − 1 comparaciones), y <b>dos llamadas recursivas</b>, una por lado. Si a la izquierda quedan k elementos, a la derecha quedan n − k − 1 (el pivote ya no cuenta).',
     rec: ['T(n) = T(k) + T(n − k − 1) + (n − 1)', 'T(0) = T(1) = 0'],
     pasos: [
-      ['MEJOR caso: el pivote parte justo a la mitad (k ≈ n/2)', ''],
+      ['MEJOR caso: el pivote parte justo a la mitad (k ≈ n/2)', 'pivote del MEDIO con un arreglo ordenado o al revés'],
       ['T(n) = 2T(n/2) + n', 'dos mitades + la partición'],
       ['T(n) = 2[2T(n/4) + n/2] + n = 4T(n/4) + 2n', 'sustituyo T(n/2)'],
       ['T(n) = 8T(n/8) + 3n', 'otra vez'],
       ['T(n) = 2ᵏ T(n/2ᵏ) + k·n', 'patrón'],
       ['n/2ᵏ = 1  ⇒  k = log₂ n', 'caso base'],
       ['T(n) = n·T(1) + n·log₂ n = n log₂ n', '⇒ O(n log n)'],
-      ['PEOR caso: el pivote es el menor o el mayor (k = 0)', 'pasa con un arreglo ordenado o al revés'],
+      ['PEOR caso: el pivote es el menor o el mayor (k = 0)', 'pivote del INICIO o FINAL con un arreglo ordenado o al revés'],
       ['T(n) = T(0) + T(n − 1) + (n − 1) = T(n − 1) + (n − 1)', 'un lado vacío'],
       ['T(n) = (n − 1) + (n − 2) + … + 1 = n(n − 1)/2', 'igual que los simples ⇒ O(n²)']
     ],
-    res: 'Mejor caso y promedio <b>O(n log n)</b>, peor caso <b>O(n²)</b>. En el visualizador se ve en la cantidad de niveles: con buenos pivotes hay unos log₂ n niveles; con el peor, n niveles en forma de escalera.',
-    ej: 'n = 8: con pivotes perfectos, unas 8·3 = 24 comparaciones; al revés, 8·7/2 = <b>28</b> y 8 niveles.'
+    res: 'Mejor caso y promedio <b>O(n log n)</b>, peor caso <b>O(n²)</b>. <b>¿Qué pivote da cada caso?</b> El valor de k lo decide el pivote. Con un arreglo ordenado o al revés: pivote del INICIO o FINAL ⇒ k = 0 en cada llamada ⇒ T(n) = T(n−1) + n ⇒ O(n²); pivote del MEDIO ⇒ k ≈ n/2 ⇒ T(n) = 2T(n/2) + n ⇒ O(n log n). En el visualizador se ve en los niveles: unos log₂ n con buenos pivotes, n niveles en escalera con el peor.',
+    ej: 'n = 8 al revés: pivote del FINAL ⇒ 8·7/2 = <b>28</b> comparaciones y 8 niveles; pivote del MEDIO ⇒ unas 8·3 = 24 como máximo (en la práctica menos) y ~4 niveles. Compáralos en el panel COMPARAR con "AL REVÉS".'
   },
   merge: {
     plan: 'Cada llamada hace <b>dos llamadas recursivas</b> con la mitad (izquierda y derecha) y luego <b>merge</b>, que recorre los n elementos del pedazo para mezclarlos: cuesta del orden de n. Dividir (calcular mid) cuesta una constante y no cambia nada.',
@@ -2709,10 +2739,16 @@ function renderRace() {
       ' La binaria iterativa y la recursiva hacen exactamente las mismas comparaciones.';
     return;
   }
-  const maxC = Math.max(...ks.map(k => r[k].cmp), 1), maxM = Math.max(...ks.map(k => r[k].mov), 1);
-  $('race').innerHTML = ks.map(k => {
-    const x = r[k];
-    return `<div class="rr${k === algo ? ' on' : ''}" data-algo="${k}"><span class="nm">${ALGOS[k].name}</span><div class="bars">
+  const rows = [];
+  for (const k of ks) {
+    if (k !== 'quick') { rows.push({ k, nm: ALGOS[k].name, x: r[k], on: k === algo }); continue; }
+    const keep = QS.pivot; r.qm = {};
+    for (const m of ['first', 'mid', 'last']) { QS.pivot = m; const st = gen('quick', values); r.qm[m] = st[st.length - 1].stats; rows.push({ k, piv: m, nm: 'QUICK · ' + PIVOT_NAME[m], x: r.qm[m], on: algo === 'quick' && keep === m }); }
+    QS.pivot = keep;
+  }
+  const maxC = Math.max(...rows.map(o => o.x.cmp), 1), maxM = Math.max(...rows.map(o => o.x.mov), 1);
+  $('race').innerHTML = rows.map(({ k, piv, nm, x, on }) => {
+    return `<div class="rr${on ? ' on' : ''}" data-algo="${k}"${piv ? ` data-piv="${piv}"` : ''}><span class="nm">${nm}</span><div class="bars">
       <div class="bar"><i style="width:${Math.max(4, x.cmp / maxC * 200)}px;background:${ST.compare}"></i><span>${x.cmp} comparaciones</span></div>
       <div class="bar"><i style="width:${Math.max(4, x.mov / maxM * 200)}px;background:${ST.swap}"></i><span>${x.mov} ${ALGOS[k].movShort}</span></div></div></div>`;
   }).join('');
@@ -2725,7 +2761,7 @@ function renderRace() {
     else txt = `Menos comparaciones: <b>${best}</b> (${minCmp}). Menos movimientos: <b>SELECCIÓN</b> casi siempre (${r.seleccion.mov}). Intercambio, burbuja y selección SIEMPRE comparan ${n * (n - 1) / 2} veces; inserción depende del orden de los datos.`;
   } else {
     txt = `Menos comparaciones (entre los que comparan): <b>${best}</b> (${minCmp}). <b>RADIX</b> y <b>COUNTING</b> hacen 0: no comparan, cuentan o miran dígitos. `;
-    if (sortedAsc || rev) txt += `Arreglo ${sortedAsc ? '<b>ya ordenado</b>' : '<b>al revés</b>'}: QuickSort con el último como pivote cae en su PEOR caso (${r.quick.cmp} comparaciones, casi n²/2 = ${Math.round(n * n / 2)}). IntroSort lo detecta${r.intro.cmp < r.quick.cmp ? ` y baja a ${r.intro.cmp}` : ''}.${sortedAsc ? ` TimSort y Shell aprovechan el orden: ${r.tim.cmp} y ${r.shell.cmp}.` : ''}`;
+    if (sortedAsc || rev) txt += `Arreglo ${sortedAsc ? '<b>ya ordenado</b>' : '<b>al revés</b>'}: QuickSort con pivote del <b>INICIO</b> o del <b>FINAL</b> cae en su PEOR caso (${r.qm.first.cmp} y ${r.qm.last.cmp} comparaciones, n(n−1)/2 = ${n * (n - 1) / 2}); con el del <b>MEDIO</b> parte a la mitad y hace solo ${r.qm.mid.cmp}. ${r.intro.cmp < r.qm.last.cmp ? `IntroSort usa el final, pero detecta la profundidad y baja a ${r.intro.cmp}.` : 'IntroSort usa el final; con tan pocos elementos todavía no llega a su límite de profundidad (prueba con 11 o 12).'}${sortedAsc ? ` TimSort y Shell aprovechan el orden: ${r.tim.cmp} y ${r.shell.cmp}.` : ''}`;
     else txt += `MergeSort siempre ronda n·log2(n) ≈ ${Math.round(n * Math.log2(n))} sin importar el arreglo; QuickSort suele estar cerca, pero puede empeorar mucho. Prueba "AL REVÉS".`;
   }
   $('verdict').innerHTML = txt;
@@ -2771,7 +2807,13 @@ function renderGuide() {
     ${recHTML()}
     <div class="uso"><h3>MEJOR USO</h3><p>${I.uso}</p></div>`;
 }
+function setPivot(m) {
+  QS.pivot = m; ALGOS.quick.code = quickCode(m); ALGOS.quick.lines = lineMap(ALGOS.quick.code);
+  document.querySelectorAll('.piv').forEach(b => b.classList.toggle('on', b.dataset.piv === m));
+}
 function rebuild() {
+  $('pivRow').style.display = algo === 'quick' ? 'flex' : 'none';
+  $('pivNote').textContent = { first: 'con datos ordenados o al revés es su PEOR caso', mid: 'predeterminado · con datos ordenados es su MEJOR caso', last: 'con datos ordenados o al revés es su PEOR caso' }[QS.pivot];
   steps = gen(algo, values);
   steps.maxHist = Math.max(0, ...steps.map(x => x.hist ? x.hist.length : 0));
   renderGuide(); renderNav(); renderLegend(); renderStrip(); renderRace();
@@ -2881,7 +2923,8 @@ $('dialog').onclick = () => { if (typer && !typer.done) finishTyping(); else { p
 document.querySelectorAll('.grp').forEach(b => b.onclick = () => setGroup(b.dataset.group));
 $('algoNav').onclick = e => { const b = e.target.closest('.algo'); if (b) setAlgo(b.dataset.algo); };
 $('presets').onclick = e => { const b = e.target.closest('[data-preset]'); if (b) newArray(b.dataset.preset); };
-$('race').onclick = e => { const r = e.target.closest('.rr'); if (r && r.dataset.algo) setAlgo(r.dataset.algo); };
+$('race').onclick = e => { const r = e.target.closest('.rr'); if (r && r.dataset.algo) { if (r.dataset.piv) setPivot(r.dataset.piv); setAlgo(r.dataset.algo); } };
+document.querySelectorAll('.piv').forEach(b => b.onclick = () => { setPivot(b.dataset.piv); pause(); rebuild(); });
 document.querySelectorAll('.tab[data-pane]').forEach(b => b.onclick = () => {
   document.querySelectorAll('.tab[data-pane]').forEach(x => x.classList.toggle('on', x === b));
   document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === b.dataset.pane));
