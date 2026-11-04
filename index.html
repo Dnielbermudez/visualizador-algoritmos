@@ -352,7 +352,8 @@ body[data-theme=busqueda]{--yellow:#4fc3ff; --acc-hi:#c9eeff; --acc-sh:#1c5f86; 
 /* ============================================================
    1. CONFIGURACIÓN GENERAL
    ============================================================ */
-const ST = { idle:'#a3a3a3', dim:'#6b6b6b', active:'#5aa0ff', part:'#45d6e6', compare:'#ffd84a', swap:'#ff74b4', temp:'#ff74b4', min:'#ff9f43', shift:'#b48cff', merge:'#b48cff', sorted:'#5ee87e', done:'#5ee87e' };
+const ST = { idle:'#a3a3a3', wait:'#6a6a6a', right:'#b48cff', grp:'#a3a3a3', dim:'#6b6b6b', active:'#5aa0ff', part:'#45d6e6', compare:'#ffd84a', swap:'#ff74b4', temp:'#ff74b4', min:'#ff9f43', shift:'#b48cff', merge:'#b48cff', sorted:'#5ee87e', done:'#5ee87e' };
+const GRP = ['#5aa0ff','#ffd84a','#ff74b4','#45d6e6','#b48cff','#5ee87e','#ff9f43','#e8e8e8','#ff6b6b','#a3e635'];
 const PCOL = { i:'#45d6e6', j:'#ff74b4', 'j+1':'#ffd84a', 'j-gap':'#ffd84a', min:'#ff9f43', k:'#b48cff', izq:'#ffd84a', der:'#ffd84a', mayor:'#ff9f43', low:'#45d6e6', high:'#ff74b4', mid:'#ffd84a', pos:'#ffd84a' };
 const hexToRgb = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
 const rgbHex = (r, g, b) => '#' + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
@@ -367,7 +368,7 @@ const KIND = {
   gap:['NUEVO GAP','#5aa0ff','surprised'],
   call:['LLAMADA RECURSIVA','#5aa0ff','surprised'], base:['CASO BASE','#a3a3a3','happy'],
   pivot:['ELEGIR PIVOTE','#ff9f43','surprised'], pcmp:['COMPARAR CON PIVOTE','#ffd84a','surprised'], pswap:['A LA IZQUIERDA','#ff74b4','happy'],
-  pkeep:['SE QUEDA','#a3a3a3','open'], place:['PIVOTE A SU LUGAR','#5ee87e','happy'],
+  pkeep:['SE QUEDA','#a3a3a3','open'], place:['PIVOTE A SU LUGAR','#5ee87e','happy'], qret:['LA LLAMADA TERMINA','#5ee87e','happy'],
   split:['DIVIDIR','#5aa0ff','surprised'], mergeStart:['MEZCLAR','#b48cff','open'], mcmp:['COMPARACIÓN','#ffd84a','surprised'],
   takeL:['TOMA IZQUIERDA','#45d6e6','happy'], takeR:['TOMA DERECHA','#5aa0ff','happy'], rest:['COPIAR EL RESTO','#b48cff','open'], copyBack:['COPIAR DE VUELTA','#5ee87e','happy'],
   build:['CONSTRUIR HEAP','#5aa0ff','surprised'], heapify:['HEAPIFY','#b48cff','open'], cmpL:['HIJO IZQUIERDO','#ffd84a','surprised'],
@@ -391,7 +392,7 @@ const EXPLAIN = {
   call:'<b>Llamada recursiva:</b> el método se llama a sí mismo con un pedazo más pequeño del arreglo.', base:'<b>Caso base:</b> el pedazo tiene 0 o 1 elementos, ya está ordenado. La llamada termina sin volver a llamarse.',
   pivot:'<b>pivote = a[hi]:</b> se toma el último elemento como pivote. i marca el final de la zona "menores o iguales".',
   pcmp:'<b>if (a[j] <= pivote):</b> ¿este elemento va a la izquierda del pivote?', pswap:'<b>i++ e intercambiar:</b> el elemento entra a la zona de los menores.',
-  pkeep:'<b>Condición falsa:</b> es mayor que el pivote, se queda en la zona derecha.', place:'<b>intercambiar(a, i+1, hi):</b> el pivote queda entre menores y mayores: es su posición FINAL.',
+  pkeep:'<b>Condición falsa:</b> es mayor que el pivote, se queda en la zona derecha.', qret:'<b>Fin de la llamada:</b> las dos llamadas recursivas terminaron; el pedazo completo ya está ordenado y la llamada retorna.', place:'<b>intercambiar(a, i+1, hi):</b> el pivote queda entre menores y mayores: es su posición FINAL.',
   split:'<b>mid = (lo + hi) / 2:</b> se parte el pedazo en dos mitades.', mergeStart:'<b>merge:</b> se crea temp y se ponen i (izquierda), j (derecha) y k (temp) al inicio.',
   mcmp:'<b>if (a[i] <= a[j]):</b> se comparan los primeros de cada mitad.', takeL:'<b>temp[k++] = a[i++]:</b> el menor viene de la mitad izquierda.',
   takeR:'<b>temp[k++] = a[j++]:</b> el menor viene de la mitad derecha.', rest:'<b>while sobrante:</b> una mitad se acabó; lo que queda de la otra se copia tal cual.',
@@ -421,6 +422,8 @@ function Rec(vals) {
     n, vals, main: vals.map((_, i) => i), tmp: new Array(n).fill(null), bk: null,
     fixed: new Set(), stats: { cmp: 0, mov: 0, p: '-' }, stack: [], base: null, tmpState: 'temp', heap: null, label: '',
     calls: 0, out: [],
+    lvl: new Array(n).fill(0), tmpRow: 0, tmpRange: null, nodes: new Map(), keyStack: [], focus: null,
+    hist: [], runs: null, gi: null, persist: new Array(n).fill(null),
     v(id) { return vals[id]; },
     at(p) { return vals[R.main[p]]; },
     arr() { return R.main.map(id => id == null ? null : vals[id]); },
@@ -435,6 +438,7 @@ function Rec(vals) {
         else if ((p = R.tmp.indexOf(id)) >= 0) L = { z: 't', c: p };
         else if (R.bk) { for (let b = 0; b < 10; b++) { const k = R.bk[b].indexOf(id); if (k >= 0) { L = { z: 'b', c: b, k }; break; } } }
         if (!L) L = { z: 'm', c: 0 };
+        L.r = L.z === 't' ? R.tmpRow : R.lvl[id];
         loc[id] = L;
         let s = 'idle';
         if (o.kind === 'done') s = 'done';
@@ -442,20 +446,29 @@ function Rec(vals) {
         else if (L.z === 'b') s = 'shift';
         else if (R.fixed.has(L.c)) s = 'sorted';
         else if (R.base) s = R.base(L.c) || 'idle';
+        if (s !== 'done' && s !== 'dim' && R.persist[id] && (s === 'active' || s === 'idle')) s = R.persist[id];
         if (o.ov && o.ov[id]) s = o.ov[id];
         st[id] = s;
       }
       const holes = []; R.main.forEach((id, p) => { if (id == null) holes.push(p); });
+      const top = R.keyStack[R.keyStack.length - 1];
       R.out.push({
         kind: o.kind, msg: o.msg, tip: o.tip, loc, st, holes, arr: R.arr(), tarr: R.tarr(),
         ptr: Object.fromEntries(Object.entries(o.ptr || {}).map(([k, c]) => [k, (c == null || c < 0 || c >= n) ? null : c])), vars: { ...(o.vars || {}) }, stats: { ...R.stats }, cmp: o.cmp || null,
         hot: o.hot != null ? o.hot : null, hop: o.hop || null, stack: R.stack.slice(), heap: R.heap ? { ...R.heap } : null,
-        extra: o.extra || null, label: o.label != null ? o.label : R.label, bk: R.bk ? R.bk.map(b => b.map(id => vals[id])) : null
+        extra: o.extra || null, label: o.label != null ? o.label : R.label, bk: R.bk ? R.bk.map(b => b.map(id => vals[id])) : null,
+        bkIds: R.bk ? R.bk.map(b => b.slice()) : null,
+        nodes: [...R.nodes.values()].filter(nd => !nd.hidden).map(nd => ({ key: nd.key, lo: nd.lo, hi: nd.hi, depth: nd.depth, parent: nd.parent, state: nd.state === 'open' ? (top === nd.key ? 'active' : 'waiting') : nd.state })),
+        focus: R.focus ? { ...R.focus } : null, tmpRange: R.tmpRange ? { ...R.tmpRange } : null,
+        hist: R.hist.map(h => ({ ...h, ids: h.ids ? h.ids.slice() : null })),
+        runs: R.runs ? R.runs.map(r => ({ ...r })) : null,
+        gi: R.gi ? { ...R.gi, sub: R.gi.sub ? R.gi.sub.slice() : null } : null
       });
     }
   };
   return R;
 }
+
 const chip = (v, cls = '') => `<span class="chip ${cls}">${v}</span>`;
 const fmt = (vals, cls = '') => `[${vals.map(v => chip(v, cls)).join(' ')}]`;
 const seg = (R, lo, hi) => R.arr().slice(lo, hi + 1);
@@ -489,6 +502,7 @@ function insertionRange(R, lo, hi, opt = {}) {
         msg: `a[${j + 2}] = a[${j + 1}]: ${chip(cv, 'shift')} se corre una casilla a la derecha y el hueco pasa a la posición ${j + 1}. j = ${j}.` });
     }
     R.main[j + 1] = id; R.tmp[hole] = null;
+    if (opt.passes) R.hist.push({ label: `i = ${i}`, ids: R.main.slice(), partTo: i });
     R.snap({ kind: 'insert', ptr: { i }, vars: { i, j, actual: act }, hot: id,
       msg: j + 1 === i ? `a[${j + 1}] = actual: ${chip(act, 'part')} vuelve a su misma casilla. ¡Ni se movió! Parte ordenada: ${fmt(seg(R, lo, i), 'part')}.`
                        : `a[${j + 1}] = actual: ${chip(act, 'part')} cae en el hueco. Parte ordenada: ${fmt(seg(R, lo, i), 'part')}.` });
@@ -629,7 +643,7 @@ function genIntercambio(vals) {
           msg: `temp = ${a}; a[${i}] = ${b}; a[${j}] = temp. Ahora a[${i}] = ${chip(b, 'swap')} es el menor visto. Arreglo: ${fmt(R.arr())}.` });
       } else R.snap({ kind: 'keep', ptr: { i, j }, vars, ov: { [S[i]]: 'part' }, msg: `Sin cambio. a[${i}] = ${chip(a, 'part')} se mantiene; j avanza.` });
     }
-    R.fixed.add(i);
+    R.fixed.add(i); R.hist.push({ label: `pasada ${i + 1}`, ids: R.main.slice(), fixedTo: i, side: 'L' });
     R.snap({ kind: 'passEnd', vars: { n, i, j: '-' }, hot: S[i], msg: `Fin de la pasada ${i + 1}: a[${i}] = ${chip(v(S[i]), 'sorted')} es el menor de lo que faltaba y queda fijo. Arreglo: ${fmt(R.arr())}.` });
   }
   R.fixed.add(n - 1);
@@ -652,7 +666,7 @@ function genBurbuja(vals) {
         R.snap({ kind: 'swap', ptr: { j, 'j+1': j + 1 }, vars: { ...vars, 'a[j]': b, 'a[j+1]': a, temp: a }, ov: { [S[j]]: 'swap', [S[j + 1]]: 'swap' }, hop: [S[j + 1], S[j]], msg: `El ${chip(a, 'swap')} pasa a la derecha. Arreglo: ${fmt(R.arr())}.` });
       } else R.snap({ kind: 'keep', ptr: { j, 'j+1': j + 1 }, vars, msg: `Sin cambio; j avanza a la siguiente pareja.` });
     }
-    R.fixed.add(n - 1 - i);
+    R.fixed.add(n - 1 - i); R.hist.push({ label: `pasada ${i + 1}`, ids: R.main.slice(), fixedTo: n - 1 - i, side: 'R' });
     R.snap({ kind: 'passEnd', vars: { n, i, j: '-' }, hot: S[n - 1 - i], msg: `Fin de la pasada ${i + 1}: el mayor de lo pendiente, ${chip(v(S[n - 1 - i]), 'sorted')}, llegó a a[${n - 1 - i}] y queda fijo.` });
   }
   R.fixed.add(0);
@@ -681,7 +695,7 @@ function genSeleccion(vals) {
       R.snap({ kind: 'swap', ptr: { i, min }, vars: { n, i, min, j: '-', temp: a }, ov: { [S[i]]: 'swap', [S[min]]: 'swap' }, hop: [S[i], S[min]],
         msg: `Terminé de buscar. AHORA sí: UN intercambio. ${chip(b, 'swap')} pasa a a[${i}] y ${chip(a, 'swap')} se va a a[${min}]. Arreglo: ${fmt(R.arr())}.` });
     } else R.snap({ kind: 'noswap', ptr: { i, min }, vars: { n, i, min, j: '-' }, ov: { [S[i]]: 'min' }, msg: `Terminé de buscar y min = i = ${i}: el menor (${chip(v(S[i]), 'min')}) ya estaba en su lugar. El intercambio no cambia nada.` });
-    R.fixed.add(i);
+    R.fixed.add(i); R.hist.push({ label: `pasada ${i + 1}`, ids: R.main.slice(), fixedTo: i, side: 'L' });
     R.snap({ kind: 'passEnd', vars: { n, i, min, j: '-' }, hot: S[i], msg: `Fin de la pasada ${i + 1}: a[${i}] = ${chip(v(S[i]), 'sorted')} queda fijo.` });
   }
   R.fixed.add(n - 1);
@@ -711,10 +725,13 @@ function genShell(vals) {
     let curI = g;
     R.base = p => 'active';
     const subs = []; for (let s = 0; s < g; s++) { const r = []; for (let p = s; p < n; p += g) r.push(R.at(p)); subs.push(fmt(r)); }
-    R.snap({ kind: 'gap', vars: { n, gap: g }, msg: g > 1 ? `PASE ${pi + 1}: gap = ${g}. Se forman ${g} sub-listas de elementos separados ${g} posiciones: ${subs.join(' ')}. Cada una se ordena por inserción.` : `PASE ${pi + 1}: gap = 1. Es la inserción normal. Como el arreglo ya está casi ordenado, habrá pocos desplazamientos.` });
+    R.gi = { gap: g, mode: 'group', sub: null };
+    const ovG = {}; R.main.forEach(id => { ovG[id] = 'grp'; });
+    R.snap({ kind: 'gap', vars: { n, gap: g }, ov: ovG, msg: g > 1 ? `PASE ${pi + 1}: gap = ${g}. Se forman ${g} sub-listas de elementos separados ${g} posiciones: ${subs.join(' ')}. Cada una se ordena por inserción.` : `PASE ${pi + 1}: gap = 1. Es la inserción normal. Como el arreglo ya está casi ordenado, habrá pocos desplazamientos.` });
     for (let i = g; i < n; i++) {
       curI = i;
       R.base = p => (p % g !== i % g) ? 'dim' : (p <= curI ? 'part' : 'active');
+      R.gi = { gap: g, mode: 'pass', sub: (() => { const r = []; for (let p = i % g; p < n; p += g) r.push(p); return r; })() };
       const id = R.main[i], t = R.v(id); R.lift(i, i); let j = i;
       R.snap({ kind: 'pick', ptr: { i, j }, vars: { gap: g, i, j, temp: t }, msg: `i = ${i}: temp = a[${i}] = ${chip(t, 'swap')}. Su sub-lista son las posiciones ${(() => { const r = []; for (let p = i % g; p < n; p += g) r.push(p); return r.join(', '); })()}.` });
       while (true) {
@@ -730,59 +747,128 @@ function genShell(vals) {
       R.main[j] = id; R.tmp[j] = null;
       R.snap({ kind: 'insert', ptr: { i }, vars: { gap: g, i, j, temp: t }, hot: id, msg: j === i ? `temp = ${chip(t, 'part')} vuelve a su casilla: ya estaba en orden en su sub-lista.` : `a[${j}] = temp: ${chip(t, 'part')} cae en el hueco.` });
     }
-    R.base = null;
+    R.base = null; R.gi = { gap: g, mode: 'passEnd', sub: null }; R.hist.push({ label: `gap ${g}`, ids: R.main.slice() });
     R.snap({ kind: 'passEnd', vars: { gap: g }, msg: `Fin del pase con gap = ${g}: ${fmt(R.arr())}. ${g > 1 ? `Cada sub-lista quedó ordenada (el arreglo está "${g}-ordenado").` : 'Con gap = 1 queda totalmente ordenado.'}` });
   });
-  for (let k = 0; k < n; k++) R.fixed.add(k);
+  for (let k = 0; k < n; k++) R.fixed.add(k); R.gi = null;
   R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} desplazamientos. Los saltos grandes hacen que los elementos viajen lejos rápido; la inserción final casi no trabaja.` });
   return R.out;
 }
 
 function genQuick(vals) {
   const R = Rec(vals), n = R.n;
-  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. QUICKSORT (divide y vencerás): elige un pivote, pone los menores a su izquierda y los mayores a su derecha, y repite RECURSIVAMENTE con cada lado. Abre la pestaña PILA para ver las llamadas.` });
-  function qs(lo, hi) {
+  let D = 0; const splits = new Array(Math.max(0, n - 1)).fill(99);
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. QUICKSORT elige un pivote, pone los menores a su izquierda y los mayores a su derecha (partición) y repite con cada lado. Cada llamada recursiva BAJA un nivel; el pivote se queda arriba, ya en su lugar final.` });
+  function qs(lo, hi, depth, side) {
     R.calls++; R.stats.p = String(R.calls);
-    R.stack.push(`quickSort(a, ${lo}, ${hi})`); R.label = R.stack[R.stack.length - 1];
-    R.base = rangeBase(lo, hi);
-    R.snap({ kind: 'call', vars: { lo, hi }, msg: `quickSort(a, ${lo}, ${hi}) → pedazo ${lo <= hi ? fmt(seg(R, lo, hi)) : '[ ] (vacío)'}.` });
-    if (lo >= hi) {
-      if (lo === hi) R.fixed.add(lo);
-      R.snap({ kind: 'base', vars: { lo, hi }, msg: `lo >= hi: el pedazo tiene ${lo === hi ? '1 elemento' : '0 elementos'}. CASO BASE: ya está ordenado, se retorna sin más llamadas.` });
-      R.stack.pop(); R.label = R.stack[R.stack.length - 1] || ''; return;
+    R.stack.push(`quickSort(a, ${lo}, ${hi})`); R.label = '';
+    if (lo > hi) {
+      R.focus = null; R.base = p => 'dim';
+      R.snap({ kind: 'base', vars: { lo, hi }, msg: `quickSort(a, ${lo}, ${hi}): lo > hi, el lado ${side === 'L' ? 'izquierdo' : 'derecho'} está VACÍO. CASO BASE: no hay nada que ordenar.` });
+      R.stack.pop(); return;
     }
+    const key = lo + '-' + hi, nd = { key, lo, hi, depth, state: 'open' };
+    R.nodes.set(key, nd); R.keyStack.push(key);
+    for (let p = lo; p <= hi; p++) R.lvl[R.main[p]] = depth;
+    D = Math.max(D, depth);
+    R.focus = { lo, hi, mode: 'divide', depth };
+    R.base = rangeBase(lo, hi, 'active');
+    R.snap({ kind: 'call', vars: { lo, hi, nivel: depth }, msg: depth === 0 ? `Llamada inicial quickSort(a, ${lo}, ${hi}) sobre ${fmt(seg(R, lo, hi), 'active')}.` : `Llamada recursiva sobre el lado ${side === 'L' ? 'IZQUIERDO (los ≤ pivote)' : 'DERECHO (los > pivote)'}: quickSort(a, ${lo}, ${hi}) → ${fmt(seg(R, lo, hi), 'active')}. Bajan al nivel ${depth}.` });
+    if (lo === hi) {
+      R.fixed.add(lo); nd.state = 'sorted';
+      R.snap({ kind: 'base', vars: { lo, hi, nivel: depth }, msg: `CASO BASE: un solo elemento (${chip(R.at(lo), 'sorted')}) ya está en su lugar.` });
+      R.stack.pop(); R.keyStack.pop(); return;
+    }
+    R.focus = { lo, hi, mode: 'part', depth };
     const p = partition(R, lo, hi);
-    qs(lo, p - 1); qs(p + 1, hi);
-    R.stack.pop(); R.label = R.stack[R.stack.length - 1] || '';
+    if (p - 1 >= lo) splits[p - 1] = Math.min(splits[p - 1], depth);
+    if (p + 1 <= hi) splits[p] = Math.min(splits[p], depth);
+    R.focus = { lo, hi, mode: 'divide', depth, pivot: p };
+    qs(lo, p - 1, depth + 1, 'L');
+    qs(p + 1, hi, depth + 1, 'R');
+    for (let q = lo; q <= hi; q++) R.lvl[R.main[q]] = depth;
+    for (const [k2, c] of R.nodes) if (c.depth > depth && c.lo >= lo && c.hi <= hi) c.hidden = true;
+    nd.state = 'sorted';
+    R.focus = { lo, hi, mode: 'done', depth };
+    R.base = rangeBase(lo, hi, 'sorted');
+    R.snap({ kind: 'qret', vars: { lo, hi, nivel: depth }, hop: R.main.slice(lo, hi + 1), msg: `Las dos llamadas de quickSort(a, ${lo}, ${hi}) terminaron: ${fmt(seg(R, lo, hi), 'sorted')} ya está ordenado. Los elementos suben al nivel ${depth} y la llamada retorna.` });
+    R.stack.pop(); R.keyStack.pop();
   }
-  qs(0, n - 1);
-  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones, ${R.stats.mov} intercambios y ${R.calls} llamadas. Con pivotes buenos es O(n log n); si el arreglo ya está ordenado o al revés, este pivote (el último) es el peor y llega a O(n²).` });
+  qs(0, n - 1, 0, 'root');
+  R.focus = null; R.nodes.clear();
+  for (let k = 0; k < n; k++) R.fixed.add(k);
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones, ${R.stats.mov} intercambios y ${R.calls} llamadas, con ${D + 1} niveles de profundidad. Con pivotes buenos hay unos log2(n) niveles (O(n log n)); si el arreglo ya está ordenado o al revés, este pivote es el peor: ¡n niveles y O(n²)!` });
+  R.out.layout = { D, splits };
   return R.out;
 }
 
 function genMerge(vals) {
   const R = Rec(vals), n = R.n;
-  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. MERGESORT (divide y vencerás): divide a la mitad hasta tener pedazos de 1 elemento y luego los MEZCLA ordenadamente. Abre la pestaña PILA para ver las llamadas.` });
-  function ms(lo, hi) {
+  let D = 0; const splits = new Array(Math.max(0, n - 1)).fill(99);
+  (function rec(lo, hi, d) { D = Math.max(D, d); if (lo >= hi) return; const m = (lo + hi) >> 1; splits[m] = d; rec(lo, m, d + 1); rec(m + 1, hi, d + 1); })(0, n - 1, 0);
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. MERGESORT parte el arreglo a la mitad una y otra vez (cada llamada BAJA un nivel en el escenario) y luego MEZCLA las partes ya ordenadas (los elementos SUBEN al nivel de arriba).` });
+  function ms(lo, hi, depth, side, parent) {
+    const key = lo + '-' + hi;
+    const nd = { key, lo, hi, depth, parent, state: 'open' };
+    R.nodes.set(key, nd); R.keyStack.push(key);
+    for (let p = lo; p <= hi; p++) R.lvl[R.main[p]] = depth;
     R.calls++; R.stats.p = String(R.calls);
-    R.stack.push(`mergeSort(a, ${lo}, ${hi})`); R.label = R.stack[R.stack.length - 1];
-    R.base = rangeBase(lo, hi);
-    R.snap({ kind: 'call', vars: { lo, hi }, msg: `mergeSort(a, ${lo}, ${hi}) → pedazo ${fmt(seg(R, lo, hi))}.` });
+    R.stack.push(`mergeSort(a, ${lo}, ${hi})`); R.label = '';
+    R.focus = { lo, hi, mid: null, mode: 'divide', depth };
+    R.base = p => (p < lo || p > hi) ? 'dim' : 'active';
+    R.snap({ kind: 'call', vars: { lo, hi, nivel: depth }, msg: side === 'root'
+      ? `Llamada inicial mergeSort(a, ${lo}, ${hi}) sobre todo el arreglo ${fmt(seg(R, lo, hi), 'active')}.`
+      : `Llamada recursiva sobre la mitad ${side === 'L' ? 'IZQUIERDA' : 'DERECHA'}: mergeSort(a, ${lo}, ${hi}) → ${fmt(seg(R, lo, hi), 'active')}. Sus elementos bajan al nivel ${depth}.` });
     if (lo >= hi) {
-      R.snap({ kind: 'base', vars: { lo, hi }, ov: { [R.main[lo]]: 'part' }, msg: `lo >= hi: un solo elemento (${chip(R.at(lo), 'part')}) ya está ordenado. CASO BASE.` });
-      R.stack.pop(); R.label = R.stack[R.stack.length - 1] || ''; return;
+      R.persist[R.main[lo]] = 'sorted'; nd.state = 'sorted';
+      R.snap({ kind: 'base', vars: { lo, hi, nivel: depth }, msg: `CASO BASE: ${fmt(seg(R, lo, hi), 'sorted')} tiene un solo elemento, así que ya está ordenado. La llamada retorna sin dividir más.` });
+      R.stack.pop(); R.keyStack.pop(); return;
     }
     const mid = Math.floor((lo + hi) / 2);
-    R.base = p => (p < lo || p > hi) ? 'dim' : (p <= mid ? 'part' : 'active');
-    R.snap({ kind: 'split', vars: { lo, mid, hi }, msg: `mid = (${lo} + ${hi}) / 2 = ${mid}. Divido en izquierda ${fmt(seg(R, lo, mid), 'part')} y derecha ${fmt(seg(R, mid + 1, hi), 'active')}. Primero ordeno la izquierda.` });
-    ms(lo, mid); ms(mid + 1, hi);
-    R.label = R.stack[R.stack.length - 1];
-    mergeRange(R, lo, mid, hi);
-    R.stack.pop(); R.label = R.stack[R.stack.length - 1] || '';
+    R.focus.mid = mid;
+    R.base = p => (p < lo || p > hi) ? 'dim' : (p <= mid ? 'part' : 'right');
+    R.snap({ kind: 'split', vars: { lo, mid, hi, nivel: depth }, msg: `Divido ${fmt(seg(R, lo, hi))} por la mitad: mid = (${lo} + ${hi}) / 2 = ${mid} → izquierda ${fmt(seg(R, lo, mid), 'part')} y derecha ${fmt(seg(R, mid + 1, hi), 'shift')}. Dividir no mueve nada: solo calcula mid.` });
+    ms(lo, mid, depth + 1, 'L', key);
+    ms(mid + 1, hi, depth + 1, 'R', key);
+    // mezcla en el nivel de esta llamada
+    nd.state = 'merging';
+    R.focus = { lo, hi, mid, mode: 'merge', depth };
+    R.tmpRow = depth; R.tmpRange = { lo, hi }; R.tmpState = 'temp';
+    R.base = p => (p < lo || p > hi) ? 'dim' : (p <= mid ? 'part' : 'right');
+    R.snap({ kind: 'mergeStart', ptr: { i: lo, j: mid + 1, k: lo }, vars: { lo, mid, hi, i: lo, j: mid + 1, k: 0 },
+      msg: `Las dos mitades ya están ordenadas: ${fmt(seg(R, lo, mid), 'part')} y ${fmt(seg(R, mid + 1, hi), 'shift')}. Ahora se MEZCLAN: las casillas punteadas de arriba son temp[] (${hi - lo + 1} casillas). i apunta al primero de la izquierda y j al primero de la derecha.` });
+    let i = lo, j = mid + 1, k = lo;
+    const take = (pos, left, kind, why) => {
+      const id = R.lift(pos, k), v = R.v(id); R.stats.mov++;
+      if (left) i++; else j++; k++;
+      R.snap({ kind, ptr: { i: i <= mid ? i : null, j: j <= hi ? j : null, k: k <= hi ? k : null }, vars: { lo, mid, hi, i, j, k: k - lo }, hot: id,
+        msg: `${chip(v, 'swap')} sube a temp[${k - 1 - lo}]${why}. Avanzan ${left ? 'i' : 'j'} y k.` });
+    };
+    while (i <= mid && j <= hi) {
+      const a = R.at(i), b = R.at(j); R.stats.cmp++;
+      const le = a <= b;
+      R.snap({ kind: 'mcmp', ptr: { i, j, k }, vars: { lo, mid, hi, i, j, k: k - lo }, ov: { [R.main[i]]: 'compare', [R.main[j]]: 'compare' },
+        cmp: { x1: i, x2: j, a, b, op: le ? '≤' : '>', good: le, win: le ? R.main[i] : R.main[j] },
+        tip: a === b ? 'ESTABILIDAD: ante un empate gana el de la IZQUIERDA, así los iguales conservan su orden original.' : undefined,
+        msg: `Comparo a[i] = ${chip(a, 'compare')} con a[j] = ${chip(b, 'compare')}: ${a < b ? `${a} es menor, va primero.` : a > b ? `${b} es menor, va primero.` : 'son iguales; gana el de la izquierda.'}` });
+      if (le) take(i, true, 'takeL', ''); else take(j, false, 'takeR', '');
+    }
+    while (i <= mid) take(i, true, 'rest', ' (la derecha se agotó: pasa sin comparar)');
+    while (j <= hi) take(j, false, 'rest', ' (la izquierda se agotó: pasa sin comparar)');
+    for (let p = lo; p <= hi; p++) { const id = R.tmp[p]; R.main[p] = id; R.tmp[p] = null; R.lvl[id] = depth; R.persist[id] = 'sorted'; }
+    R.tmpRange = null;
+    R.nodes.get(lo + '-' + mid).hidden = true; R.nodes.get((mid + 1) + '-' + hi).hidden = true;
+    nd.state = 'sorted';
+    R.focus = { lo, hi, mid: null, mode: 'done', depth };
+    R.base = p => (p < lo || p > hi) ? 'dim' : 'sorted';
+    R.snap({ kind: 'copyBack', vars: { lo, mid, hi }, hop: R.main.slice(lo, hi + 1), msg: `temp se copia de vuelta: a[${lo}..${hi}] = ${fmt(seg(R, lo, hi), 'sorted')}. ✓ Este pedazo ya está ORDENADO y la llamada termina.` });
+    R.stack.pop(); R.keyStack.pop();
   }
-  ms(0, n - 1);
+  ms(0, n - 1, 0, 'root', null);
+  R.focus = null; R.nodes.clear();
   for (let k = 0; k < n; k++) R.fixed.add(k);
-  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} copias a temp. T(n) = 2T(n/2) + n → O(n log n) SIEMPRE, sin importar cómo venga el arreglo. Es estable, pero usa memoria extra (temp).` });
+  R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} copias a temp en ${R.calls} llamadas. Hay unos log2(n) niveles y en cada nivel se procesan los n elementos ⇒ O(n log n) SIEMPRE. Es estable, pero usa memoria extra (temp).` });
+  R.out.layout = { D, splits };
   return R.out;
 }
 
@@ -819,7 +905,7 @@ function genRadix(vals) {
       R.snap({ kind: 'collect', vars: { exp, k }, extra: { bucket: d }, hop: R.main.slice(from, k),
         msg: `Vacío la cubeta ${d} en orden: ${fmt(items, 'part')} → a[${from}${k - 1 > from ? '..' + (k - 1) : ''}].` });
     }
-    R.base = null;
+    R.base = null; R.hist.push({ label: exp === 1 ? 'unidades' : (exp === 10 ? 'decenas' : 'centenas'), ids: R.main.slice() });
     R.snap({ kind: 'passEnd', vars: { exp }, msg: `Después de ordenar por ${nm}: ${fmt(R.arr())}.${exp * 10 <= max ? ' Falta el siguiente dígito.' : ''}` });
   }
   R.bk = null;
@@ -832,24 +918,28 @@ function genCounting(vals) {
   const R = Rec(vals), n = R.n;
   const min = Math.min(...vals), max = Math.max(...vals), size = max - min + 1;
   const count = new Array(size).fill(0);
-  R.tmpState = 'part';
-  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. COUNTING SORT no compara: CUENTA cuántas veces aparece cada valor y con eso calcula la posición exacta de cada uno.` });
+  R.tmpState = 'part'; R.tmpRange = { lo: 0, hi: n - 1 };
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. COUNTING SORT no compara: CUENTA cuántas veces aparece cada valor (casillas del medio) y con eso calcula la posición EXACTA de cada uno en salida[] (fila de abajo).` });
   R.stats.p = 'CONTAR';
   R.snap({ kind: 'range', vars: { min, max, 'tamaño': size }, extra: { count: count.slice(), min }, msg: `min = ${min}, max = ${max}. Creo count[] con ${size} casillas (una por cada valor de ${min} a ${max}), todas en 0.` });
   for (let p = 0; p < n; p++) {
     const id = R.main[p], x = R.v(id); count[x - min]++;
-    R.snap({ kind: 'count', ptr: { i: p }, vars: { i: p, x, 'x-min': x - min }, ov: { [id]: 'compare' }, extra: { count: count.slice(), min, hot: x - min }, msg: `a[${p}] = ${chip(x, 'compare')}: count[${x} - ${min}] = count[${x - min}]++ → ${count[x - min]}.` });
+    R.snap({ kind: 'count', ptr: { i: p }, vars: { i: p, x, 'x-min': x - min }, ov: { [id]: 'compare' }, extra: { count: count.slice(), min, hot: x - min, tok: { id, cell: x - min, txt: '+1' } }, msg: `a[${p}] = ${chip(x, 'compare')}: count[${x} - ${min}] = count[${x - min}]++ → ahora vale ${count[x - min]}.` });
   }
   R.stats.p = 'ACUMULAR';
-  for (let v = 1; v < size; v++) count[v] += count[v - 1];
-  R.snap({ kind: 'prefix', vars: { min, max }, extra: { count: count.slice(), min }, msg: `Sumo acumulado: count[v] += count[v-1]. Ahora count[v] dice cuántos elementos son ≤ ${'v'}. Por ejemplo, count[${size - 1}] = ${count[size - 1]} = n.` });
+  R.snap({ kind: 'prefix', vars: { v: 0 }, extra: { count: count.slice(), min, hot: 0 }, msg: `Ahora ACUMULO de izquierda a derecha: count[v] += count[v-1]. Al final, count[v] dirá cuántos elementos son ≤ ${min}+v, o sea, hasta qué posición llega ese valor en salida[].` });
+  for (let v = 1; v < size; v++) {
+    const before = count[v]; count[v] += count[v - 1];
+    R.snap({ kind: 'prefix', vars: { v, 'count[v-1]': count[v - 1], 'count[v]': count[v] }, extra: { count: count.slice(), min, hot: v, prev: v - 1 }, msg: `count[${v}] += count[${v - 1}] → ${before} + ${count[v - 1]} = ${count[v]}: hay ${count[v]} elemento${count[v] === 1 ? '' : 's'} ≤ ${min + v}.` });
+  }
   R.stats.p = 'COLOCAR';
   for (let p = n - 1; p >= 0; p--) {
     const id = R.main[p], x = R.v(id), pos = --count[x - min];
     R.main[p] = null; R.tmp[pos] = id; R.stats.mov++;
-    R.snap({ kind: 'cplace', ptr: { i: p }, vars: { i: p, x, pos }, hot: id, extra: { count: count.slice(), min, hot: x - min }, msg: `i = ${p}: x = ${chip(x, 'swap')}. --count[${x - min}] = ${pos} → salida[${pos}] = ${x}. (Se recorre de derecha a izquierda para que sea ESTABLE.)` });
+    R.snap({ kind: 'cplace', ptr: { i: p }, vars: { i: p, x, pos }, hot: id, extra: { count: count.slice(), min, hot: x - min, tok: null }, msg: `i = ${p}: x = ${chip(x, 'swap')}. --count[${x - min}] = ${pos} → salida[${pos}] = ${x}. (Se recorre de derecha a izquierda para que sea ESTABLE.)` });
   }
   for (let p = 0; p < n; p++) { R.main[p] = R.tmp[p]; R.tmp[p] = null; }
+  R.tmpRange = null;
   R.base = () => 'part';
   R.snap({ kind: 'copyBack', vars: {}, extra: { count: count.slice(), min }, hop: R.main.slice(), msg: `Copio salida[] de vuelta a a[]: ${fmt(R.arr(), 'part')}.` });
   for (let k = 0; k < n; k++) R.fixed.add(k);
@@ -859,26 +949,32 @@ function genCounting(vals) {
 
 function genTim(vals) {
   const R = Rec(vals), n = R.n, RUN = 4;
-  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. TIM SORT (versión simplificada, RUN = ${RUN}) combina lo mejor de dos: ordena bloques pequeños (runs) con INSERCIÓN y luego los une con MERGE. Es el que usa Java para ordenar objetos.` });
-  let r = 0;
-  for (let ini = 0; ini < n; ini += RUN) {
-    const fin = Math.min(ini + RUN - 1, n - 1); r++;
-    R.stats.p = `RUN ${r}`; R.label = `insercion(a, ${ini}, ${fin})`;
-    R.base = rangeBase(ini, fin);
-    R.snap({ kind: 'runStart', vars: { ini, fin, RUN }, msg: `Run ${r}: posiciones ${ini} a ${fin} → ${fmt(seg(R, ini, fin))}. Lo ordeno con inserción.` });
-    insertionRange(R, ini, fin, { dim: true });
-  }
-  R.label = '';
+  R.runs = []; for (let ini = 0; ini < n; ini += RUN) R.runs.push({ lo: ini, hi: Math.min(ini + RUN - 1, n - 1), st: 'pending', id: R.runs.length });
+  R.tmpRow = -1;
+  R.snap({ kind: 'start', msg: `Arreglo inicial: ${fmt(vals)}. TIM SORT (versión simplificada, RUN = ${RUN}) parte el arreglo en bloques (runs, separados en el escenario), ordena cada run con INSERCIÓN y luego los une de dos en dos con MERGE: los huecos entre runs se van cerrando.` });
+  R.runs.forEach((run, r) => {
+    run.st = 'active'; R.stats.p = `RUN ${r + 1}`;
+    R.base = rangeBase(run.lo, run.hi);
+    R.snap({ kind: 'runStart', vars: { ini: run.lo, fin: run.hi, RUN }, msg: `Run ${r + 1}: posiciones ${run.lo} a ${run.hi} → ${fmt(seg(R, run.lo, run.hi))}. Lo ordeno con inserción.` });
+    insertionRange(R, run.lo, run.hi, { dim: true });
+    run.st = 'sorted';
+  });
   for (let tam = RUN; tam < n; tam *= 2) {
     R.stats.p = `MEZCLA ${tam}`; R.base = null;
     R.snap({ kind: 'mergePhase', vars: { tam }, msg: `FASE DE MEZCLA: uno runs de tamaño ${tam} de dos en dos. ${fmt(R.arr())}.` });
     for (let lo = 0; lo < n - tam; lo += 2 * tam) {
       const mid = lo + tam - 1, hi = Math.min(lo + 2 * tam - 1, n - 1);
-      R.label = `merge(a, ${lo}, ${mid}, ${hi})`;
+      const a = R.runs.find(r => r.lo === lo), b = R.runs.find(r => r.lo === mid + 1);
+      a.st = 'merging'; b.st = 'merging';
+      R.tmpRange = { lo, hi };
       mergeRange(R, lo, mid, hi);
+      R.tmpRange = null;
+      R.runs = R.runs.filter(r => r !== b); a.hi = hi; a.st = 'sorted';
+      R.base = null;
+      R.snap({ kind: 'passEnd', vars: { lo, hi }, msg: `Los dos runs se unieron en uno solo: a[${lo}..${hi}] = ${fmt(seg(R, lo, hi), 'part')}. El hueco entre ellos se cierra.` });
     }
   }
-  R.label = '';
+  R.runs = null;
   for (let k = 0; k < n; k++) R.fixed.add(k);
   R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} movimientos. El TimSort real usa runs de 32 a 64 y aprovecha los pedazos que YA vienen ordenados: por eso es muy rápido con datos reales.` });
   return R.out;
@@ -887,34 +983,60 @@ function genTim(vals) {
 function genIntro(vals) {
   const R = Rec(vals), n = R.n, UMBRAL = 4;
   const limite = 2 * Math.floor(Math.log2(n));
-  R.snap({ kind: 'start', vars: { limite, UMBRAL }, msg: `Arreglo inicial: ${fmt(vals)}. INTRO SORT empieza como QUICKSORT, pero vigila: si un pedazo es pequeño (≤ ${UMBRAL}) usa INSERCIÓN, y si la recursión se hace muy profunda (límite = 2·log2(n) = ${limite}) cambia a HEAPSORT. Prueba "AL REVÉS" con 11 o 12 elementos para ver el cambio a HeapSort.` });
-  function intro(lo, hi, prof) {
+  let D = 0; const splits = new Array(Math.max(0, n - 1)).fill(99);
+  R.snap({ kind: 'start', vars: { limite, UMBRAL }, msg: `Arreglo inicial: ${fmt(vals)}. INTRO SORT empieza como QUICKSORT (cada llamada baja un nivel), pero vigila: si un pedazo es pequeño (≤ ${UMBRAL}) usa INSERCIÓN, y si la recursión se hace muy profunda (límite = 2·log2(n) = ${limite}) cambia a HEAPSORT. Prueba "AL REVÉS" con 11 o 12 elementos para ver el cambio a HeapSort.` });
+  function intro(lo, hi, prof, depth, side) {
     R.calls++; R.stats.p = String(R.calls);
-    R.stack.push(`intro(a, ${lo}, ${hi}, prof=${prof})`); R.label = R.stack[R.stack.length - 1];
-    R.base = rangeBase(lo, hi);
+    R.stack.push(`intro(a, ${lo}, ${hi}, prof=${prof})`); R.label = '';
     const tam = hi - lo + 1;
-    R.snap({ kind: 'call', vars: { lo, hi, prof, tam }, msg: `intro(a, ${lo}, ${hi}, ${prof}) → ${tam > 0 ? fmt(seg(R, lo, hi)) : '[ ]'} (tamaño ${tam}).` });
-    if (tam <= 1) {
-      if (tam === 1) R.fixed.add(lo);
-      R.snap({ kind: 'base', vars: { lo, hi, prof }, msg: `Tamaño ${tam}: ya está ordenado.` });
+    if (tam <= 0) {
+      R.focus = null; R.base = () => 'dim';
+      R.snap({ kind: 'base', vars: { lo, hi, prof }, msg: `intro(a, ${lo}, ${hi}): pedazo vacío, no hay nada que hacer.` });
+      R.stack.pop(); return;
+    }
+    const key = lo + '-' + hi, nd = { key, lo, hi, depth, state: 'open' };
+    R.nodes.set(key, nd); R.keyStack.push(key);
+    for (let p = lo; p <= hi; p++) R.lvl[R.main[p]] = depth;
+    D = Math.max(D, depth);
+    R.focus = { lo, hi, mode: 'divide', depth };
+    R.base = rangeBase(lo, hi, 'active');
+    R.snap({ kind: 'call', vars: { lo, hi, prof, tam, nivel: depth }, msg: `intro(a, ${lo}, ${hi}, prof = ${prof}) → ${fmt(seg(R, lo, hi), 'active')} (tamaño ${tam}).` });
+    if (tam === 1) {
+      R.fixed.add(lo); nd.state = 'sorted';
+      R.snap({ kind: 'base', vars: { lo, hi, prof }, msg: `Tamaño 1: ${chip(R.at(lo), 'sorted')} ya está en su lugar.` });
     } else if (tam <= UMBRAL) {
-      R.snap({ kind: 'toIns', vars: { lo, hi, prof, tam }, msg: `tam = ${tam} ≤ UMBRAL (${UMBRAL}): pedazo pequeño → uso INSERCIÓN, que con pocos elementos es lo más rápido.` });
+      R.focus = { lo, hi, mode: 'ins', depth };
+      R.snap({ kind: 'toIns', vars: { lo, hi, prof, tam }, msg: `tam = ${tam} ≤ UMBRAL (${UMBRAL}): pedazo pequeño → uso INSERCIÓN, que con pocos elementos es lo más rápido. La carta que se toma baja al nivel de abajo mientras se le abre espacio.` });
+      R.tmpRow = depth + 1; D = Math.max(D, depth + 1);
       insertionRange(R, lo, hi, { dim: true });
       for (let p = lo; p <= hi; p++) R.fixed.add(p);
-      R.base = rangeBase(lo, hi);
+      nd.state = 'sorted';
+      R.base = rangeBase(lo, hi, 'sorted');
     } else if (prof === 0) {
-      R.snap({ kind: 'toHeap', vars: { lo, hi, prof, tam }, msg: `prof = 0: QuickSort ya se dividió demasiadas veces (pivotes malos). → cambio a HEAPSORT en a[${lo}..${hi}] para garantizar O(n log n). Dentro de HeapSort los índices del árbol cuentan desde lo: el nodo 0 es a[${lo}].` });
+      R.focus = { lo, hi, mode: 'heap', depth };
+      R.snap({ kind: 'toHeap', vars: { lo, hi, prof, tam }, msg: `prof = 0: QuickSort ya se dividió demasiadas veces (pivotes malos). → cambio a HEAPSORT en a[${lo}..${hi}] para garantizar O(n log n). Los arcos de abajo unen cada padre con sus hijos. Dentro de HeapSort los índices del árbol cuentan desde lo: el nodo 0 es a[${lo}].` });
       heapRange(R, lo, hi, { intro: true });
-      R.label = R.stack[R.stack.length - 1];
+      nd.state = 'sorted';
     } else {
+      R.focus = { lo, hi, mode: 'part', depth };
       const p = partition(R, lo, hi);
-      intro(lo, p - 1, prof - 1); intro(p + 1, hi, prof - 1);
+      if (p - 1 >= lo) splits[p - 1] = Math.min(splits[p - 1], depth);
+      if (p + 1 <= hi) splits[p] = Math.min(splits[p], depth);
+      intro(lo, p - 1, prof - 1, depth + 1, 'L'); intro(p + 1, hi, prof - 1, depth + 1, 'R');
+      for (let q = lo; q <= hi; q++) R.lvl[R.main[q]] = depth;
+      for (const [, c] of R.nodes) if (c.depth > depth && c.lo >= lo && c.hi <= hi) c.hidden = true;
+      nd.state = 'sorted';
+      R.focus = { lo, hi, mode: 'done', depth };
+      R.base = rangeBase(lo, hi, 'sorted');
+      R.snap({ kind: 'qret', vars: { lo, hi, prof }, hop: R.main.slice(lo, hi + 1), msg: `intro(a, ${lo}, ${hi}) terminó: ${fmt(seg(R, lo, hi), 'sorted')} ya está ordenado y sube al nivel ${depth}.` });
     }
-    R.stack.pop(); R.label = R.stack[R.stack.length - 1] || '';
+    R.stack.pop(); R.keyStack.pop();
   }
-  intro(0, n - 1, limite);
-  for (let k = 0; k < n; k++) R.fixed.add(k);
+  intro(0, n - 1, limite, 0, 'root');
+  R.focus = null; R.nodes.clear(); R.heap = null;
+  for (let k = 0; k < n; k++) { R.fixed.add(k); R.lvl[R.main[k]] = 0; }
   R.snap({ kind: 'done', vars: { n }, msg: `¡Listo! ${fmt(R.arr(), 'sorted')}. ${R.stats.cmp} comparaciones y ${R.stats.mov} movimientos. IntroSort tiene la velocidad de QuickSort y la garantía O(n log n) de HeapSort. Es el que usa C++ (std::sort); el real usa UMBRAL = 16.` });
+  R.out.layout = { D, splits };
   return R.out;
 }
 
@@ -931,6 +1053,7 @@ function genBinIter(vals, x) {
   R.snap({ kind: 'sStart', ptr: { low, high }, vars: { x, low, high }, msg: `Buscar x = ${chip(x, 'min')} en ${fmt(vals)} (ORDENADO, es requisito). low = 0, high = ${n - 1}: x puede estar en cualquier parte.` });
   while (low <= high) {
     const mid = Math.floor((low + high) / 2), v = R.at(mid); R.stats.cmp++; R.stats.p = String(R.stats.cmp);
+    R.hist.push({ label: `intento ${R.stats.cmp}`, low, high, probe: mid });
     R.snap({ kind: 'sMid', ptr: { low, high, mid }, vars: { x, low, high, mid, 'a[mid]': v }, ov: { [R.main[mid]]: 'compare' }, cmp: { x1: mid, x2: mid, text: `a[${mid}]=${v}  x=${x}` },
       msg: `mid = (${low} + ${high}) / 2 = ${mid}. Miro a[${mid}] = ${chip(v, 'compare')} y lo comparo con x = ${chip(x, 'min')}.` });
     if (v === x) {
@@ -953,6 +1076,7 @@ function genBinRec(vals, x) {
     R.snap({ kind: 'sCall', ptr: { low: low <= high ? low : null, high: low <= high ? high : null }, vars: { x, low, high }, msg: `binariaRec(a, ${x}, ${low}, ${high}).` });
     if (low > high) { R.snap({ kind: 'notFound', vars: { x, low, high }, msg: `CASO BASE: low > high, zona vacía → return -1. Este -1 se devuelve por toda la pila.` }); res = -1; R.stack.pop(); return; }
     const mid = Math.floor((low + high) / 2), v = R.at(mid); R.stats.cmp++; R.stats.p = String(R.stats.cmp);
+    R.hist.push({ label: `llamada ${R.stack.length}`, low, high, probe: mid });
     R.snap({ kind: 'sMid', ptr: { low, high, mid }, vars: { x, low, high, mid, 'a[mid]': v }, ov: { [R.main[mid]]: 'compare' }, cmp: { x1: mid, x2: mid, text: `a[${mid}]=${v}  x=${x}` }, msg: `mid = ${mid}: a[${mid}] = ${chip(v, 'compare')} vs x = ${chip(x, 'min')}.` });
     if (v === x) { R.snap({ kind: 'found', ptr: { mid }, vars: { x, mid }, ov: { [R.main[mid]]: 'sorted' }, msg: `CASO BASE: ¡a[${mid}] == x! return ${mid}. Cada llamada de la pila devuelve ese ${mid} hacia arriba. Total: ${R.stats.cmp} comparaciones y ${R.stack.length} llamadas.` }); res = mid; R.stack.pop(); return; }
     if (v < x) { R.snap({ kind: 'goRight', ptr: { low, high, mid }, vars: { x, low, high, mid }, msg: `${v} < ${x}: return binariaRec(a, ${x}, ${mid + 1}, ${high}). Nueva llamada con la mitad derecha.` }); rec(mid + 1, high); }
@@ -976,6 +1100,7 @@ function genInterp(vals, x) {
     const al = R.at(low), ah = R.at(high);
     const pos = low + Math.floor((x - al) * (high - low) / (ah - al)), v = R.at(pos);
     R.stats.cmp++; R.stats.p = String(R.stats.cmp);
+    R.hist.push({ label: `intento ${R.stats.cmp}`, low, high, probe: pos });
     R.snap({ kind: 'sMid', ptr: { low, high, pos }, vars: { x, low, high, pos, 'a[pos]': v }, ov: { [R.main[pos]]: 'compare' }, cmp: { x1: pos, x2: pos, text: `a[${pos}]=${v}  x=${x}` },
       msg: `pos = ${low} + (${x} - ${al})·(${high} - ${low}) / (${ah} - ${al}) = ${pos}. Miro a[${pos}] = ${chip(v, 'compare')}.` });
     if (v === x) { R.snap({ kind: 'found', ptr: { pos }, vars: { x, pos }, ov: { [R.main[pos]]: 'sorted' }, msg: `¡a[${pos}] == x! Encontrado con ${R.stats.cmp} comparación${R.stats.cmp > 1 ? 'es' : ''}. Con datos repartidos uniformemente la estimación casi siempre cae cerca: O(log log n).` }); return R.out; }
@@ -1009,36 +1134,36 @@ const ALGOS = {
     legend:['idle','part','temp','compare','shift','sorted'],
     tips:{ start:'Como ordenar cartas en la mano: la parte izquierda ya está ordenada y cada carta nueva se mete en su lugar.', pick:'<code>actual</code> guarda el valor y su casilla queda como HUECO.', shift:'No intercambia: COPIA a[j] una casilla a la derecha.', insert:'Si el while paró en la primera comparación, ni se movió: por eso es rápido con datos casi ordenados.', done:'Mejor caso O(n), peor caso O(n²). Es estable y adaptativo.' } },
 
-  shell: { name:'SHELL SORT', sub:'inserción con saltos', gen:genShell, movLbl:'DESPLAZAMIENTOS', movShort:'desplaz.', pLbl:'PASE', hint:'inserción por sub-listas separadas gap posiciones', top:{ temp:'temp' },
+  shell: { view:'shell', name:'SHELL SORT', sub:'inserción con saltos', gen:genShell, movLbl:'DESPLAZAMIENTOS', movShort:'desplaz.', pLbl:'PASE', hint:'arcos = sub-listas del gap actual · abajo, el arreglo tras cada pase', top:{ temp:'temp' },
     code:[['static void shellSort(int[] a) {',''],['  int n = a.length;',''],['  for (int gap = n / 2; gap > 0; gap /= 2) {','gap passEnd'],['    for (int i = gap; i < n; i++) {','~pick'],['      int temp = a[i];','pick'],['      int j = i;','pick'],['      while (j >= gap && a[j - gap] > temp) {','cmp edge ~shift'],['        a[j] = a[j - gap];','shift'],['        j -= gap;','shift'],['      }',''],['      a[j] = temp;','insert'],['    }',''],['  }',''],['}','']],
     legend:['dim','active','part','temp','compare','shift','sorted'],
     tips:{ start:'Donald Shell (1959) mejoró la inserción: los elementos viajan lejos de un solo salto.', gap:'Con gap grande, un elemento pequeño que está al final llega al inicio en pocos saltos.', cmp:'Se compara con el que está a gap posiciones, no con el vecino.', done:'Con gaps n/2, n/4…, 1 el peor caso es O(n²), pero en la práctica es mucho más rápido que la inserción. No es estable.' } },
-  quick: { name:'QUICKSORT', sub:'pivote y partición', gen:genQuick, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'LLAMADAS', hint:'zona izquierda ≤ pivote · zona derecha > pivote', rec:true,
-    code:[['static void quickSort(int[] a, int lo, int hi) {','call'],['  if (lo >= hi) return;','base ~call'],['  int p = particion(a, lo, hi);','~pivot ~place'],['  quickSort(a, lo, p - 1);',''],['  quickSort(a, p + 1, hi);',''],['}',''],['static int particion(int[] a, int lo, int hi) {',''],['  int pivote = a[hi];','pivot'],['  int i = lo - 1;','pivot'],['  for (int j = lo; j < hi; j++) {','~pcmp ~pkeep'],['    if (a[j] <= pivote) {','pcmp pkeep ~pswap'],['      i++;','pswap'],['      intercambiar(a, i, j);','pswap'],['    }',''],['  }',''],['  intercambiar(a, i + 1, hi);','place'],['  return i + 1;','place'],['}','']],
+  quick: { view:'levels', name:'QUICKSORT', sub:'pivote y partición', gen:genQuick, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'LLAMADAS', hint:'cada [ ] es una llamada · los lados bajan un nivel, el pivote se queda arriba', rec:true,
+    code:[['static void quickSort(int[] a, int lo, int hi) {','call'],['  if (lo >= hi) return;','base ~call'],['  int p = particion(a, lo, hi);','~pivot ~place'],['  quickSort(a, lo, p - 1);',''],['  quickSort(a, p + 1, hi);',''],['}','qret'],['static int particion(int[] a, int lo, int hi) {',''],['  int pivote = a[hi];','pivot'],['  int i = lo - 1;','pivot'],['  for (int j = lo; j < hi; j++) {','~pcmp ~pkeep'],['    if (a[j] <= pivote) {','pcmp pkeep ~pswap'],['      i++;','pswap'],['      intercambiar(a, i, j);','pswap'],['    }',''],['  }',''],['  intercambiar(a, i + 1, hi);','place'],['  return i + 1;','place'],['}','']],
     legend:['dim','min','part','active','compare','swap','sorted'], legNames:{ min:'Pivote', part:'Zona ≤ pivote', active:'Zona > pivote' },
     tips:{ start:'Divide y vencerás: el trabajo está en PARTIR. Después de partir, el pivote ya quedó en su posición final.', call:'Cada llamada trabaja solo con su pedazo (lo..hi). Lo demás está apagado.', base:'Recursividad: sin caso base, el método se llamaría para siempre.', place:'El pivote no se vuelve a mover nunca más.', done:'Promedio O(n log n), peor caso O(n²) con pivotes malos (arreglo ordenado). Es in-place pero no estable.' } },
-  merge: { name:'MERGESORT', sub:'dividir y mezclar', gen:genMerge, movLbl:'COPIAS', movShort:'copias', pLbl:'LLAMADAS', hint:'arriba: temp[] donde se mezclan las dos mitades', rec:true, top:{ temp:'temp[]' },
+  merge: { view:'levels', name:'MERGESORT', sub:'dividir y mezclar', gen:genMerge, movLbl:'COPIAS', movShort:'copias', pLbl:'LLAMADAS', hint:'cada [ ] es una llamada recursiva · cada nivel baja una división', rec:true, top:{ temp:'temp[]' },
     code:[['static void mergeSort(int[] a, int lo, int hi) {','call'],['  if (lo >= hi) return;','base ~call'],['  int mid = (lo + hi) / 2;','split'],['  mergeSort(a, lo, mid);','~split'],['  mergeSort(a, mid + 1, hi);','~split'],['  merge(a, lo, mid, hi);','~mergeStart'],['}',''],['static void merge(int[] a, int lo, int mid, int hi) {',''],['  int[] temp = new int[hi - lo + 1];','mergeStart'],['  int i = lo, j = mid + 1, k = 0;','mergeStart'],['  while (i <= mid && j <= hi) {','~mcmp'],['    if (a[i] <= a[j]) temp[k++] = a[i++];','mcmp takeL'],['    else              temp[k++] = a[j++];','takeR'],['  }',''],['  while (i <= mid) temp[k++] = a[i++];','rest'],['  while (j <= hi)  temp[k++] = a[j++];','rest'],['  for (k = 0; k < temp.length; k++)','copyBack'],['    a[lo + k] = temp[k];','copyBack'],['}','']],
     legend:['dim','part','active','compare','merge','sorted'], legNames:{ part:'Mitad izquierda', active:'Mitad derecha', merge:'En temp[]' },
     tips:{ start:'T(n) = 2T(n/2) + n: dos llamadas con la mitad, más n para mezclar. Resultado: O(n log n).', split:'Dividir no ordena nada: solo parte el problema en dos más pequeños.', base:'Un arreglo de 1 elemento SIEMPRE está ordenado: ese es el caso base.', mcmp:'Como las dos mitades ya están ordenadas, basta comparar el primero de cada una.', done:'O(n log n) en TODOS los casos. Estable. Usa memoria extra O(n).' } },
-  heap: { name:'HEAPSORT', sub:'árbol max-heap', gen:genHeap, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'FASE', hint:'arriba: el MISMO arreglo visto como árbol', rec:true, top:{ tree:true },
+  heap: { view:'heap', name:'HEAPSORT', sub:'árbol max-heap', gen:genHeap, movLbl:'INTERCAMBIOS', movShort:'intercamb.', pLbl:'FASE', hint:'el MISMO arreglo visto como árbol · abajo, la zona ya ordenada', rec:true, top:{ tree:true },
     code:[['static void heapSort(int[] a) {',''],['  int n = a.length;',''],['  for (int i = n / 2 - 1; i >= 0; i--)','build'],['    heapify(a, n, i);','~build'],['  for (int i = n - 1; i > 0; i--) {','~extract'],['    intercambiar(a, 0, i);','extract'],['    heapify(a, i, 0);','~extract'],['  }',''],['}',''],['static void heapify(int[] a, int n, int i) {','heapify'],['  int mayor = i;','heapify'],['  int izq = 2 * i + 1, der = 2 * i + 2;','heapify'],['  if (izq < n && a[izq] > a[mayor]) mayor = izq;','cmpL'],['  if (der < n && a[der] > a[mayor]) mayor = der;','cmpR'],['  if (mayor != i) {','~hswap ok'],['    intercambiar(a, i, mayor);','hswap'],['    heapify(a, n, mayor);','~hswap'],['  }',''],['}','']],
     legend:['active','min','compare','swap','part','sorted'], legNames:{ active:'Dentro del heap', min:'Padre / mayor', part:'Heap válido aquí' },
     tips:{ start:'El árbol NO es otra estructura: es el mismo arreglo. a[0] es la raíz, a[1] y a[2] sus hijos, y así.', build:'En un max-heap el mayor siempre está en la raíz.', extract:'Es como selección, pero encontrar el mayor cuesta O(log n) en vez de O(n).', done:'O(n log n) garantizado, in-place, no estable.' } },
-  radix: { name:'RADIX SORT', sub:'cubetas por dígito', gen:genRadix, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'DÍGITO', hint:'arriba: 10 cubetas, una por dígito (0-9)', top:{ buckets:true },
+  radix: { view:'radix', name:'RADIX SORT', sub:'cubetas por dígito', gen:genRadix, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'DÍGITO', hint:'10 cubetas · el dígito que se mira está resaltado en amarillo', top:{ buckets:true },
     code:[['static void radixSort(int[] a) {',''],['  int max = Arrays.stream(a).max().getAsInt();','start'],['  for (int exp = 1; max / exp > 0; exp *= 10) {','digitPass passEnd'],['    List<List<Integer>> cubetas = new ArrayList<>();','digitPass'],['    for (int d = 0; d < 10; d++) cubetas.add(new ArrayList<>());','digitPass'],['    for (int x : a)','~toBucket'],['      cubetas.get((x / exp) % 10).add(x);','toBucket'],['    int k = 0;',''],['    for (List<Integer> c : cubetas)','~collect'],['      for (int x : c) a[k++] = x;','collect'],['  }',''],['}','']],
     legend:['idle','compare','shift','part','sorted'], legNames:{ compare:'Elemento actual', shift:'En una cubeta', part:'Recogido' },
     tips:{ start:'Radix no pregunta "¿quién es mayor?": solo mira dígitos. Por eso tiene 0 comparaciones.', toBucket:'(x / exp) % 10 saca un dígito: con exp=1 las unidades, con exp=10 las decenas.', collect:'Se vacían en orden 0→9 y, dentro de cada cubeta, en el orden en que entraron (estable).', done:'O(d·n). Solo sirve con enteros (o claves que se puedan partir en dígitos).' } },
-  counting: { name:'COUNTING SORT', sub:'contar y colocar', gen:genCounting, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'FASE', hint:'arriba: salida[]; abajo: el arreglo count[]', top:{ temp:'salida' },
+  counting: { view:'counting', name:'COUNTING SORT', sub:'contar y colocar', gen:genCounting, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'FASE', hint:'a[] arriba · count[] en el medio · salida[] abajo', top:{ temp:'salida' },
     code:[['static void countingSort(int[] a) {',''],['  int min = minimo(a), max = maximo(a);','range'],['  int[] count = new int[max - min + 1];','range'],['  for (int x : a) count[x - min]++;','count'],['  for (int v = 1; v < count.length; v++)','~prefix'],['    count[v] += count[v - 1];','prefix'],['  int[] salida = new int[a.length];',''],['  for (int i = a.length - 1; i >= 0; i--)','~cplace'],['    salida[--count[a[i] - min]] = a[i];','cplace'],['  for (int i = 0; i < a.length; i++)','copyBack'],['    a[i] = salida[i];','copyBack'],['}','']],
     legend:['idle','compare','part','sorted'], legNames:{ compare:'Contando', part:'En salida[]' },
     tips:{ start:'Ideal cuando los valores están en un rango pequeño (notas de 0 a 5, edades, etc.).', count:'Cada casilla de count[] es un contador de un valor.', prefix:'El acumulado convierte "cuántos hay" en "hasta dónde llegan".', cplace:'Recorrer de derecha a izquierda mantiene el orden de los iguales: ESTABLE.', done:'O(n + k). No compara. Usa memoria extra: count[] y salida[].' } },
-  tim: { name:'TIM SORT', sub:'runs + merge', gen:genTim, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'FASE', hint:'inserción en runs de 4, luego mezcla como MergeSort', top:{ temp:'temp' },
-    code:[['static final int RUN = 4; // el real usa 32-64',''],['static void timSort(int[] a) {',''],['  int n = a.length;',''],['  for (int ini = 0; ini < n; ini += RUN)','runStart'],['    insercion(a, ini, Math.min(ini + RUN - 1, n - 1));','~runStart pick cmp shift edge insert'],['  for (int tam = RUN; tam < n; tam *= 2)','mergePhase'],['    for (int lo = 0; lo < n - tam; lo += 2 * tam) {','~mergePhase'],['      int mid = lo + tam - 1;',''],['      int hi = Math.min(lo + 2 * tam - 1, n - 1);',''],['      merge(a, lo, mid, hi);','mergeStart mcmp takeL takeR rest copyBack'],['    }',''],['}',''],['// insercion() y merge() son los de',''],['// Inserción y MergeSort (ver esas pestañas)','']],
+  tim: { view:'tim', name:'TIM SORT', sub:'runs + merge', gen:genTim, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'FASE', hint:'cada [ ] es un run · los huecos se cierran al mezclar', top:{ temp:'temp' },
+    code:[['static final int RUN = 4; // el real usa 32-64',''],['static void timSort(int[] a) {',''],['  int n = a.length;',''],['  for (int ini = 0; ini < n; ini += RUN)','runStart'],['    insercion(a, ini, Math.min(ini + RUN - 1, n - 1));','~runStart pick cmp shift edge insert'],['  for (int tam = RUN; tam < n; tam *= 2)','mergePhase'],['    for (int lo = 0; lo < n - tam; lo += 2 * tam) {','~mergePhase'],['      int mid = lo + tam - 1;',''],['      int hi = Math.min(lo + 2 * tam - 1, n - 1);',''],['      merge(a, lo, mid, hi);','mergeStart mcmp takeL takeR rest copyBack passEnd'],['    }',''],['}',''],['// insercion() y merge() son los de',''],['// Inserción y MergeSort (ver esas pestañas)','']],
     legend:['dim','part','active','temp','compare','shift','merge','sorted'], legNames:{ part:'Ordenado / mitad izq.', active:'Mitad derecha', merge:'En temp' },
     tips:{ start:'Inserción es rapidísima con pocos elementos y MergeSort es bueno uniendo: TimSort usa cada uno donde mejor funciona.', runStart:'Cada run es pequeño, así que la inserción casi no cuesta.', mergePhase:'Los runs ya están ordenados: solo falta mezclarlos.', done:'O(n log n) peor caso, O(n) si ya viene ordenado. Estable. Lo usan Java (objetos) y Python.' } },
-  intro: { name:'INTRO SORT', sub:'quick + heap + inserción', gen:genIntro, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'LLAMADAS', hint:'QuickSort que se cambia a inserción o HeapSort cuando conviene', rec:true, top:{ tree:true, temp:'actual' },
-    code:[['static void introSort(int[] a) {',''],['  int limite = 2 * (int) (Math.log(a.length) / Math.log(2));','start'],['  intro(a, 0, a.length - 1, limite);',''],['}',''],['static void intro(int[] a, int lo, int hi, int prof) {','call'],['  int tam = hi - lo + 1;','call base'],['  if (tam <= UMBRAL) {      // UMBRAL = 4','toIns base'],['    insercion(a, lo, hi); return;','~toIns pick cmp shift edge insert'],['  }',''],['  if (prof == 0) {','toHeap'],['    heapSort(a, lo, hi); return;','~toHeap build heapify cmpL cmpR hswap ok extract'],['  }',''],['  int p = particion(a, lo, hi);','pivot pcmp pswap pkeep place'],['  intro(a, lo, p - 1, prof - 1);',''],['  intro(a, p + 1, hi, prof - 1);',''],['}','']],
+  intro: { view:'levels', name:'INTRO SORT', sub:'quick + heap + inserción', gen:genIntro, movLbl:'MOVIMIENTOS', movShort:'movim.', pLbl:'LLAMADAS', hint:'como QuickSort por niveles · los pedazos pequeños usan inserción', rec:true, top:{ tree:true, temp:'actual' },
+    code:[['static void introSort(int[] a) {',''],['  int limite = 2 * (int) (Math.log(a.length) / Math.log(2));','start'],['  intro(a, 0, a.length - 1, limite);',''],['}',''],['static void intro(int[] a, int lo, int hi, int prof) {','call'],['  int tam = hi - lo + 1;','call base'],['  if (tam <= UMBRAL) {      // UMBRAL = 4','toIns base'],['    insercion(a, lo, hi); return;','~toIns pick cmp shift edge insert'],['  }',''],['  if (prof == 0) {','toHeap'],['    heapSort(a, lo, hi); return;','~toHeap build heapify cmpL cmpR hswap ok extract'],['  }',''],['  int p = particion(a, lo, hi);','pivot pcmp pswap pkeep place'],['  intro(a, lo, p - 1, prof - 1);',''],['  intro(a, p + 1, hi, prof - 1);',''],['}','qret']],
     legend:['dim','min','part','active','temp','compare','swap','sorted'], legNames:{ min:'Pivote / padre', part:'Zona ≤ pivote / ordenado', active:'Zona > pivote / heap' },
     tips:{ start:'Es un QuickSort "con seguro": si las cosas van mal (recursión muy profunda), cambia de estrategia.', toIns:'Con pedazos pequeños, la inserción le gana a QuickSort.', toHeap:'HeapSort garantiza O(n log n) aunque los pivotes sean malos.', done:'O(n log n) garantizado. No estable. Es el std::sort de C++.' } },
 
@@ -1276,6 +1401,497 @@ const INFO = {
 };
 
 /* ============================================================
+   VISTAS: cada algoritmo dibuja la ESTRUCTURA de lo que hace
+   flat     → simples y búsquedas (fila + historial)
+   levels   → MergeSort / QuickSort / IntroSort (un nivel por llamada)
+   shell    → sub-listas con arcos + historial de pases
+   heap     → árbol de slimes + arreglo + zona ordenada
+   radix    → 10 cubetas con el dígito resaltado + historial
+   counting → a[] · count[] · salida[]
+   tim      → runs separados que se van uniendo
+   ============================================================ */
+const sizeFor = cw => {
+  const sw = Math.max(12, Math.round(cw * (cw < 40 ? 0.8 : 0.7))), sh = Math.round(sw * 13 / 16);
+  const q = Math.max(1, Math.min(Math.max(2, Math.round(sw / 20)), Math.floor(cw * 0.92 / 7)));
+  return { sw, sh, q, numH: 7 * q + 6 };
+};
+const gutOf = W => W < 600 ? 50 : 84;
+const padOf = W => W < 600 ? 6 : 18;
+const colX = (c, L) => L.left + L.cw * (c + 0.5);
+function idAtMain(s, c) { return s.loc.findIndex(L => L.z === 'm' && L.c === c); }
+function idAtTmp(s, c) { return s.loc.findIndex(L => L.z === 't' && L.c === c); }
+function stColor(s, id) { const st = s.st[id]; return st === 'grp' ? GRP[s.loc[id].c % ((s.gi && s.gi.gap) || 1)] : ST[st]; }
+
+/* ---------- utilidades de dibujo compartidas ---------- */
+function dashedBox(ctx, x, feet, w, h, q, color, a) {
+  ctx.globalAlpha = a; ctx.fillStyle = color;
+  const x0 = x - w / 2, y0 = feet - h;
+  for (let xx = x0; xx < x0 + w; xx += 2 * q) { rect(ctx, xx, y0, q, q); rect(ctx, xx, y0 + h - q, q, q); }
+  for (let yy = y0; yy < y0 + h; yy += 2 * q) { rect(ctx, x0, yy, q, q); rect(ctx, x0 + w - q, yy, q, q); }
+  ctx.globalAlpha = 1;
+}
+function drawBracket(ctx, x1, x2, y1, y2, color, t, serif, a) {
+  ctx.globalAlpha = a; ctx.fillStyle = color;
+  rect(ctx, x1, y1, t, y2 - y1); rect(ctx, x1, y1, serif, t); rect(ctx, x1, y2 - t, serif, t);
+  rect(ctx, x2 - t, y1, t, y2 - y1); rect(ctx, x2 - serif, y1, serif, t); rect(ctx, x2 - serif, y2 - t, serif, t);
+  ctx.globalAlpha = 1;
+}
+function pixArc(ctx, x1, x2, y0, d, q, color, a) {
+  ctx.globalAlpha = a; ctx.fillStyle = color;
+  const n = Math.max(6, Math.round(Math.abs(x2 - x1) / (3 * q)));
+  for (let k = 0; k <= n; k++) { const t = k / n; rect(ctx, x1 + (x2 - x1) * t - q / 2, y0 + Math.sin(Math.PI * t) * d, q, q); }
+  ctx.globalAlpha = 1;
+}
+function txt(ctx, s, x, y, color, align = 'left', shadow = true) {
+  ctx.font = '16px Pix'; ctx.textAlign = align; ctx.textBaseline = 'alphabetic';
+  if (shadow) { ctx.fillStyle = '#000'; ctx.fillText(s, Math.round(x) + 2, Math.round(y) + 2); }
+  ctx.fillStyle = color; ctx.fillText(s, Math.round(x), Math.round(y));
+}
+function smallCell(ctx, x, y, w, h, fill, label, tcol, font = 16) {
+  ctx.fillStyle = '#000'; rect(ctx, x - w / 2 + 2, y + 2, w, h);
+  ctx.fillStyle = fill; rect(ctx, x - w / 2, y, w, h);
+  ctx.fillStyle = tcol; ctx.font = font + 'px Pix'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, Math.round(x), Math.round(y + h / 2 + 1));
+}
+function drawHistRows(ctx, s, top, xOf, opt = {}) {
+  const rows = s.hist; if (!rows) return;
+  ctx.fillStyle = '#2a2a2a'; rect(ctx, 6, top, lay.W - 12, 2);
+  txt(ctx, rows.length ? (opt.title || 'ARREGLO AL TERMINAR CADA PASADA') : (opt.empty || 'Aquí aparecerá el arreglo al terminar cada pasada'), 6, top + 22, '#9b9b9b', 'left', false);
+  const cwid = Math.min(lay.cw - 4, 44), chh = 24;
+  rows.forEach((h, r) => {
+    const y = top + 32 + r * lay.histRowH;
+    ctx.font = '16px Pix'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = r === rows.length - 1 ? '#fff' : '#8a8a8a';
+    ctx.fillText(h.label, 6, Math.round(y + chh / 2));
+    if (h.ids) {
+      h.ids.forEach((id, c) => {
+        if (id == null) return;
+        const fixed = h.fixedTo != null && (h.side === 'L' ? c <= h.fixedTo : c >= h.fixedTo);
+        const part = h.partTo != null && c <= h.partTo;
+        smallCell(ctx, xOf(c), y, cwid, chh, bodyCol[id], String(values[id]), '#161616', cwid < 24 ? 12 : 16);
+        if (fixed || part) { ctx.fillStyle = fixed ? ST.sorted : ST.part; rect(ctx, xOf(c) - cwid / 2, y + chh + 2, cwid, 3); }
+      });
+    } else if (h.low != null) {
+      const x1 = xOf(h.low) - lay.cw / 2 + 3, x2 = xOf(h.high) + lay.cw / 2 - 3;
+      ctx.fillStyle = 'rgba(90,160,255,.22)'; rect(ctx, x1, y + 4, x2 - x1, chh - 8);
+      ctx.fillStyle = ST.active; rect(ctx, x1, y + 4, 3, chh - 8); rect(ctx, x2 - 3, y + 4, 3, chh - 8);
+      smallCell(ctx, xOf(h.probe), y, cwid, chh, ST.compare, String(s.arr[h.probe] != null ? s.arr[h.probe] : values[h.probe]), '#1d1700', cwid < 24 ? 12 : 16);
+      ctx.font = '12px Pix'; ctx.textAlign = 'left'; ctx.fillStyle = '#777'; ctx.textBaseline = 'middle';
+      ctx.fillText(`${h.high - h.low + 1} posibles`, Math.min(x2 + 6, lay.W - 70), y + chh / 2);
+    }
+  });
+}
+
+/* ============================================================
+   FLAT: fila principal (+ temp) + historial
+   ============================================================ */
+const FLAT = {
+  layout(W) {
+    const gut = gutOf(W), padR = padOf(W);
+    const cw = Math.min((W - gut - padR) / N, 96);
+    const L = { W, gut, padR, cw, left: gut + ((W - gut - padR) - cw * N) / 2, ...sizeFor(cw), top: 40 };
+    let y = 40;
+    if (algo === 'insercion') { L.tempFeet = y + L.numH + L.sh; y = L.tempFeet + 54; } else y += 14;
+    L.mainTop = y; L.mainFeet = y + L.numH + L.sh;
+    L.histRowH = 32; L.histTop = L.mainFeet + 118;
+    L.H = steps.maxHist ? L.histTop + 34 + steps.maxHist * L.histRowH : L.mainFeet + 120;
+    return L;
+  },
+  pos(id, s) { const L = s.loc[id]; return { x: colX(L.c, lay), y: L.z === 't' ? lay.tempFeet : lay.mainFeet }; },
+  ptr(name, col) { return { x: colX(col, lay), y: lay.mainFeet + 34 }; },
+  decor(s, T) { s.holes.forEach(p => T.set('ho' + p, { p: { x: colX(p, lay), y: lay.mainFeet, a: 1 } })); },
+  under(ctx, s, Dc, now) {
+    const q = lay.q;
+    if (lay.tempFeet) {
+      txt(ctx, 'actual', 6, lay.tempFeet - lay.sh / 2 + 6, '#ff74b4', 'left', false);
+      ctx.fillStyle = 'rgba(255,116,180,0.10)'; rect(ctx, lay.left, lay.tempFeet + 2, lay.cw * N, 2);
+    }
+    txt(ctx, 'a[]', 6, lay.mainFeet - lay.sh / 2 + 6, '#9b9b9b', 'left', false);
+    ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left, lay.mainFeet + q + 4, lay.cw * N, 2);
+    for (let c = 0; c < N; c++) txt(ctx, String(c), colX(c, lay), lay.mainFeet + 26, '#555', 'center', false);
+    if (A().search) {
+      txt(ctx, 'buscando x = ' + target, lay.W - 10, 22, ST.min, 'right');
+      const lo = s.vars.low, hi = s.vars.high;
+      if (lo != null && hi != null && lo <= hi && s.kind !== 'found') {
+        const x1 = colX(lo, lay) - lay.cw / 2 + 2, x2 = colX(hi, lay) + lay.cw / 2 - 2;
+        ctx.fillStyle = 'rgba(90,160,255,.10)'; rect(ctx, x1, lay.mainTop - 6, x2 - x1, lay.mainFeet - lay.mainTop + 12);
+        drawBracket(ctx, x1, x2, lay.mainTop - 6, lay.mainFeet + 8, ST.active, 2, 8, 0.9);
+        txt(ctx, `zona posible [${lo}..${hi}]`, x1, lay.mainTop - 12, ST.active);
+      }
+    }
+    for (const [k, [, v]] of Dc) if (k.startsWith('ho') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, ST.temp, v.a * (0.6 + 0.4 * Math.abs(Math.sin(now / 300))));
+    drawHistRows(ctx, s, lay.histTop, c => colX(c, lay), A().search ? { title: 'CÓMO SE ACHICA LA ZONA EN CADA INTENTO', empty: 'Aquí aparecerá cómo se achica la zona en cada intento' } : {});
+  }
+};
+
+/* ============================================================
+   LEVELS: árbol de recursión (Merge / Quick / Intro)
+   ============================================================ */
+const LEVELS = {
+  layout(W) {
+    const info = steps.layout || { D: 0, splits: [] }, Dd = info.D, sp = info.splits;
+    const gapU = (b, Lv) => sp[b] < Lv ? 1 + 0.3 * (Lv - 1 - sp[b]) : 0;
+    const pad = padOf(W);
+    let S = 0; for (let b = 0; b < N - 1; b++) S += gapU(b, Dd);
+    const Gc = 0.3;
+    let cw = Math.min((W - 2 * pad) / (N + Gc * S), 86);
+    const zone = 48, top = 34, maxH = 880;
+    const avail = (maxH - top) / (Dd + 1);
+    cw = Math.max(16, Math.min(cw, (avail - 70) / 0.86));
+    const L = { W, pad, cw, G: Gc * cw, ...sizeFor(cw), top, zone, D: Dd };
+    L.rowH = 8 + L.numH + L.sh + zone;
+    L.pref = []; L.lefts = [];
+    for (let Lv = 0; Lv <= Dd + 1; Lv++) {
+      L.pref[Lv] = [0];
+      for (let c = 1; c < N; c++) L.pref[Lv][c] = L.pref[Lv][c - 1] + gapU(c - 1, Lv);
+      L.lefts[Lv] = W / 2 - (N * cw + L.G * L.pref[Lv][N - 1]) / 2;
+    }
+    L.H = top + (Dd + 1) * L.rowH + 10;
+    return L;
+  },
+  X(c, Lv) { Lv = Math.max(0, Math.min(Lv, lay.D + 1)); return lay.lefts[Lv] + lay.cw * (c + 0.5) + lay.G * lay.pref[Lv][c]; },
+  rowTop(Lv) { return lay.top + Lv * lay.rowH; },
+  feet(Lv) { return LEVELS.rowTop(Lv) + 8 + lay.numH + lay.sh; },
+  pos(id, s) { const L = s.loc[id]; return { x: LEVELS.X(L.c, L.r), y: LEVELS.feet(L.r) }; },
+  ptr(name, col, s) {
+    const f = s.focus;
+    if (algo === 'merge' && f && f.mode === 'merge') {
+      if (name === 'k') return { x: LEVELS.X(col, f.depth), y: LEVELS.feet(f.depth) - lay.sh - lay.numH - 6, down: true };
+      return { x: LEVELS.X(col, f.depth + 1), y: LEVELS.feet(f.depth + 1) + lay.q * 2 + 6 };
+    }
+    const d = f ? f.depth : 0;
+    return { x: LEVELS.X(col, d), y: LEVELS.feet(d) + lay.q * 2 + 6 };
+  },
+  decor(s, T) {
+    const f = s.focus, curKey = f ? f.lo + '-' + f.hi : null;
+    const padB = Math.max(3, Math.min((lay.cw - lay.sw) / 2 + lay.G * 0.22, lay.sw * 0.32));
+    for (const nd of s.nodes) {
+      let col;
+      if (f && f.mode === 'merge' && nd.parent === curKey) col = nd.lo <= f.mid ? 'part' : 'right';
+      else if (nd.state === 'merging') col = 'swap';
+      else if (nd.state === 'active') col = 'active';
+      else if (nd.state === 'sorted') col = 'sorted';
+      else col = 'wait';
+      const c = hexToRgb(ST[col]);
+      T.set('nd' + nd.key, { p: { x1: LEVELS.X(nd.lo, nd.depth) - lay.sw / 2 - padB, x2: LEVELS.X(nd.hi, nd.depth) + lay.sw / 2 + padB, y: LEVELS.rowTop(nd.depth), a: 1, r: c[0], g: c[1], b: c[2], th: (nd.state === 'active' || nd.state === 'merging') ? 1 : 0 } });
+    }
+    if (f) {
+      const nm = algo === 'merge' ? 'mergeSort' : algo === 'quick' ? 'quickSort' : 'intro';
+      const text = { divide: `${nm}(${f.lo},${f.hi})`, merge: `temp ← merge(${f.lo},${f.mid},${f.hi})`, part: `particion(${f.lo},${f.hi})`, ins: `insercion(${f.lo},${f.hi})`, heap: `heapSort(${f.lo},${f.hi})`, done: `✓ a[${f.lo}..${f.hi}] ordenado` }[f.mode] || '';
+      const col = { divide: 'active', merge: 'swap', part: 'min', ins: 'part', heap: 'min', done: 'sorted' }[f.mode] || 'active';
+      const c = hexToRgb(ST[col]);
+      T.set('lb', { p: { x: LEVELS.X(f.lo, f.depth) - lay.sw / 2 - padB, y: LEVELS.rowTop(f.depth) - 6, a: 1, r: c[0], g: c[1], b: c[2] }, meta: { text } });
+      if (s.kind === 'split' && f.mid != null) T.set('md', { p: { x: (LEVELS.X(f.mid, f.depth) + LEVELS.X(f.mid + 1, f.depth)) / 2, y: LEVELS.rowTop(f.depth), a: 1 } });
+    }
+    if (s.tmpRange && algo === 'merge') {
+      const r = s.tmpRange, d = f ? f.depth : 0;
+      for (let c = r.lo; c <= r.hi; c++) if (s.tarr[c] == null) T.set('ts' + c, { p: { x: LEVELS.X(c, d), y: LEVELS.feet(d), a: 1 } });
+    }
+    if (algo === 'intro' && f) s.holes.forEach(p => T.set('ho' + p, { p: { x: LEVELS.X(p, f.depth), y: LEVELS.feet(f.depth), a: 1 } }));
+  },
+  under(ctx, s, Dc, now) {
+    const q = lay.q, t0 = Math.max(2, Math.round(q * 0.9)), serif = Math.max(6, Math.round(lay.sw * 0.22));
+    if (lay.W >= 600) for (let Lv = 0; Lv <= lay.D; Lv++) txt(ctx, 'nivel ' + Lv, 6, LEVELS.rowTop(Lv) + 18, '#3d3d3d', 'left', false);
+    for (const [k, [it, v]] of Dc) {
+      if (k.startsWith('nd') && v.a > 0.02) drawBracket(ctx, v.x1, v.x2, v.y + 2, v.y + 8 + lay.numH + lay.sh + 4 + q, `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`, t0 + Math.round(v.th), serif, v.a);
+    }
+    const md = Dc.get('md');
+    if (md && md[1].a > 0.02) {
+      const v = md[1]; ctx.globalAlpha = v.a * (0.6 + 0.4 * Math.abs(Math.sin(now / 250))); ctx.fillStyle = ST.compare;
+      for (let y = v.y + 4; y < v.y + 8 + lay.numH + lay.sh + 2; y += 3 * q) rect(ctx, v.x - q / 2, y, q, 1.5 * q);
+      ctx.globalAlpha = 1;
+    }
+    const lb = Dc.get('lb');
+    if (lb && lb[1].a > 0.02) { const [it, v] = lb; ctx.globalAlpha = v.a; ctx.font = '16px Pix'; const tx = clamp(v.x, 4, Math.max(4, lay.W - ctx.measureText(it.meta.text).width - 4)); txt(ctx, it.meta.text, tx, v.y, `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`); ctx.globalAlpha = 1; }
+    for (const [k, [, v]] of Dc) {
+      if (k.startsWith('ts') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, ST.temp, v.a * 0.9);
+      if (k.startsWith('ho') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, ST.temp, v.a * (0.6 + 0.4 * Math.abs(Math.sin(now / 300))));
+    }
+    if (s.focus && s.focus.mode === 'ins' && s.loc.some(L => L.z === 't')) {
+      const id = s.loc.findIndex(L => L.z === 't'); const p = LEVELS.pos(id, s);
+      txt(ctx, 'actual', p.x + lay.sw / 2 + 4, p.y - lay.sh / 2, ST.temp, 'left');
+    }
+    if (s.heap && s.focus) {
+      const d = s.focus.depth, y0 = LEVELS.feet(d) + q + 8;
+      for (let k = 1; k < s.heap.size; k++) {
+        const pa = s.heap.base + Math.floor((k - 1) / 2), ch = s.heap.base + k;
+        pixArc(ctx, LEVELS.X(pa, d), LEVELS.X(ch, d), y0, 8 + (k % 2) * 6, Math.max(2, q - 1), k % 2 ? ST.min : ST.compare, 0.55);
+      }
+    }
+  },
+  over(ctx, s) {
+    s.loc.forEach((L, id) => {
+      if (s.st[id] !== 'min' || L.z !== 'm') return;
+      const p = LEVELS.pos(id, s);
+      const tag = s.heap ? 'padre' : 'pivote'; ctx.font = '12px Pix'; const w = ctx.measureText(tag).width + 8;
+      smallCell(ctx, p.x + lay.sw / 2 + w / 2 - 4, p.y - lay.sh - 4, w, 16, ST.min, tag, '#2a1400', 12);
+    });
+  }
+};
+
+/* ============================================================
+   SHELL: sub-listas con arcos + temp + historial
+   ============================================================ */
+const SHELL = {
+  layout(W) {
+    const gut = gutOf(W), padR = padOf(W);
+    const cw = Math.min((W - gut - padR) / N, 90);
+    const L = { W, gut, padR, cw, left: gut + ((W - gut - padR) - cw * N) / 2, ...sizeFor(cw), top: 40 };
+    L.tempFeet = 40 + L.numH + L.sh + 10; L.mainTop = L.tempFeet + 60; L.mainFeet = L.mainTop + L.numH + L.sh;
+    L.histRowH = 32; L.histTop = L.mainFeet + 140;
+    L.H = L.histTop + 34 + Math.max(1, steps.maxHist) * L.histRowH;
+    return L;
+  },
+  pos(id, s) { const L = s.loc[id]; return { x: colX(L.c, lay), y: L.z === 't' ? lay.tempFeet : lay.mainFeet }; },
+  ptr(name, col) { return { x: colX(col, lay), y: lay.mainFeet + 62 }; },
+  decor(s, T) {
+    s.holes.forEach(p => T.set('ho' + p, { p: { x: colX(p, lay), y: lay.mainFeet, a: 1 } }));
+    const g = s.gi;
+    if (g && g.mode === 'group') for (let p = 0; p + g.gap < N; p++) { const c = hexToRgb(GRP[p % g.gap % GRP.length]); T.set('ar' + p, { p: { x1: colX(p, lay), x2: colX(p + g.gap, lay), d: 10 + (g.gap > 1 ? (p % g.gap % 4) * 6 : 0), a: 1, r: c[0], g: c[1], b: c[2] } }); }
+    else if (g && g.sub) for (let k = 0; k + 1 < g.sub.length; k++) { const p = g.sub[k], c = hexToRgb(ST.active); T.set('ar' + p, { p: { x1: colX(p, lay), x2: colX(g.sub[k + 1], lay), d: 16, a: 1, r: c[0], g: c[1], b: c[2] } }); }
+    if (s.kind === 'cmp' && s.ptr['j-gap'] != null) T.set('br', { p: { x1: colX(s.ptr['j-gap'], lay), x2: colX(s.ptr.j, lay), a: 1 }, meta: { label: `gap ${g ? g.gap : ''}` } });
+    if (s.kind === 'shift' && g) T.set('br', { p: { x1: colX(s.ptr.j, lay), x2: colX(s.ptr.j + g.gap, lay), a: 1 }, meta: { label: `+${g.gap}` } });
+  },
+  under(ctx, s, Dc, now) {
+    const q = lay.q;
+    txt(ctx, 'temp', 6, lay.tempFeet - lay.sh / 2 + 6, '#ff74b4', 'left', false);
+    txt(ctx, 'a[]', 6, lay.mainFeet - lay.sh / 2 + 6, '#9b9b9b', 'left', false);
+    ctx.fillStyle = 'rgba(255,116,180,0.10)'; rect(ctx, lay.left, lay.tempFeet + 2, lay.cw * N, 2);
+    ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left, lay.mainFeet + q + 4, lay.cw * N, 2);
+    if (s.gi) {
+      const gaps = []; for (let g = Math.floor(N / 2); g > 0; g = Math.floor(g / 2)) gaps.push(g);
+      let x = lay.W - 10; ctx.font = '16px Pix';
+      [...gaps].reverse().forEach(g => { const t = `gap ${g}`, w = ctx.measureText(t).width + 14; x -= w + 6; const on = g === s.gi.gap, past = g > s.gi.gap;
+        ctx.fillStyle = on ? themeAcc() : '#141414'; rect(ctx, x, 6, w, 22); ctx.fillStyle = on ? '#111' : (past ? ST.sorted : '#777'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, x + w / 2, 18); });
+    }
+    for (let c = 0; c < N; c++) { const inSub = s.gi && s.gi.sub && s.gi.sub.includes(c); txt(ctx, String(c), colX(c, lay), lay.mainFeet + 54, inSub ? '#c7d2fe' : '#555', 'center', false); }
+    for (const [k, [, v]] of Dc) {
+      if (k.startsWith('ar') && v.a > 0.02) pixArc(ctx, v.x1, v.x2, lay.mainFeet + q + 10, v.d, q, `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`, v.a * 0.9);
+      if (k.startsWith('ho') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, ST.temp, v.a * (0.6 + 0.4 * Math.abs(Math.sin(now / 300))));
+    }
+    const br = Dc.get('br');
+    if (br && br[1].a > 0.02) {
+      const [it, v] = br, y = lay.mainTop - 10, tk = Math.max(2, q);
+      ctx.globalAlpha = v.a; ctx.fillStyle = ST.compare;
+      rect(ctx, v.x1, y, v.x2 - v.x1, tk); rect(ctx, v.x1, y, tk, 10); rect(ctx, v.x2 - tk, y, tk, 10);
+      txt(ctx, it.meta.label, (v.x1 + v.x2) / 2, y - 6, ST.compare, 'center'); ctx.globalAlpha = 1;
+    }
+    drawHistRows(ctx, s, lay.histTop, c => colX(c, lay), { title: 'ARREGLO AL TERMINAR CADA PASE', empty: 'Aquí aparecerá el arreglo al terminar cada pase' });
+  }
+};
+
+/* ============================================================
+   HEAP: árbol de slimes + arreglo + zona ordenada
+   ============================================================ */
+const HEAP = {
+  layout(W) {
+    const pad = padOf(W), usable = W - 2 * pad, lv = Math.max(1, Math.ceil(Math.log2(N + 1)));
+    const slot = usable / 2 ** (lv - 1);
+    const cw = Math.min(slot * 0.95, 86, usable / N * 1.6);
+    const L = { W, pad, usable, lv, cw, ...sizeFor(cw), top: 40 };
+    L.levelH = L.numH + L.sh + 34; L.treeTop = 40;
+    L.stripY = L.treeTop + lv * L.levelH + 14;
+    L.cw2 = Math.min(usable / N, 70); L.left2 = pad + (usable - L.cw2 * N) / 2;
+    L.sc2 = Math.min(1, (L.cw2 * 0.8) / L.sw);
+    L.sortedFeet = L.stripY + 30 + 26 + 46 + (L.numH + L.sh) * L.sc2 + 14;
+    L.H = L.sortedFeet + 40; L.left = L.left2;
+    return L;
+  },
+  node(k) { const l = Math.floor(Math.log2(k + 1)), idx = k - (2 ** l - 1); return { x: lay.pad + lay.usable * (idx + 0.5) / 2 ** l, y: lay.treeTop + l * lay.levelH + lay.numH + lay.sh }; },
+  X2(c) { return lay.left2 + lay.cw2 * (c + 0.5); },
+  size(s) { return s.heap ? s.heap.size : (s.kind === 'done' ? 0 : N); },
+  pos(id, s) { const c = s.loc[id].c; return c < HEAP.size(s) ? HEAP.node(c) : { x: HEAP.X2(c), y: lay.sortedFeet, sc: lay.sc2 }; },
+  ptr(name, col) { return { x: HEAP.X2(col), y: lay.stripY + 44 }; },
+  decor() {},
+  under(ctx, s) {
+    const q = lay.q, size = HEAP.size(s);
+    txt(ctx, 'max-heap: cada padre ≥ sus hijos', lay.W - 10, 22, '#9b9b9b', 'right', false);
+    for (let k = 1; k < size; k++) {
+      const a = HEAP.node(Math.floor((k - 1) / 2)), b = HEAP.node(k);
+      const ia = idAtMain(s, Math.floor((k - 1) / 2)), ib = idAtMain(s, k);
+      const hot = ia >= 0 && ib >= 0 && ['compare', 'swap', 'min'].includes(s.st[ia]) && ['compare', 'swap', 'min'].includes(s.st[ib]);
+      pixLine(ctx, a.x, a.y - lay.sh * 0.3, b.x, b.y - lay.sh - lay.numH - 4, Math.max(2, q), hot ? ST.compare : '#333');
+    }
+    for (let k = 0; k < size; k++) { const p = HEAP.node(k); txt(ctx, String(k), p.x + lay.sw / 2 + 4, p.y - 4, '#4a4a4a', 'left', false); }
+    // arreglo
+    txt(ctx, 'a[]', 6, lay.stripY + 18, '#9b9b9b', 'left', false);
+    const w = Math.min(lay.cw2 - 4, 44);
+    for (let c = 0; c < N; c++) {
+      const id = idAtMain(s, c), st = id >= 0 ? s.st[id] : 'idle';
+      smallCell(ctx, HEAP.X2(c), lay.stripY, w, 26, st === 'idle' || st === 'active' ? '#3a3a3a' : ST[st], String(s.arr[c]), st === 'idle' || st === 'active' ? '#fff' : '#161616', w < 24 ? 12 : 16);
+      txt(ctx, String(c), HEAP.X2(c), lay.stripY + 42, '#555', 'center', false);
+    }
+    if (size > 0 && size < N) {
+      const x = (HEAP.X2(size - 1) + HEAP.X2(size)) / 2;
+      ctx.fillStyle = themeAcc(); rect(ctx, x - 1, lay.stripY - 8, 3, 42);
+      txt(ctx, '← heap', x - 6, lay.stripY - 12, '#9b9b9b', 'right', false); txt(ctx, 'ordenado →', x + 6, lay.stripY - 12, ST.sorted, 'left', false);
+    }
+    txt(ctx, 'ordenado', 6, lay.sortedFeet - 6, ST.sorted, 'left', false);
+    ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left2, lay.sortedFeet + 3, lay.cw2 * N, 2);
+    for (let c = size; c < N; c++) { if (c < 0) continue; }
+    for (let c = 0; c < size; c++) dashedBox(ctx, HEAP.X2(c), lay.sortedFeet, lay.sw * lay.sc2, lay.sh * lay.sc2, Math.max(1, q - 1), '#333', 0.8);
+  },
+  over(ctx, s) {
+    s.loc.forEach((L, id) => {
+      if (s.st[id] !== 'min' || L.c >= HEAP.size(s)) return;
+      const p = HEAP.node(L.c); txt(ctx, s.kind === 'heapify' ? 'padre' : 'mayor', p.x, p.y - lay.sh - lay.numH - 8, ST.min, 'center');
+    });
+  }
+};
+
+/* ============================================================
+   RADIX: cubetas con el dígito resaltado
+   ============================================================ */
+const RADIX = {
+  layout(W) {
+    const gut = gutOf(W), padR = padOf(W), usable = W - gut - padR;
+    const cw = Math.min(usable / N, 90);
+    const L = { W, gut, padR, cw, left: gut + (usable - cw * N) / 2, ...sizeFor(cw), top: 40 };
+    L.bw = usable / 10; L.bleft = gut; L.bsc = Math.min(1, (L.bw * 0.8) / L.sw);
+    L.bstep = (L.sh + L.numH) * L.bsc + 14; L.cap = Math.min(N, 5);
+    L.bucketFeet = 44 + L.cap * L.bstep;
+    L.mainTop = L.bucketFeet + 64; L.mainFeet = L.mainTop + L.numH + L.sh;
+    L.histRowH = 32; L.histTop = L.mainFeet + 64;
+    L.H = L.histTop + 34 + Math.max(1, steps.maxHist) * L.histRowH;
+    L.digits = String(Math.max(...values)).length;
+    return L;
+  },
+  BX(b) { return lay.bleft + lay.bw * (b + 0.5); },
+  pos(id, s) {
+    const L = s.loc[id], hl = s.vars.exp ? Math.round(Math.log10(s.vars.exp)) : null;
+    if (L.z === 'b') {
+      const cnt = s.bkIds ? s.bkIds[L.c].length : 1, step = cnt > lay.cap ? lay.bstep * (lay.cap - 1) / (cnt - 1) : lay.bstep;
+      return { x: RADIX.BX(L.c), y: lay.bucketFeet - L.k * step, sc: lay.bsc, hl };
+    }
+    return { x: colX(L.c, lay), y: lay.mainFeet, hl };
+  },
+  ptr(name, col) { return { x: colX(col, lay), y: lay.mainFeet + 34 }; },
+  decor(s, T) { s.holes.forEach(p => T.set('ho' + p, { p: { x: colX(p, lay), y: lay.mainFeet, a: 1 } })); },
+  under(ctx, s, Dc, now) {
+    const q = lay.q, hot = s.extra && s.extra.bucket != null ? s.extra.bucket : -1;
+    txt(ctx, 'cubetas', 6, 22, '#9b9b9b', 'left', false);
+    if (s.vars.exp) txt(ctx, `mirando ${s.vars.exp === 1 ? 'UNIDADES' : s.vars.exp === 10 ? 'DECENAS' : 'CENTENAS'} (exp = ${s.vars.exp})`, lay.W - 10, 22, themeAcc(), 'right');
+    for (let b = 0; b < 10; b++) {
+      const x = RADIX.BX(b), w = lay.bw * 0.86, on = b === hot, col = on ? ST.compare : '#3a3a3a';
+      ctx.fillStyle = on ? 'rgba(255,216,74,.08)' : 'rgba(255,255,255,.02)'; rect(ctx, x - w / 2, 36, w, lay.bucketFeet - 36 + 4);
+      ctx.fillStyle = col; rect(ctx, x - w / 2, lay.bucketFeet + 4, w, 3); rect(ctx, x - w / 2, 36, 3, lay.bucketFeet - 32); rect(ctx, x + w / 2 - 3, 36, 3, lay.bucketFeet - 32);
+      smallCell(ctx, x, lay.bucketFeet + 12, 26, 22, on ? ST.compare : '#262626', String(b), on ? '#1d1700' : '#9b9b9b');
+    }
+    txt(ctx, 'a[]', 6, lay.mainFeet - lay.sh / 2 + 6, '#9b9b9b', 'left', false);
+    ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left, lay.mainFeet + q + 4, lay.cw * N, 2);
+    for (let c = 0; c < N; c++) txt(ctx, String(c), colX(c, lay), lay.mainFeet + 26, '#555', 'center', false);
+    for (const [k, [, v]] of Dc) if (k.startsWith('ho') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, '#555', v.a * 0.7);
+    drawHistRows(ctx, s, lay.histTop, c => colX(c, lay), { title: 'ARREGLO DESPUÉS DE CADA DÍGITO', empty: 'Aquí aparecerá el arreglo después de cada dígito' });
+  }
+};
+
+/* ============================================================
+   COUNTING: a[] · count[] · salida[]
+   ============================================================ */
+const COUNTING = {
+  layout(W) {
+    const gut = gutOf(W), padR = padOf(W), usable = W - gut - padR;
+    const cw = Math.min(usable / N, 90);
+    const L = { W, gut, padR, usable, cw, left: gut + (usable - cw * N) / 2, ...sizeFor(cw), top: 40 };
+    L.mainTop = 40; L.mainFeet = L.mainTop + L.numH + L.sh;
+    const k = Math.max(...values) - Math.min(...values) + 1;
+    L.k = k; L.cellW = Math.max(14, Math.min(46, usable / k - 4)); L.cleft = gut + (usable - (L.cellW + 4) * k) / 2;
+    L.cellsTop = L.mainFeet + 96; L.outTop = L.cellsTop + 34 + 62; L.outFeet = L.outTop + L.numH + L.sh;
+    L.H = L.outFeet + 46;
+    return L;
+  },
+  CX(v) { return lay.cleft + (lay.cellW + 4) * (v + 0.5); },
+  pos(id, s) { const L = s.loc[id]; return { x: colX(L.c, lay), y: L.z === 't' ? lay.outFeet : lay.mainFeet }; },
+  ptr(name, col) { return { x: colX(col, lay), y: lay.mainFeet + 34 }; },
+  decor(s, T) {
+    s.holes.forEach(p => T.set('ho' + p, { p: { x: colX(p, lay), y: lay.mainFeet, a: 1 } }));
+    if (s.tmpRange) for (let c = 0; c < N; c++) if (s.tarr[c] == null) T.set('ts' + c, { p: { x: colX(c, lay), y: lay.outFeet, a: 1 } });
+  },
+  under(ctx, s, Dc, now) {
+    const q = lay.q, ex = s.extra || {};
+    txt(ctx, 'a[]', 6, lay.mainFeet - lay.sh / 2 + 6, '#9b9b9b', 'left', false);
+    ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left, lay.mainFeet + q + 4, lay.cw * N, 2);
+    for (let c = 0; c < N; c++) txt(ctx, String(c), colX(c, lay), lay.mainFeet + 26, '#555', 'center', false);
+    txt(ctx, 'count', 6, lay.cellsTop + 20, ST.compare, 'left', false);
+    if (ex.count) {
+      const kc = s.kind === 'prefix' ? ST.shift : s.kind === 'cplace' ? ST.swap : ST.compare;
+      ex.count.forEach((c, v) => {
+        const x = COUNTING.CX(v), hot = v === ex.hot, prev = v === ex.prev;
+        txt(ctx, String(v + ex.min), x, lay.cellsTop - 8, hot ? kc : '#5f5f5f', 'center', false);
+        smallCell(ctx, x, lay.cellsTop, lay.cellW, 30, hot ? kc : prev ? '#4a3a66' : (c === 0 ? '#1f1f1f' : '#3a3a3a'), String(c), hot ? '#111' : (c === 0 ? '#555' : '#fff'), lay.cellW < 24 ? 12 : 16);
+      });
+      if (ex.prev != null) pixArc(ctx, COUNTING.CX(ex.prev), COUNTING.CX(ex.hot), lay.cellsTop + 34, 10, Math.max(2, q), ST.shift, 0.9);
+    } else txt(ctx, 'count[] todavía no existe', lay.W / 2, lay.cellsTop + 20, '#4a4a4a', 'center', false);
+    txt(ctx, 'salida', 6, lay.outFeet - lay.sh / 2 + 6, ST.part, 'left', false);
+    ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left, lay.outFeet + q + 4, lay.cw * N, 2);
+    for (let c = 0; c < N; c++) txt(ctx, String(c), colX(c, lay), lay.outFeet + 26, '#555', 'center', false);
+    for (const [k, [, v]] of Dc) {
+      if (k.startsWith('ts') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, ST.part, v.a * 0.7);
+      if (k.startsWith('ho') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, '#555', v.a * 0.7);
+    }
+  },
+  over(ctx, s, Dc, now) {
+    const ex = s.extra; if (!ex || !ex.tok) return;
+    const it = tw.items.get('el' + ex.tok.id); if (!it) return;
+    const v = tw.val(it, now), p = easeOut(tw.progress(now));
+    const x0 = v.x, y0 = v.y - lay.sh / 2, x1 = COUNTING.CX(ex.tok.cell), y1 = lay.cellsTop + 15;
+    const x = x0 + (x1 - x0) * p, y = y0 + (y1 - y0) * p - Math.sin(Math.PI * p) * 30;
+    ctx.globalAlpha = 1 - Math.max(0, p - 0.85) / 0.15;
+    smallCell(ctx, x, y - 11, 34, 22, ST.compare, ex.tok.txt, '#1d1700');
+    ctx.globalAlpha = 1;
+  }
+};
+
+/* ============================================================
+   TIM: runs separados que se van uniendo
+   ============================================================ */
+const TIM = {
+  layout(W) {
+    const gut = gutOf(W), padR = padOf(W), usable = W - gut - padR, runs = Math.ceil(N / 4);
+    const cw = Math.min(usable / (N + 0.5 * (runs - 1)), 90);
+    const L = { W, gut, padR, usable, cw, G: 0.5 * cw, ...sizeFor(cw), top: 40 };
+    L.tempFeet = 40 + L.numH + L.sh + 10; L.mainTop = L.tempFeet + 64; L.mainFeet = L.mainTop + L.numH + L.sh;
+    L.H = L.mainFeet + 120; L.left = gut;
+    return L;
+  },
+  prep(s) {
+    const starts = new Set((s.runs || []).map(r => r.lo)); starts.delete(0);
+    const g = []; let acc = 0; for (let c = 0; c < N; c++) { if (starts.has(c)) acc++; g[c] = acc; }
+    const total = (N * lay.cw + lay.G * acc);
+    s._x = c => lay.gut + (lay.usable - total) / 2 + lay.cw * (c + 0.5) + lay.G * g[c];
+  },
+  pos(id, s) { const L = s.loc[id]; return { x: s._x(L.c), y: L.z === 't' ? lay.tempFeet : lay.mainFeet }; },
+  ptr(name, col, s) { if (name === 'k') return { x: s._x(col), y: lay.tempFeet - lay.sh - lay.numH - 6, down: true }; return { x: s._x(col), y: lay.mainFeet + 34 }; },
+  decor(s, T) {
+    s.holes.forEach(p => T.set('ho' + p, { p: { x: s._x(p), y: lay.mainFeet, a: 1 } }));
+    if (s.tmpRange) for (let c = s.tmpRange.lo; c <= s.tmpRange.hi; c++) if (s.tarr[c] == null) T.set('ts' + c, { p: { x: s._x(c), y: lay.tempFeet, a: 1 } });
+    const padB = Math.max(3, lay.sw * 0.22);
+    (s.runs || []).forEach((r, k) => {
+      const col = { pending: 'wait', active: 'active', sorted: 'sorted', merging: 'swap' }[r.st]; const c = hexToRgb(ST[col]);
+      T.set('nd' + r.id, { p: { x1: s._x(r.lo) - lay.sw / 2 - padB, x2: s._x(r.hi) + lay.sw / 2 + padB, a: 1, r: c[0], g: c[1], b: c[2], th: r.st === 'active' || r.st === 'merging' ? 1 : 0 }, meta: { label: r.hi - r.lo + 1 > 4 ? `run ${r.lo}..${r.hi}` : `run ${k + 1}` } });
+    });
+  },
+  under(ctx, s, Dc, now) {
+    const q = lay.q, t0 = Math.max(2, Math.round(q * 0.9)), serif = Math.max(6, Math.round(lay.sw * 0.22));
+    txt(ctx, 'temp', 6, lay.tempFeet - lay.sh / 2 + 6, '#ff74b4', 'left', false);
+    txt(ctx, 'a[]', 6, lay.mainFeet - lay.sh / 2 + 6, '#9b9b9b', 'left', false);
+    ctx.fillStyle = 'rgba(255,116,180,0.10)'; rect(ctx, lay.gut, lay.tempFeet + 2, lay.usable, 2);
+    for (const [k, [it, v]] of Dc) {
+      if (k.startsWith('nd') && v.a > 0.02) {
+        const col = `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`;
+        drawBracket(ctx, v.x1, v.x2, lay.mainTop - 4, lay.mainFeet + q + 8, col, t0 + Math.round(v.th), serif, v.a);
+        if (it.meta.label) { ctx.globalAlpha = v.a; txt(ctx, it.meta.label, v.x1, lay.mainTop - 10, col); ctx.globalAlpha = 1; }
+      }
+      if (k.startsWith('ts') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, ST.temp, v.a * 0.9);
+      if (k.startsWith('ho') && v.a > 0.02) dashedBox(ctx, v.x, v.y, lay.sw, lay.sh, q, ST.temp, v.a * (0.6 + 0.4 * Math.abs(Math.sin(now / 300))));
+    }
+    for (let c = 0; c < N; c++) txt(ctx, String(c), s._x(c), lay.mainFeet + 28, '#555', 'center', false);
+  }
+};
+
+const VIEWS = { flat: FLAT, levels: LEVELS, shell: SHELL, heap: HEAP, radix: RADIX, counting: COUNTING, tim: TIM };
+const V = () => VIEWS[A().view || 'flat'];
+
+/* ============================================================
    8. UTILIDADES
    ============================================================ */
 const $ = id => document.getElementById(id);
@@ -1416,34 +2032,10 @@ const manualDur = () => clamp(interval() * 0.75, 380, 800);
 const A = () => ALGOS[algo];
 let accCache = null; const themeAcc = () => accCache || (accCache = getComputedStyle(document.body).getPropertyValue('--yellow').trim() || '#f5e642');
 
-function computeLayout(W) {
-  const top = A().top || {};
-  const gut = W < 600 ? 50 : 84, padR = W < 600 ? 6 : 18;
-  const cw = Math.min((W - gut - padR) / N, 96);
-  const left = gut + ((W - gut - padR) - cw * N) / 2;
-  const sw = Math.max(14, Math.round(cw * (cw < 40 ? 0.8 : 0.66))), sh = Math.round(sw * 13 / 16);
-  const q = Math.max(1, Math.min(Math.max(2, Math.round(sw / 18)), Math.floor(cw * 0.92 / 7)));
-  const numH = 7 * q + 6;
-  const L = { W, gut, padR, cw, left, sw, sh, q, numH, top: 40 };
-  let y = 40;
-  if (top.tree) { const lv = Math.ceil(Math.log2(N + 1)); L.treeTop = y + 6; L.levelH = 50; L.treeH = lv * L.levelH; y = L.treeTop + L.treeH + 6; }
-  if (top.buckets) {
-    L.bsc = 0.55; L.bstep = Math.round((sh + numH) * L.bsc + 4);
-    const cap = Math.min(N, 5);
-    L.bucketFeet = y + cap * L.bstep + 10; L.bw = (W - gut - padR) / 10; L.bleft = gut;
-    y = L.bucketFeet + 34;
-  }
-  if (top.temp) { L.tempFeet = y + numH + sh; y = L.tempFeet + 54; } else y += 14;
-  L.mainTop = y; L.mainFeet = y + numH + sh; L.H = L.mainFeet + 120;
-  return L;
-}
-const X = col => lay.left + lay.cw * (col + 0.5);
-const BX = b => lay.bleft + lay.bw * (b + 0.5);
-
 function setupStage() {
   const dpr = window.devicePixelRatio || 1;
   const W = Math.max(300, $('wrapStage').clientWidth);
-  lay = computeLayout(W);
+  lay = V().layout(W);
   stage.w = W; stage.h = lay.H;
   stage.el.style.height = lay.H + 'px';
   stage.el.width = Math.round(W * dpr); stage.el.height = Math.round(lay.H * dpr);
@@ -1453,33 +2045,33 @@ function setupStage() {
   avatar.ctx = avatar.el.getContext('2d'); avatar.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); avatar.ctx.imageSmoothingEnabled = false;
 }
 
-const EXPR = { idle:'neutral', dim:'sleepy', active:'open', part:'open', compare:'surprised', swap:'happy', temp:'open', min:'cool', shift:'surprised', merge:'open', sorted:'happy', done:'cool' };
+const EXPR = { idle:'neutral', wait:'neutral', grp:'open', dim:'sleepy', active:'open', part:'open', right:'open', compare:'surprised', swap:'happy', temp:'open', min:'cool', shift:'surprised', merge:'open', sorted:'happy', done:'cool' };
+const HOP_KINDS = ['passEnd', 'insert', 'place', 'extract', 'takeL', 'takeR', 'rest', 'base', 'collect', 'cplace'];
 function buildTargets(s) {
-  const T = new Map();
+  const T = new Map(), view = V();
+  if (view.prep) view.prep(s);
   for (let id = 0; id < N; id++) {
-    const st = s.st[id], L = s.loc[id];
-    const c = hexToRgb(ST[st]);
+    const st = s.st[id], P = view.pos(id, s);
+    const c = hexToRgb(stColor(s, id));
     let expr = EXPR[st] || 'neutral';
-    if ((s.kind === 'cmp' || s.kind === 'pcmp' || s.kind === 'mcmp') && st === 'compare' && s.cmp) expr = s.cmp.good ? 'happy' : 'sweat';
+    if (s.cmp && st === 'compare') expr = s.cmp.win != null ? (s.cmp.win === id ? 'happy' : 'sweat') : (s.cmp.good ? 'happy' : 'sweat');
     if (s.kind === 'found' && st === 'sorted') expr = 'cool';
     if (s.kind === 'notFound' && st !== 'dim') expr = 'sweat';
-    const hop = (s.hot === id && ['passEnd', 'insert', 'place', 'extract', 'takeL', 'takeR'].includes(s.kind)) || s.kind === 'done' || s.kind === 'found' && st === 'sorted';
+    const hop = (s.hot === id && HOP_KINDS.includes(s.kind)) || s.kind === 'done' || (s.kind === 'found' && st === 'sorted') || ((s.kind === 'copyBack' || s.kind === 'qret') && s.hop && s.hop.includes(id));
     let arcMul = 1;
     if (s.hop && s.hop.length === 2) arcMul = id === s.hop[0] ? 1.3 : 0.55;
-    let x, y, sc = 1;
-    if (L.z === 't') { x = X(L.c); y = lay.tempFeet; }
-    else if (L.z === 'b') { x = BX(L.c); sc = lay.bsc; y = lay.bucketFeet - Math.min(L.k, 7) * (L.k > 4 ? lay.bstep * 0.55 : lay.bstep); }
-    else { x = X(L.c); y = lay.mainFeet; }
-    T.set('el' + id, { p: { x, y, sc, a: st === 'dim' ? 0.35 : 1, r: c[0], g: c[1], b: c[2] },
-      meta: { v: values[id], st, expr, id, z: L.z }, arcH: lay.sh * 0.9, arcMul, hop,
-      delay: s.kind === 'done' ? L.c * 40 : 0 });
+    const sc = P.sc || 1;
+    const stg = s.hop && s.hop.length > 2 ? s.hop.indexOf(id) : -1;
+    T.set('el' + id, { p: { x: P.x, y: P.y, sc, a: st === 'dim' ? 0.4 : 1, r: c[0], g: c[1], b: c[2] },
+      meta: { v: values[id], st, expr, id, z: s.loc[id].z, hl: P.hl }, arcH: lay.sh * 0.95 * sc, arcMul, hop,
+      delay: s.kind === 'done' ? s.loc[id].c * 40 : (stg > 0 ? stg * 45 : 0) });
   }
-  s.holes.forEach(p => T.set('hole' + p, { p: { x: X(p), y: lay.mainFeet, a: 1 } }));
-  if (s.cmp && s.cmp.x1 !== s.cmp.x2) T.set('br', { p: { x1: X(Math.min(s.cmp.x1, s.cmp.x2)), x2: X(Math.max(s.cmp.x1, s.cmp.x2)), a: 1 }, meta: { lift: !!s.cmp.lift } });
   for (const k of Object.keys(PCOL)) {
     const col = s.ptr[k];
-    T.set('p:' + k, col != null ? { p: { x: X(col), a: 1 } } : { p: { x: null, a: 0 }, keepX: true });
+    if (col != null) { const P = view.ptr(k, col, s); T.set('p:' + k, { p: { x: P.x, y: P.y, a: 1 }, meta: { down: !!P.down } }); }
+    else T.set('p:' + k, { p: { x: null, y: null, a: 0 }, keepX: true });
   }
+  if (view.decor) view.decor(s, T);
   return T;
 }
 
@@ -1494,9 +2086,9 @@ function getDots(ctx) {
   dotPattern = ctx.createPattern(c, 'repeat'); return dotPattern;
 }
 function rect(ctx, x, y, w, h) { ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); }
-function arrow(ctx, x, y, q, color) {
+function arrow(ctx, x, y, q, color, up = true) {
   ctx.fillStyle = color;
-  for (let r = 0; r < 3; r++) { const w = (2 * r + 1) * q; rect(ctx, x - w / 2, y + r * q, w, q); }
+  for (let r = 0; r < 3; r++) { const w = (2 * (up ? r : 2 - r) + 1) * q; rect(ctx, x - w / 2, y + r * q, w, q); }
 }
 function pixLine(ctx, x1, y1, x2, y2, q, color) {
   ctx.fillStyle = color;
@@ -1504,119 +2096,64 @@ function pixLine(ctx, x1, y1, x2, y2, q, color) {
   for (let k = 0; k <= n; k++) rect(ctx, x1 + (x2 - x1) * k / n - q / 2, y1 + (y2 - y1) * k / n - q / 2, q, q);
 }
 
-function drawTree(ctx, s) {
-  const h = s.heap, q = Math.max(2, lay.q);
-  ctx.font = '16px Pix'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#9b9b9b';
-  ctx.fillText('heap', 6, lay.treeTop + 16);
-  if (!h) {
-    ctx.fillStyle = '#4a4a4a'; ctx.textAlign = 'center';
-    ctx.fillText(algo === 'intro' ? 'aquí aparece el árbol si IntroSort cambia a HeapSort' : 'árbol del heap', lay.gut + (lay.W - lay.gut - lay.padR) / 2, lay.treeTop + lay.treeH / 2);
-    return;
+function drawBubble(ctx, s, now) {
+  const c = s.cmp; if (!c) return;
+  const view = A().view || 'flat';
+  let ida = idAtMain(s, c.x1), idb = c.lift ? idAtTmp(s, c.x2) : idAtMain(s, c.x2);
+  if (ida < 0) return;
+  const A1 = tw.items.get('el' + ida), B1 = idb >= 0 && idb !== ida ? tw.items.get('el' + idb) : null;
+  if (!A1) return;
+  const va = tw.val(A1, now), vb = B1 ? tw.val(B1, now) : null, p = easeOut(tw.progress(now));
+  const t = c.text || `${c.a} ${c.op} ${c.b}`;
+  ctx.font = '16px Pix';
+  const bw = ctx.measureText(t).width + 16, bh = 22;
+  const scA = va.sc || 1, headA = va.y - (lay.sh + lay.numH) * scA - 4, headB = vb ? vb.y - (lay.sh + lay.numH) * (vb.sc || 1) - 4 : headA;
+  const mx = clamp(vb ? (va.x + vb.x) / 2 : va.x, bw / 2 + 4, stage.w - bw / 2 - 4);
+  const by = Math.max(4, Math.round(Math.min(headA, headB) - bh - 18 - 6 * (1 - p)));
+  ctx.globalAlpha = p;
+  ctx.fillStyle = ST.compare;
+  for (let k = 0; k <= 1; k += 0.08) {
+    rect(ctx, mx + (va.x - mx) * k - lay.q / 2, by + bh + (headA - by - bh) * k, lay.q, lay.q);
+    if (vb) rect(ctx, mx + (vb.x - mx) * k - lay.q / 2, by + bh + (headB - by - bh) * k, lay.q, lay.q);
   }
-  const usable = lay.W - lay.gut - lay.padR;
-  const pos = k => { const l = Math.floor(Math.log2(k + 1)), idx = k - (2 ** l - 1); return { x: lay.gut + usable * (idx + 0.5) / 2 ** l, y: lay.treeTop + l * lay.levelH + 18 }; };
-  const nodeSt = k => { const id = s.loc.findIndex(L => L.z === 'm' && L.c === h.base + k); return id >= 0 ? s.st[id] : 'idle'; };
-  for (let k = 1; k < h.size; k++) {
-    const a = pos(Math.floor((k - 1) / 2)), b = pos(k);
-    const hot = ['compare', 'swap'].includes(nodeSt(k));
-    pixLine(ctx, a.x, a.y, b.x, b.y, q, hot ? ST.compare : '#3a3a3a');
-  }
-  const nw = Math.min(40, Math.max(26, usable / 2 ** Math.floor(Math.log2(h.size)) - 6));
-  for (let k = 0; k < h.size; k++) {
-    const p = pos(k), st = nodeSt(k), v = s.arr[h.base + k];
-    ctx.fillStyle = '#000'; rect(ctx, p.x - nw / 2 + 3, p.y - 14 + 3, nw, 28);
-    ctx.fillStyle = st === 'idle' ? '#3a3a3a' : ST[st]; rect(ctx, p.x - nw / 2, p.y - 14, nw, 28);
-    ctx.fillStyle = st === 'idle' ? '#fff' : '#161616'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(v == null ? '' : String(v), Math.round(p.x), Math.round(p.y + 1));
-    ctx.fillStyle = '#5f5f5f'; ctx.font = '12px Pix'; ctx.fillText(String(k), Math.round(p.x + nw / 2 + 8), Math.round(p.y - 10)); ctx.font = '16px Pix';
-  }
-}
-function drawBuckets(ctx, s) {
-  ctx.font = '16px Pix'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#9b9b9b';
-  ctx.fillText(lay.gut > 60 ? 'cubetas' : 'cub.', 6, lay.bucketFeet - 30);
-  const hotB = s.extra && s.extra.bucket != null ? s.extra.bucket : -1;
-  for (let b = 0; b < 10; b++) {
-    const x = BX(b), w = lay.bw * 0.82, hot = b === hotB;
-    ctx.fillStyle = hot ? ST.compare : '#333';
-    rect(ctx, x - w / 2, lay.bucketFeet + 3, w, 3); rect(ctx, x - w / 2, lay.bucketFeet - 18, 3, 21); rect(ctx, x + w / 2 - 3, lay.bucketFeet - 18, 3, 21);
-    ctx.fillStyle = hot ? ST.compare : '#777'; ctx.textAlign = 'center';
-    ctx.fillText(String(b), Math.round(x), lay.bucketFeet + 20);
-  }
+  ctx.fillStyle = '#000'; rect(ctx, mx - bw / 2 + 3, by + 3, bw, bh);
+  ctx.fillStyle = c.text ? ST.compare : (c.good ? ST.sorted : ST.compare); rect(ctx, mx - bw / 2, by, bw, bh);
+  ctx.fillStyle = '#161616'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, Math.round(mx), by + bh / 2 + 1);
+  ctx.globalAlpha = 1;
 }
 
 function drawStage(now) {
   const ctx = stage.ctx; if (!ctx || !lay || !steps[cur]) return;
-  const W = stage.w, H = stage.h, s = steps[cur], q = lay.q, top = A().top || {};
+  const W = stage.w, H = stage.h, s = steps[cur], view = V();
   ctx.fillStyle = '#0f0f0f'; ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = getDots(ctx); ctx.fillRect(0, 0, W, H);
-
-  const els = [], holes = []; let br = null; const P = {};
+  const els = [], Dc = new Map(), P = {};
   for (const [key, it] of tw.items) {
     if (key.startsWith('el')) els.push([it, tw.val(it, now)]);
-    else if (key.startsWith('hole')) holes.push(tw.val(it, now));
-    else if (key === 'br') br = [it, tw.val(it, now)];
-    else if (key.startsWith('p:')) P[key.slice(2)] = tw.val(it, now);
+    else if (key.startsWith('p:')) P[key.slice(2)] = [it, tw.val(it, now)];
+    else Dc.set(key, [it, tw.val(it, now)]);
   }
-
-  ctx.font = '16px Pix'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-  if (s.label) { ctx.fillStyle = '#5aa0ff'; ctx.fillText('▶ ' + s.label, 8, 18); }
-  if (A().search) { ctx.fillStyle = ST.min; ctx.textAlign = 'right'; ctx.fillText('buscando x = ' + target, W - 10, 18); ctx.textAlign = 'left'; }
-  if (top.tree) drawTree(ctx, s);
-  if (top.buckets) drawBuckets(ctx, s);
-  if (top.temp) {
-    ctx.textAlign = 'left'; ctx.fillStyle = '#ff74b4'; ctx.fillText(lay.gut > 60 ? top.temp : top.temp.slice(0, 4), 6, Math.round(lay.tempFeet - lay.sh / 2));
-    ctx.fillStyle = 'rgba(255,116,180,0.10)'; rect(ctx, lay.left, lay.tempFeet + 2, lay.cw * N, 2);
-  }
-  ctx.textAlign = 'left'; ctx.fillStyle = '#9b9b9b'; ctx.fillText('a[]', 6, Math.round(lay.mainFeet - lay.sh / 2));
-  ctx.fillStyle = '#2a2a2a'; rect(ctx, lay.left, lay.mainFeet + q + 4, lay.cw * N, 2);
-  ctx.textAlign = 'center';
-  for (let c = 0; c < N; c++) { ctx.fillStyle = '#555'; ctx.fillText(String(c), Math.round(X(c)), Math.round(lay.mainFeet + 22)); }
-
-  for (const hole of holes) {
-    if (hole.a < 0.02) continue;
-    ctx.globalAlpha = hole.a * (0.6 + 0.4 * Math.abs(Math.sin(now / 300))); ctx.fillStyle = ST.temp;
-    const x0 = hole.x - lay.sw / 2, y0 = hole.y - lay.sh;
-    for (let x = x0; x < x0 + lay.sw; x += 2 * q) { rect(ctx, x, y0, q, q); rect(ctx, x, y0 + lay.sh - q, q, q); }
-    for (let y = y0; y < y0 + lay.sh; y += 2 * q) { rect(ctx, x0, y, q, q); rect(ctx, x0 + lay.sw - q, y, q, q); }
-    ctx.globalAlpha = 1;
-  }
-
-  if (br && br[1].a > 0.02 && !br[0].meta.lift) {
-    const v = br[1], y = lay.mainTop - 4, tk = Math.max(2, q);
-    ctx.globalAlpha = v.a; ctx.fillStyle = ST.compare;
-    rect(ctx, v.x1, y, v.x2 - v.x1, tk); rect(ctx, v.x1, y, tk, 10); rect(ctx, v.x2 - tk, y, tk, 10);
-    ctx.globalAlpha = 1;
-  }
-  if (s.cmp) {
-    const p = easeOut(tw.progress(now));
-    const txt = s.cmp.text || `${s.cmp.a} ${s.cmp.op} ${s.cmp.b}`;
-    ctx.font = '16px Pix';
-    const bw = ctx.measureText(txt).width + 16, bh = 22;
-    let bx, by;
-    if (s.cmp.lift) { bx = clamp(X(s.cmp.x2) + lay.cw * 0.5 + bw / 2, bw / 2 + 4, W - bw / 2 - 4); by = Math.round(lay.tempFeet - lay.sh - 6 + 4 * (1 - p)); }
-    else { bx = clamp((X(s.cmp.x1) + X(s.cmp.x2)) / 2, bw / 2 + 4, W - bw / 2 - 4); by = Math.round(lay.mainTop - 34 - 4 * (1 - p)); }
-    ctx.globalAlpha = p;
-    ctx.fillStyle = '#000'; rect(ctx, bx - bw / 2 + 3, by + 3, bw, bh);
-    ctx.fillStyle = s.cmp.good ? ST.sorted : ST.compare; rect(ctx, bx - bw / 2, by, bw, bh);
-    ctx.fillStyle = '#161616'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, Math.round(bx), by + bh / 2 + 1);
-    ctx.globalAlpha = 1;
-  }
-
+  if (view.prep) view.prep(s);
+  if (s.label) txt(ctx, '▶ ' + s.label, 8, 22, '#5aa0ff');
+  view.under(ctx, s, Dc, now);
   const fly = [];
   for (const pair of els) { if (pair[0].arc && pair[1].t > 0 && pair[1].t < 1) fly.push(pair); else drawElement(ctx, pair[0], pair[1], now); }
   for (const pair of fly) drawElement(ctx, pair[0], pair[1], now);
+  if (view.over) view.over(ctx, s, Dc, now);
 
   ctx.font = '16px Pix'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-  const used = {};
+  const used = {}, q = Math.max(2, lay.q);
   for (const k of Object.keys(PCOL)) {
-    const v = P[k]; if (!v || v.a < 0.02 || v.x == null) continue;
-    const slot = Math.round(v.x / 4), n = used[slot] = (used[slot] || 0) + 1;
-    const y = lay.mainFeet + 34 + (n - 1) * 28;
-    ctx.globalAlpha = v.a;
-    arrow(ctx, v.x, y, Math.max(2, q), PCOL[k]);
-    ctx.fillStyle = PCOL[k]; ctx.fillText(k, Math.round(v.x), y + 3 * Math.max(2, q) + 15);
+    if (!P[k]) continue;
+    const [it, v] = P[k]; if (v.a < 0.02 || v.x == null || v.y == null) continue;
+    const down = it.meta && it.meta.down;
+    const slot = Math.round(v.x / 6) + (down ? 'd' : 'u'), n = used[slot] = (used[slot] || 0) + 1;
+    ctx.globalAlpha = v.a; ctx.fillStyle = PCOL[k];
+    if (down) { const yb = v.y - 3 * q - (n - 1) * 24; arrow(ctx, v.x, yb, q, PCOL[k], false); ctx.fillText(k, Math.round(v.x), yb - 3); }
+    else { const y = v.y + (n - 1) * 26; arrow(ctx, v.x, y, q, PCOL[k], true); ctx.fillText(k, Math.round(v.x), y + 3 * q + 15); }
     ctx.globalAlpha = 1;
   }
+  drawBubble(ctx, s, now);
 
   const dt = Math.min(3, (now - lastFrame) / 16.67);
   for (const p of particles) {
@@ -1626,6 +2163,18 @@ function drawStage(now) {
   }
   ctx.globalAlpha = 1;
   particles = particles.filter(p => p.life > 0 && p.y < H + 10);
+}
+
+function drawNumHL(ctx, str, cx, top, q, color, a, hl, digits) {
+  if (hl == null || !digits) return drawNum(ctx, str, cx, top, q, color, a);
+  const full = str.padStart(digits, '0'), lead = digits - str.length;
+  const w = (full.length * 4 - 1) * q, x0 = cx - w / 2;
+  [...full].forEach((ch, k) => {
+    const idxR = full.length - 1 - k, isH = idxR === hl, isLead = k < lead;
+    const dx = x0 + (k * 4 + 1.5) * q;
+    drawNum(ctx, ch, dx, top - (isH ? q : 0), q, isH ? '#ffd84a' : (isLead ? '#555' : color), a);
+    if (isH) { ctx.globalAlpha = a; ctx.fillStyle = '#ffd84a'; rect(ctx, dx - 1.5 * q, top + 5 * q + 1, 3 * q, Math.max(1, q / 2)); ctx.globalAlpha = 1; }
+  });
 }
 
 function drawElement(ctx, it, v, now) {
@@ -1653,8 +2202,8 @@ function drawElement(ctx, it, v, now) {
   const spr = getSprite(bodyCol[id], it.meta.expr);
   const dw = sw * 18 / 16 * sx, dh = sh * 15 / 13 * sy, pxh = sh / 13 * sy;
   ctx.drawImage(spr, Math.round(v.x - dw / 2), Math.round(feet + pxh - dh), Math.round(dw), Math.round(dh));
-  const ncol = it.meta.st === 'idle' ? '#ffffff' : `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`;
-  drawNum(ctx, String(it.meta.v), v.x, feet - sh * sy - 7 * q, q, ncol, v.a);
+  const ncol = (it.meta.st === 'idle' || it.meta.st === 'wait') ? '#ffffff' : `rgb(${v.r | 0},${v.g | 0},${v.b | 0})`;
+  drawNumHL(ctx, String(it.meta.v), v.x, feet - sh * sy - 7 * q, q, ncol, v.a, it.meta.hl, lay.digits);
   ctx.globalAlpha = 1;
 }
 
@@ -1672,10 +2221,12 @@ function drawAvatar(now) {
   ctx.drawImage(spr, Math.round(40 - w / 2), Math.round(68 - h), Math.round(w), Math.round(h));
 }
 function burst() {
-  const pal = [ST.sorted, ST.compare, ST.swap, ST.shift, '#45d6e6', '#ffffff', '#f5e642'];
+  const pal = [ST.sorted, ST.compare, ST.swap, ST.shift, '#45d6e6', '#ffffff', themeAcc()];
+  const pts = [...tw.items].filter(([k]) => k.startsWith('el')).map(([, it]) => it.to);
+  if (!pts.length) return;
   for (let k = 0; k < 140; k++) {
-    const c = Math.floor(Math.random() * N);
-    particles.push({ x: X(c), y: lay.mainFeet - lay.sh - Math.random() * 30, vx: (Math.random() - 0.5) * 7, vy: -Math.random() * 7 - 2,
+    const p = pts[Math.floor(Math.random() * pts.length)];
+    particles.push({ x: p.x, y: p.y - lay.sh - Math.random() * 30, vx: (Math.random() - 0.5) * 7, vy: -Math.random() * 7 - 2,
       s: lay.q * (1 + Math.floor(Math.random() * 2)), life: 1 + Math.random() * 0.5, c: pal[k % pal.length] });
   }
 }
@@ -1926,6 +2477,7 @@ function renderGuide() {
 }
 function rebuild() {
   steps = gen(algo, values);
+  steps.maxHist = Math.max(0, ...steps.map(x => x.hist ? x.hist.length : 0));
   renderGuide(); renderNav(); renderLegend(); renderStrip(); renderRace();
   $('stageHint').textContent = A().hint;
   $('codeTitle').textContent = 'CÓDIGO JAVA · ' + A().name;
